@@ -14,7 +14,7 @@ export default function Layout({ title, children }: LayoutProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className='container mx-auto px-4'>{children}</main>
+      <main className=''>{children}</main>
     </div>
   )
 }
