@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Navbar from './navbar'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -14,6 +15,7 @@ export default function Layout({ title, children }: LayoutProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <Navbar />
       <main className=''>{children}</main>
     </div>
   )
