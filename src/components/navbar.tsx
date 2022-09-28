@@ -33,8 +33,8 @@ export default function Navbar() {
 
   return (
     <nav className={`text-sm px-4 py-2 fixed inset-x-0 z-50 w-full transition- ${isOpen ? 'bg-black/60 text-white h-full' : ''}`}>
-      <div className='flex flex-col' onClick={() => setIsOpen(!isOpen)}>
-        <div className='flex justify-between items-center font-bold'>
+      <div className='flex flex-col max-w-[1280px] mx-auto' onClick={() => setIsOpen(!isOpen)}>
+        <div className='flex justify-between items-center font-bold h-8'>
           <Link href='/'>SIUM</Link>
           {renderHamburger()}
         </div>
