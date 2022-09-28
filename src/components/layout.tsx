@@ -16,7 +16,7 @@ export default function Layout({ title, children }: LayoutProps) {
       </Head>
 
       <Navbar />
-      <main className=''>{children}</main>
+      <main className='pt-[60px] px-4'>{children}</main>
     </div>
   )
 }
