@@ -1,6 +1,6 @@
 export default function Header() {
     return (
-        <header className='absolute inset-0 px-4 bg-secondary w-screen h-64'>
+        <header className='bg-secondary w-screen h-64 px-4'>
             <div className='flex flex-col gap-4 justify-center items-start pt-[60px] h-full max-w-[1280px] mx-auto'>
                 <h1 className='font-bold text-2xl'>Encuentra La Mejor Universidad Para Ti</h1>
                 <div className='flex justify-between pl-4 pr-2 py-2 bg-white rounded-full text-xs w-full'>
