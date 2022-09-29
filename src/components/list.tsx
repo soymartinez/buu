@@ -24,7 +24,7 @@ export default function List() {
     ]
 
     return (
-        <div className='px-4'>
+        <div className='flex flex-col gap-2 px-4'>
             {list.map((item, index) => (
                 <Card key={index} {...item} />
             ))}
