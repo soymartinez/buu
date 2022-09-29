@@ -23,8 +23,7 @@ export default function Navbar() {
 
   const renderHamburger = () => {
     return (
-      <div className={`w-8 h-8 flex flex-col justify-center items-center md:hidden`}
-        onClick={() => setIsOpen(!isOpen)}>
+      <div className={`w-8 h-8 flex flex-col justify-center items-center md:hidden`} onClick={() => setIsOpen(!isOpen)}>
         <div className={`absolute w-5 h-0.5 bg-black transition-all rounded-full ${isOpen ? 'rotate-45' : 'mb-[6px] ml-1'}`}></div>
         <div className={`absolute w-5 h-0.5 bg-black transition-all rounded-full ${isOpen ? '-rotate-45' : 'mt-[6px] mr-1'}`}></div>
       </div>
@@ -33,7 +32,7 @@ export default function Navbar() {
 
   return (
     <nav className={`text-sm px-4 py-2 fixed inset-x-0 z-50 w-full transition- ${isOpen ? 'bg-black/60 text-white h-full' : ''}`}>
-      <div className='flex flex-col max-w-[1280px] mx-auto' onClick={() => setIsOpen(!isOpen)}>
+      <div className='flex flex-col max-w-[1280px] mx-auto' onClick={() => isOpen ? setIsOpen(false) : null}>
         <div className='flex justify-between items-center font-bold h-8'>
           <Link href='/'>SIUM</Link>
           {renderHamburger()}
