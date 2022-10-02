@@ -19,7 +19,7 @@ export default function Filter() {
     )
 
     return (
-        <aside className='px-4'>
+        <aside>
             <ul className='flex gap-4'>
                 <li className=''>
                     <div onClick={() => setIsOpenState(!isOpenState)} className='flex items-center gap-2 font-bold select-none'>
