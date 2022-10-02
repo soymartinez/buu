@@ -11,16 +11,6 @@ export default function Navbar() {
     { name: 'Nosotros', link: '/nosotros' },
   ]
 
-  const renderMenu = () => {
-    return (
-      menu.map((item, index) => (
-        <Link key={index} href={item.link}>
-          {item.name}
-        </Link>
-      ))
-    )
-  }
-
   const renderHamburger = () => {
     return (
       <div className={`w-8 h-8 flex flex-col justify-center items-center md:hidden`} onClick={() => setIsOpen(!isOpen)}>
