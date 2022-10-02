@@ -21,10 +21,25 @@ export default function Navbar() {
   }
 
   return (
-    <nav className={`py-2 fixed inset-x-0 z-50 w-full transition-all ${isOpen ? 'text-white' : null}`}>
+    <nav className={`py-2 md:py-4 fixed inset-x-0 z-50 w-full transition-all ${isOpen ? 'text-white' : null}`}>
       <div className='flex flex-col max-w-[1280px] mx-auto px-4 md:px-8' onClick={() => isOpen ? setIsOpen(false) : null}>
-        <div className='flex text-sm justify-between items-center z-50 md:text-black font-bold h-8'>
+        <div className='flex gap-10 text-sm justify-between md:justify-start items-center z-50 md:text-black font-bold h-8'>
           <Link href='/'>SIUM</Link>
+          <div className='hidden md:flex w-full justify-between items-center text-font text-xs font-medium'>
+            <div className='flex gap-8'>
+              {menu.map((item, index) => (
+                <Link key={index} href={item.link}>
+                  <a className='transition-colors hover:text-black'>
+                    {item.name}
+                  </a>
+                </Link>
+              ))}
+            </div>
+            <div className='flex items-center gap-2'>
+              <h1 className='text-black font-bold'>Alvaro M.</h1>
+              <div className='w-7 h-7 rounded-full bg-primary' />
+            </div>
+          </div>
           {renderHamburger()}
         </div>
         <div className={`absolute z-40 inset-0 transition-transform py-6 px-1 duration-200 h-screen bg-black/95 ${isOpen ? null : 'translate-x-full'} pt-16 md:hidden`}>
