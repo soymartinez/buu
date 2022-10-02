@@ -1,7 +1,7 @@
 export default function Header() {
     return (
-        <header className='bg-secondary w-screen h-64 px-4'>
-            <div className='flex flex-col gap-4 justify-center items-start pt-[60px] h-full max-w-[1280px] mx-auto'>
+        <header className='bg-secondary w-screen h-64'>
+            <div className='flex flex-col gap-4 justify-center items-start pt-[60px] px-4 md:px-8 h-full max-w-[1280px] mx-auto'>
                 <h1 className='font-bold text-2xl'>Encuentra La Mejor Universidad Para Ti</h1>
                 <div className='flex justify-between gap-2 pl-6 pr-2 py-2 bg-white rounded-full text-sm w-full'>
                     <div className='flex items-center w-full gap-4'>
