@@ -21,8 +21,8 @@ export default function Navbar() {
   }
 
   return (
-    <nav className={`text-xs px-4 py-2 fixed inset-x-0 z-50 w-full transition-all ${isOpen ? 'text-white' : null}`}>
-      <div className='flex flex-col max-w-[1280px] mx-auto' onClick={() => isOpen ? setIsOpen(false) : null}>
+    <nav className={`py-2 fixed inset-x-0 z-50 w-full transition-all ${isOpen ? 'text-white' : null}`}>
+      <div className='flex flex-col max-w-[1280px] mx-auto px-4 md:px-8' onClick={() => isOpen ? setIsOpen(false) : null}>
         <div className='flex text-sm justify-between items-center z-50 md:text-black font-bold h-8'>
           <Link href='/'>SIUM</Link>
           {renderHamburger()}
