@@ -21,13 +21,13 @@ export default function Navbar() {
   }
 
   return (
-    <nav className={`text-xs px-4 py-2 fixed inset-x-0 z-50 w-full transition-all ${isOpen ? 'text-white h-full' : ''}`}>
-      <div className='flex flex-col max-w-[1280px] mx-auto h-screen' onClick={() => isOpen ? setIsOpen(false) : null}>
+    <nav className={`text-xs px-4 py-2 fixed inset-x-0 z-50 w-full transition-all ${isOpen ? 'text-white' : null}`}>
+      <div className='flex flex-col max-w-[1280px] mx-auto' onClick={() => isOpen ? setIsOpen(false) : null}>
         <div className='flex text-sm justify-between items-center z-50 md:text-black font-bold h-8'>
           <Link href='/'>SIUM</Link>
           {renderHamburger()}
         </div>
-        <div className={`absolute z-40 inset-0 transition-transform py-6 px-1 duration-200 bg-black/95 ${isOpen ? '' : 'translate-x-full'} pt-16 md:hidden`}>
+        <div className={`absolute z-40 inset-0 transition-transform py-6 px-1 duration-200 h-screen bg-black/95 ${isOpen ? null : 'translate-x-full'} pt-16 md:hidden`}>
           <div className='flex flex-col gap-1 font-semibold text-sm'>
             {menu.map((item, index) => (
               <Link key={index} href={item.link}>
