@@ -1,6 +1,23 @@
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
 
 export default function Header() {
+    const [peep, setPeep] = useState(0)
+
+    const timer = (ms: number) => new Promise(res => setTimeout(res, ms))
+
+    async function load() {
+        for (var i = 1; i <= 11; i++) {
+            setPeep(i)
+            await timer(3000)
+            if (i == 11) i = 0
+        }
+    }
+
+    useEffect(() => {
+        load()
+    }, [])
+
     return (
         <header className='bg-secondary w-screen h-64 overflow-hidden'>
             <div className='flex flex-col relative gap-4 justify-center items-start pt-[60px] px-4 md:px-8 h-full max-w-[1280px] mx-auto'>
@@ -14,7 +31,7 @@ export default function Header() {
                     <button className='bg-primary text-white rounded-full px-4 py-2 md:px-8 lg:px-12 lg:py-4 text-xs font-semibold'>Buscar</button>
                 </div>
                 <div className='absolute -bottom-10 md:-bottom-12 -right-16 lg:right-[10%] xl:right-[16%] -scale-x-100 w-64 md:w-72 lg:w-80'>
-                    <Image src={'/peep-1.svg'} alt='OpenPeeps' width={400} height={400} />
+                    <Image src={`/peep-${peep}.svg`} alt='OpenPeeps' width={400} height={400} />
                 </div>
             </div>
         </header>
