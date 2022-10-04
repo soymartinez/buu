@@ -8,7 +8,7 @@ export default function Home() {
     <Layout title='SIUM'>
       <Header />
       <section className='flex flex-col gap-4 px-4 md:px-8 w-full max-w-[1280px] mx-auto'>
-        <Filter />
+        {/* <Filter /> */}
         <List />
       </section>
     </Layout>
