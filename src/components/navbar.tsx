@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { useState } from 'react'
+import Logo from './logo'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -23,8 +24,8 @@ export default function Navbar() {
   return (
     <nav className={`py-2 md:py-4 fixed inset-x-0 z-50 w-full transition-all ${isOpen ? 'text-white' : null}`}>
       <div className='flex flex-col max-w-[1280px] mx-auto px-4 md:px-8' onClick={() => isOpen ? setIsOpen(false) : null}>
-        <div className='flex gap-10 text-sm justify-between md:justify-start items-center z-50 md:text-black font-bold h-8'>
-          <Link href='/'>SIUM</Link>
+        <div className='flex gap-10 text-xl justify-between md:justify-start items-center z-50 md:text-black font-bold h-8'>
+          <Link href='/'><Logo /></Link>
           <div className='hidden md:flex w-full justify-between items-center text-font text-xs font-medium'>
             <div className='flex gap-8'>
               {menu.map((item, index) => (
