@@ -7,7 +7,7 @@ export default function Header() {
     const timer = (ms: number) => new Promise(res => setTimeout(res, ms))
 
     async function load() {
-        for (var i = 1; i <= 11; i++) {
+        for (let i = 1; i <= 11; i++) {
             setPeep(i)
             await timer(3000)
             if (i == 11) i = 0
