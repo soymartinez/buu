@@ -1,9 +1,11 @@
 import Link from 'next/link'
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 import Logo from './logo'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
+  const { asPath } = useRouter()
 
   const menu = [
     { name: 'Universidades', link: '/universidades' },
@@ -34,7 +36,7 @@ export default function Navbar() {
             <div className='flex gap-8'>
               {menu.map((item, index) => (
                 <Link key={index} href={item.link}>
-                  <a className='transition-colors hover:text-black'>
+                  <a className={`transition-colors hover:text-black ${item.link === asPath ? 'text-black' : null}`}>
                     {item.name}
                   </a>
                 </Link>
