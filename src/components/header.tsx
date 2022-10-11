@@ -6,16 +6,15 @@ export default function Header() {
 
     const timer = (ms: number) => new Promise(res => setTimeout(res, ms))
 
-    async function load() {
-        for (let i = 1; i <= 11; i++) {
-            setPeep(i)
-            await timer(3000)
-            if (i == 11) i = 0
-        }
+    async function loop(i: number = 1) {
+        if (i > 11) i = 1
+        setPeep(i)
+        await timer(2000)
+        loop(i + 1)
     }
 
     useEffect(() => {
-        load()
+        loop()
     }, [])
 
     return (
