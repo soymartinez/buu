@@ -6,7 +6,7 @@ export default function Header() {
 
     const timer = (ms: number) => new Promise(res => setTimeout(res, ms))
 
-    async function loop(i: number = 1) {
+    async function loop(i = 1) {
         if (i > 11) i = 1
         setPeep(i)
         await timer(2000)
