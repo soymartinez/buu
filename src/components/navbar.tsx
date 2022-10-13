@@ -24,7 +24,7 @@ export default function Navbar() {
   }
 
   return (
-    <nav className={`py-2 md:py-4 fixed inset-x-0 z-50 w-full transition-all ${isOpen ? 'text-white' : null}`}>
+    <nav className={`py-3 md:py-4 fixed inset-x-0 z-50 w-full transition-all ${isOpen ? 'text-white' : null}`}>
       <div className='flex flex-col max-w-[1280px] mx-auto px-4 md:px-8' onClick={() => isOpen ? setIsOpen(false) : null}>
         <div className='flex gap-10 text-xl justify-between md:justify-start items-center z-50 md:text-black font-bold h-8'>
           <Link href='/'>
