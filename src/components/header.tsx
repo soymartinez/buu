@@ -29,7 +29,7 @@ export default function Header() {
                     </div>
                     <button className='bg-primary text-white rounded-full px-4 py-2 md:px-8 lg:px-12 lg:py-4 text-xs font-semibold'>Buscar</button>
                 </div>
-                <div className='absolute -bottom-10 md:-bottom-12 -right-16 lg:right-[10%] xl:right-[16%] -scale-x-100 w-64 md:w-72 lg:w-80'>
+                <div className='absolute -bottom-10 md:-bottom-12 select-none -right-16 lg:right-[10%] xl:right-[16%] -scale-x-100 w-64 md:w-72 lg:w-80'>
                     <Image src={`/peep-${peep}.svg`} alt='OpenPeeps' width={400} height={400} />
                 </div>
             </div>
