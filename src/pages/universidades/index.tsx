@@ -1,4 +1,3 @@
-
 import List from 'components/list'
 import Layout from 'components/layout'
 
