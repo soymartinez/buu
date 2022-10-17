@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import Card, { CardProps } from './card'
 
 export default function List() {
@@ -26,7 +27,11 @@ export default function List() {
     return (
         <div className='flex flex-col gap-2'>
             {list.map((item, index) => (
-                <Card key={index} {...item} />
+                <Link href={`/universidades/${item.description?.toLocaleLowerCase()}`} key={index}>
+                    <a>
+                        <Card {...item} />
+                    </a>
+                </Link>
             ))}
         </div>
     )
