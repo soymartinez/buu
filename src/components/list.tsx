@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { trpc } from 'utils/trpc'
 import Card, { CardProps } from './card'
 
 export default function List() {
@@ -23,6 +24,9 @@ export default function List() {
             state: 'Nuevo León'
         },
     ]
+
+    const {data} = trpc.useQuery(['example.hello'])
+    console.log(data)
 
     return (
         <div className='flex flex-col gap-2'>
