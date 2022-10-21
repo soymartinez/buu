@@ -58,12 +58,44 @@ const examples = async (req: NextApiRequest, res: NextApiResponse) => {
               name: 'Facultad de Negocios y Tecnologías',
               subname: 'FNT',
               url: 'https://www.uv.mx/orizaba/negocios',
-              direction: 'Av. Universidad 1515, Col. Lomas de Angelópolis, C.P. 91090, Xalapa, Veracruz, México',
+              direction: 'KM 1.0 Carretera Sumidero Dos Ríos. Ixtaczoquitlán, Veracruz. C.P. 94452',
               location: 'Ixtaczoquitlán',
               carrers: [
                 {
                   id: 1,
                   name: 'Ingeniería de Software',
+                  semesters: 8,
+                  modality: ['Presencial'],
+                },
+              ]
+            },
+            {
+              id: 2,
+              name: 'Facultad de Ciencias Químicas',
+              subname: 'FCQ',
+              url: 'https://www.uv.mx/orizaba/cq',
+              direction: 'Carretera Federal 180, Km. 1.5, C.P. 94452, Ixtaczoquitlán, Veracruz',
+              location: 'Orizaba',
+              carrers: [
+                {
+                  id: 1,
+                  name: 'Ingeniería Química',
+                  semesters: 8,
+                  modality: ['Presencial'],
+                },
+              ]
+            },
+            {
+              id: 3,
+              name: 'Facultad de Enfermeria',
+              subname: 'FE',
+              url: 'https://www.uv.mx/orizaba/enfermeria',
+              direction: 'Colón Ote. 1300, Centro, 94300 Orizaba, Ver.',
+              location: 'Orizaba',
+              carrers: [
+                {
+                  id: 1,
+                  name: 'Enfermería',
                   semesters: 8,
                   modality: ['Presencial'],
                 },
@@ -75,6 +107,45 @@ const examples = async (req: NextApiRequest, res: NextApiResponse) => {
     },
     {
       id: 2,
+      name: 'Instituto Tecnológico de Orizaba',
+      subname: 'ITO',
+      url: 'http://www.orizaba.tecnm.mx',
+      logo: 'https://seeklogo.com/images/I/Instituto_Tecnologico_de_Orizaba-logo-B40898E1F3-seeklogo.com.png',
+      location: 'Orizaba',
+      country: 'Mexico',
+      region: [
+        {
+          id: 1,
+          name: 'Orizaba',
+          campus: [
+            {
+              id: 1,
+              name: 'Campus Orizaba',
+              subname: 'CO',
+              url: 'http://www.orizaba.tecnm.mx',
+              direction: 'Avenida Oriente 9 No. 852. Col. Emiliano Zapata. C.P. 94320, Orizaba, Veracruz',
+              location: 'Orizaba',
+              carrers: [
+                {
+                  id: 1,
+                  name: 'Ingeniería en Sistemas Computacionales',
+                  semesters: 8,
+                  modality: ['Presencial'],
+                },
+                {
+                  id: 2,
+                  name: 'Ingeniería en Gestión Empresarial',
+                  semesters: 8,
+                  modality: ['Presencial'],
+                },
+              ]
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 3,
       name: 'Universidad de Sotavento',
       subname: 'US',
       url: 'https://www.sotavento.mx',
