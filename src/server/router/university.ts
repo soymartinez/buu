@@ -1,5 +1,6 @@
 import { createRouter } from "./context";
 import { z } from "zod";
+import { getBaseUrl } from 'pages/_app'
 
 export const universityRouter = createRouter()
   .query("hello", {
@@ -16,7 +17,7 @@ export const universityRouter = createRouter()
   })
   .query("getAll", {
     async resolve({ ctx }) {
-      const res = await fetch('http://localhost:3000/api/examples')
+      const res = await fetch(`${getBaseUrl()}/api/examples`)
       const data = await res.json()
       return data;
       // return await ctx.prisma.example.findMany();
