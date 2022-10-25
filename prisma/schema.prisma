@@ -62,3 +62,52 @@ model VerificationToken {
 
     @@unique([identifier, token])
 }
+
+// Necessary for Universities
+enum Modality {
+    Presencial
+    Semipresencial
+    Virtual
+}
+
+model Carrer {
+    id        String   @id @default(cuid())
+    campusId  String
+    name      String
+    semesters Int
+    modality  Modality @default(Presencial)
+    campus    Campus[]
+}
+
+model Campus {
+    id        String   @id @default(cuid())
+    regionId  String
+    name      String
+    subname   String?
+    url       String
+    direction String
+    location  String
+    carrers   Carrer[]
+    Region    Region   @relation(fields: [regionId], references: [id])
+}
+
+model Region {
+    id           String     @id @default(cuid())
+    universityId String
+    name         String
+    campus       Campus[]
+    University   University @relation(fields: [universityId], references: [id])
+}
+
+model University {
+    id          String   @id @unique @default(cuid())
+    regionId    String
+    name        String
+    subname     String?
+    logo        String
+    url         String?
+    description String?
+    location    String
+    country     String
+    region      Region[]
+}
