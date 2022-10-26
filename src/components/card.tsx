@@ -4,8 +4,8 @@ import { University } from 'pages/api/examples'
 export default function Card(props: University) {
     return (
         <div
-            className='flex flex-col md:flex-row md:items-center justify-between gap-4 p-3 hover:text-white md:hover:text-black 
-            border md:border-none border-secondary hover:bg-primary md:hover:bg-hover transition-colors rounded-xl'>
+            className='flex flex-col md:flex-row md:items-center justify-between gap-4 p-3 
+            border md:border-none border-secondary hover:bg-hover transition-colors rounded-xl'>
             <div className='flex items-center gap-4'>
                 <div className='grid place-content-center w-10 h-10 relative'>
                     <Image src={props.logo || ''} alt={props.name} layout={'fill'} objectFit={'contain'} />
