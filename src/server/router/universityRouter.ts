@@ -1,18 +1,31 @@
 import { createRouter } from "./context";
 import { z } from "zod";
-import { getBaseUrl } from 'pages/_app'
 
 export const universityRouter = createRouter()
-  .query("getOne", {
+  .query("getOneBySubname", {
     input: z
       .object({
         text: z.string().nullish(),
       })
       .nullish(),
-    async resolve({ input }) {
-      const res = await fetch(`${getBaseUrl()}/api/universities/${input?.text}`)
-      const data = await res.json()
-      return data
+    async resolve({ input, ctx }) {
+      console.log('getOneBySubname', input)
+      return await ctx.prisma.university.findUnique({
+        where: {
+          subname: input?.text?.toUpperCase(),
+        },
+        include: {
+          regions: {
+            include: {
+              campus: {
+                include: {
+                  carrers: true,
+                }
+              }
+            }
+          }
+        }
+      })
     },
   })
   .query("getAll", {
