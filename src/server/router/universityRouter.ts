@@ -3,21 +3,21 @@ import { z } from "zod";
 import { getBaseUrl } from 'pages/_app'
 
 export const universityRouter = createRouter()
-  .query("hello", {
+  .query("getOne", {
     input: z
       .object({
         text: z.string().nullish(),
       })
       .nullish(),
-    resolve({ input }) {
-      return {
-        greeting: `Hello ${input?.text ?? "world"}`,
-      };
+    async resolve({ input }) {
+      const res = await fetch(`${getBaseUrl()}/api/universities/${input?.text}`)
+      const data = await res.json()
+      return data
     },
   })
   .query("getAll", {
     async resolve({ ctx }) {
-      const res = await fetch(`${getBaseUrl()}/api/examples`)
+      const res = await fetch(`${getBaseUrl()}/api/universities`)
       const data = await res.json()
       return data;
       // return await ctx.prisma.example.findMany();
