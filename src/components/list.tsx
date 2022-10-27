@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { University } from 'pages/api/examples'
+import { University } from 'pages/api/universidades'
 import { trpc } from 'utils/trpc'
 import Card from './card'
 

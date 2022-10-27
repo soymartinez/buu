@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { University } from 'pages/api/examples'
+import { University } from 'pages/api/universidades'
 
 export default function Card(props: University) {
     return (
