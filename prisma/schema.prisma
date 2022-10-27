@@ -71,17 +71,10 @@ enum Type {
     Privada
 }
 
-enum Level {
-    Bachillerato
-    Licenciatura
-    Maestria
-    Doctorado
-}
-
 model Carrer {
     id         Int      @id @default(autoincrement())
-    campusId   Int
-    name       String
+    campusId   Int      @unique
+    name       String   @unique
     semesters  Int
     curriculum String?
     modality   Modality @default(Presencial)
@@ -90,12 +83,12 @@ model Carrer {
 
 model Campus {
     id        Int      @id @default(autoincrement())
-    regionId  Int
+    regionId  Int      @unique
     name      String
     subname   String?
     url       String?
     direction String
-    contact   String
+    contact   String?
     location  String
     carrers   Carrer[]
     region    Region   @relation(fields: [regionId], references: [id], onDelete: Cascade)
@@ -103,7 +96,7 @@ model Campus {
 
 model Region {
     id           Int        @id @default(autoincrement())
-    universityId Int
+    universityId Int        @unique
     name         String
     campus       Campus[]
     university   University @relation(fields: [universityId], references: [id], onDelete: Cascade)
@@ -111,8 +104,8 @@ model Region {
 
 model University {
     id          Int      @id @unique @default(autoincrement())
-    name        String
-    subname     String?
+    name        String   @unique
+    subname     String?  @unique
     logo        String
     url         String?
     description String?
@@ -120,5 +113,5 @@ model University {
     ranking     Int?
     location    String
     country     String?
-    region      Region[]
+    regions     Region[]
 }
