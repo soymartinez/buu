@@ -2,7 +2,7 @@
 import { createRouter } from "./context";
 import superjson from "superjson";
 
-import { universityRouter } from "./university";
+import { universityRouter } from './universityRouter'
 import { protectedExampleRouter } from "./protected-example-router";
 
 export const appRouter = createRouter()
