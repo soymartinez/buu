@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { University } from 'pages/api/universidades'
+import { University } from '@prisma/client'
 
 export default function Card(props: University) {
     return (
