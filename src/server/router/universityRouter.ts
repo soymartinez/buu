@@ -17,9 +17,6 @@ export const universityRouter = createRouter()
   })
   .query("getAll", {
     async resolve({ ctx }) {
-      const res = await fetch(`${getBaseUrl()}/api/universities`)
-      const data = await res.json()
-      return data;
-      // return await ctx.prisma.example.findMany();
+      return await ctx.prisma.university.findMany()
     },
   });
