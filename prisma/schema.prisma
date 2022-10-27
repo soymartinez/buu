@@ -14,10 +14,6 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Example {
-    id String @id @default(cuid())
-}
-
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
@@ -66,48 +62,63 @@ model VerificationToken {
 // Necessary for Universities
 enum Modality {
     Presencial
-    Semipresencial
+    Hibrido
     Virtual
 }
 
+enum Type {
+    Publica
+    Privada
+}
+
+enum Level {
+    Bachillerato
+    Licenciatura
+    Maestria
+    Doctorado
+}
+
 model Carrer {
-    id        String   @id @default(cuid())
-    campusId  String
-    name      String
-    semesters Int
-    modality  Modality @default(Presencial)
-    campus    Campus[]
+    id         Int      @id @default(autoincrement())
+    campusId   Int
+    name       String
+    semesters  Int
+    curriculum String?
+    modality   Modality @default(Presencial)
+    campus     Campus   @relation(fields: [campusId], references: [id], onDelete: Cascade)
 }
 
 model Campus {
-    id        String   @id @default(cuid())
-    regionId  String
+    id        Int      @id @default(autoincrement())
+    regionId  Int
     name      String
     subname   String?
-    url       String
+    url       String?
     direction String
+    contact   String
     location  String
     carrers   Carrer[]
-    Region    Region   @relation(fields: [regionId], references: [id])
+    region    Region   @relation(fields: [regionId], references: [id], onDelete: Cascade)
 }
 
 model Region {
-    id           String     @id @default(cuid())
-    universityId String
+    id           Int        @id @default(autoincrement())
+    universityId Int
     name         String
     campus       Campus[]
-    University   University @relation(fields: [universityId], references: [id])
+    university   University @relation(fields: [universityId], references: [id], onDelete: Cascade)
 }
 
 model University {
-    id          String   @id @unique @default(cuid())
-    regionId    String
+    id          Int      @id @unique @default(autoincrement())
     name        String
     subname     String?
     logo        String
     url         String?
     description String?
+    type        Type     @default(Publica)
+    ranking     Int?
     location    String
-    country     String
+    country     String?
     region      Region[]
 }
