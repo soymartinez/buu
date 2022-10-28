@@ -21,7 +21,7 @@ export default function Universidad({ id }: { id: string }) {
                     <>
                         <h1 className='font-bold text-xl md:text-2xl mt-4'>{data.name}</h1>
                         <p className='text-sm md:text-base'>{data.subname}</p>
-                        <Image src={data.logo} width={200} height={200} objectFit={'contain'} />
+                        <Image src={data.logo} alt={data.name} width={200} height={200} objectFit={'contain'} />
                         <div>
                             <a href={data.url || ''} target={'_blank'} rel={'noreferrer'} className='text-sm md:text-base'>{data.url}</a>
                             <p className='text-sm md:text-base'>{data.description}</p>
@@ -34,7 +34,7 @@ export default function Universidad({ id }: { id: string }) {
                             <p className='text-sm md:text-base font-bold'>Regiones</p>
                             <ul>
                                 {data.regions.map((region) => (
-                                    <div>
+                                    <>
                                         <li key={region.id}>{region.name}</li>
                                         <ul>
                                             {region.campus.map((campus) => {
@@ -43,7 +43,7 @@ export default function Universidad({ id }: { id: string }) {
                                                 )
                                             })}
                                         </ul>
-                                    </div>
+                                    </>
                                 ))}
                             </ul>
                         </div>
