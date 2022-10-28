@@ -32,20 +32,18 @@ export default function Universidad({ id }: { id: string }) {
                         </div>
                         <div>
                             <p className='text-sm md:text-base font-bold'>Regiones</p>
-                            <ul>
-                                {data.regions.map((region) => (
-                                    <>
-                                        <li key={region.id}>{region.name}</li>
-                                        <ul>
-                                            {region.campus.map((campus) => {
-                                                return (
-                                                    <li className='list-disc list-inside' key={campus.id}>{campus.name}</li>
-                                                )
-                                            })}
-                                        </ul>
-                                    </>
-                                ))}
-                            </ul>
+                            {data.regions.map((region) => (
+                                <div key={region.id}>
+                                    {region.name}
+                                    <ul>
+                                        {region.campus.map((campus) => {
+                                            return (
+                                                <li className='list-disc list-inside' key={campus.id}>{campus.name}</li>
+                                            )
+                                        })}
+                                    </ul>
+                                </div>
+                            ))}
                         </div>
                     </>
                 )}
