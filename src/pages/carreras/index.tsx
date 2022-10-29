@@ -8,9 +8,9 @@ export default function Carreras() {
             <div className='flex flex-col gap-4 pt-[70px] md:pt-[80px] px-4 md:px-8 w-full max-w-[1280px] mx-auto'>
                 <h1 className='font-bold text-xl md:text-2xl mt-4'>Carreras</h1>
                 {data && data?.map((carrer) => (
-                    <div>
+                    <span key={carrer.id}>
                         {carrer.name}
-                    </div>
+                    </span>
                 ))}
             </div>
         </Layout>
