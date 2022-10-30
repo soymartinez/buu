@@ -8,6 +8,7 @@ import type { AppType } from "next/app";
 import type { AppRouter } from "../server/router";
 import type { Session } from "next-auth";
 import "../styles/globals.css";
+import 'react-loading-skeleton/dist/skeleton.css'
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
