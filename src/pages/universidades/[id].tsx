@@ -3,7 +3,6 @@ import Layout from 'components/layout'
 import { trpc } from 'utils/trpc'
 import Image from 'next/image'
 import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     return {
