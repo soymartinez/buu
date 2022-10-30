@@ -9,7 +9,6 @@ export const universityRouter = createRouter()
       })
       .nullish(),
     async resolve({ input, ctx }) {
-      console.log('getOneBySubname', input)
       return await ctx.prisma.university.findUnique({
         where: {
           subname: input?.text?.toUpperCase(),
