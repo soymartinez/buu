@@ -72,13 +72,15 @@ enum Type {
 }
 
 model Carrer {
-    id         Int      @id @default(autoincrement())
-    campusId   Int      @unique
-    name       String   @unique
-    semesters  Int
-    curriculum String?
-    modality   Modality @default(Presencial)
-    campus     Campus   @relation(fields: [campusId], references: [id], onDelete: Cascade)
+    id           Int        @id @default(autoincrement())
+    campusId     Int        @unique
+    universityId Int        @unique
+    name         String     @unique
+    semesters    Int
+    curriculum   String?
+    modality     Modality   @default(Presencial)
+    campus       Campus     @relation(fields: [campusId], references: [id], onDelete: Cascade)
+    university   University @relation(fields: [universityId], references: [id])
 }
 
 model Campus {
@@ -113,4 +115,5 @@ model University {
     location    String
     country     String?
     regions     Region[]
+    Carrer      Carrer[]
 }
