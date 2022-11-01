@@ -11,7 +11,7 @@ export default function Carreras() {
                 <h1 className='font-bold text-xl md:text-2xl mt-4'>Carreras</h1>
                 <div className='flex flex-col gap-2'>
                     {data ? data?.map((carrer) => (
-                        <div className='flex md:flex-row md:items-center justify-between gap-4 p-3 
+                        <div key={carrer.id} className='flex md:flex-row md:items-center justify-between gap-4 p-3 
                             border md:border-none border-secondary hover:bg-hover transition-colors rounded-xl'>
                             <div>
                                 <h2 className='text-base md:text-sm font-semibold md:font-bold'>{carrer.name}</h2>
