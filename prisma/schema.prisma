@@ -95,11 +95,10 @@ model Campus {
 }
 
 model Region {
-    id           Int        @id @default(autoincrement())
-    universityId Int        @unique
-    name         String
-    campus       Campus[]
-    university   University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+    id         Int          @id @default(autoincrement())
+    name       String
+    campus     Campus[]
+    university University[]
 }
 
 model University {
