@@ -111,9 +111,9 @@ model University {
     url         String?
     description String?
     type        Type     @default(Publica)
-    ranking     Int?
+    ranking     Int?     @unique
     location    String
-    country     String?
+    country     String?  @default("México")
     regions     Region[]
     Carrer      Carrer[]
 }
