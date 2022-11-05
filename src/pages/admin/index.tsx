@@ -77,7 +77,7 @@ export default function Admin() {
                             <input type={'text'} required name={'location'} className='border border-gray-300 rounded-md px-2 py-1' />
 
                             <span className='text-sm font-bold'>Ranking <span className='text-xs text-font'>(opcional)</span></span>
-                            <input type={'number'} name={'ranking'} defaultValue={1} min={1} max={100} className='border border-gray-300 rounded-md px-2 py-1' />
+                            <input type={'number'} name={'ranking'} defaultValue={0} min={0} max={100} className='border border-gray-300 rounded-md px-2 py-1' />
 
                             <span className='text-sm font-bold'>Tipo</span>
                             <select required name={'type'} className='border border-gray-300 rounded-md px-2 py-1'>
