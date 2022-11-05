@@ -29,7 +29,7 @@ export default function Navbar() {
         <div className='flex gap-10 text-xl justify-between md:justify-start items-center z-50 md:text-black font-bold h-8'>
           <Link href='/'>
             <a>
-              <Logo />
+              <Logo className={'w-12 md:w-16'} fill={'#2524D1'} />
             </a>
           </Link>
           <div className='hidden md:flex w-full justify-between items-center text-font text-xs font-medium'>
