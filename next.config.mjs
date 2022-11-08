@@ -21,6 +21,11 @@ export default defineNextConfig({
     defaultLocale: "en",
   },
   images: {
-    domains: ['colaboracion.uv.mx', 'www.sotavento.mx', 'seeklogo.com'],
+    domains: [
+      'colaboracion.uv.mx',
+      'www.sotavento.mx',
+      'seeklogo.com',
+      'lh3.googleusercontent.com',
+    ],
   }
 });
