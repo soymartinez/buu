@@ -10,6 +10,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [name, setName] = useState([''])
   const [mounted, setMounted] = useState(false)
+  const [scroll, setScroll] = useState(false)
   const { data, status } = useSession()
 
   const { asPath } = useRouter()
@@ -31,11 +32,16 @@ export default function Navbar() {
   }
 
   useEffect(() => {
+    window.addEventListener('scroll', () => {
+      setScroll(window.scrollY > 0)
+    })
+
     if (data?.user?.name) setName(data?.user?.name.split(' '))
   }, [data])
 
   return (
-    <nav className={`py-3 md:py-4 fixed inset-x-0 z-50 w-full transition-all ${isOpen ? 'text-white' : null}`}>
+    <nav className={`py-3 md:py-4 fixed inset-x-0 z-50 w-full transition-all duration-300
+    ${scroll ? `border-b border-secondary bg-white/95 backdrop-blur-sm` : `bg-trasparent border-trasparent`} ${isOpen ? 'text-white' : null}`}>
       <div className='flex flex-col max-w-[1280px] mx-auto px-4 md:px-8' onClick={() => isOpen ? setIsOpen(false) : null}>
         <div className='flex gap-10 text-xl justify-between md:justify-start items-center z-50 md:text-black font-bold h-8'>
           <Link href='/'>
