@@ -67,7 +67,7 @@ export default function Navbar() {
                   {data?.user?.name ? (
                     <div onMouseEnter={() => setMounted(true)} onMouseLeave={() => setMounted(false)} className='flex items-center gap-2 relative cursor-pointer'>
                       <h1 className='text-black font-bold'>{name[0]} {name[1] && name[1]?.charAt(0) + '.'}</h1>
-                      <Image src={data?.user?.image!} alt={data?.user?.name!} width={35} height={35} className='rounded-full' />
+                      <Image src={data.user.image!} alt={data.user.name} width={35} height={35} className='rounded-full' />
 
                       <div onMouseEnter={() => setMounted(true)}
                         className={`absolute top-5 pt-5 right-0 transition-all duration-300 ${mounted ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
