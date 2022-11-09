@@ -4,11 +4,15 @@ import { FormEvent, useState } from 'react'
 import { trpc } from 'utils/trpc'
 
 export default function Admin() {
+    const { data: universities } = trpc.useQuery(['university.getAll'])
     const { data: regions } = trpc.useQuery(['region.getAll'])
+    const { data: campus } = trpc.useQuery(['campus.getAll'])
+    const { data: carrers } = trpc.useQuery(['carrer.getAll'])
+
     const { mutate: universityCreate } = trpc.useMutation(['university.create'])
     const { mutate: regionCreate } = trpc.useMutation(['region.create'])
 
-    const [status, setStatus] = useState('universidad')
+    const [status, setStatus] = useState('universidades')
 
     const handleSaveUniversity = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -45,73 +49,41 @@ export default function Admin() {
         setStatus('carrera')
     }
 
+    const menu = [
+        { name: 'universidades', count: universities?.length },
+        { name: 'regiones', count: regions?.length },
+        { name: 'campus', count: campus?.length },
+        { name: 'carreras', count: carrers?.length },
+    ]
+
     return (
         <Layout title={'Buu – Administrador'}>
             <div className='flex flex-col gap-4 pt-[70px] md:pt-[80px] px-4 md:px-8 w-full max-w-[1280px] mx-auto'>
                 <h1 className='font-bold text-xl md:text-2xl mt-4'>Administrador</h1>
-                <div className='flex flex-col gap-4'>
-                    <h2 className='font-bold text-lg md:text-xl text-end'>Nueva {status}</h2>
-                    {status === 'universidad' && (
-                        <form onSubmit={(e) => handleSaveUniversity(e)} className='flex flex-col gap-1'>
-                            <div className='grid md:grid-cols-2 gap-2'>
-                                <div className='flex flex-col gap-1'>
-                                    <span className='text-sm font-bold'>Nombre</span>
-                                    <input type={'text'} required name={'name'} className='border border-gray-300 rounded-md px-2 py-1' />
+                <section className='grid gap-2'>
+                    <div className='flex items-center gap-1 sm:gap-6 bg-[#ececec] rounded-xl px-2 overflow-x-auto'>
+                        {menu.map(({ name, count }) => (
+                            <>
+                                <div key={name} className={`flex md:flex-row items-center justify-between font-bold gap-2 py-2 px-1 md:px-3 transition-colors cursor-pointer 
+                                    ${status === name ? 'text-primary hover:text-primary/70' : 'text-font hover:text-font/70'}`} onClick={() => setStatus(name)}>
+                                    <h2 className='text-xs capitalize'>{name}</h2>
+                                    <div className={`grid place-content-center rounded-full w-6 h-6 ${status === name ? 'bg-primary/20' : 'bg-[#d9d9d9]'}`}>
+                                        <h1 className='text-[13px]'>{count}</h1>
+                                    </div>
                                 </div>
-                                <div className='flex flex-col gap-1'>
-                                    <span className='text-sm font-bold'>Subnombre <span className='text-xs text-font'>(opcional)</span></span>
-                                    <input type={'text'} name={'subname'} className='border border-gray-300 rounded-md px-2 py-1' />
-                                </div>
-                            </div>
-
-                            <span className='text-sm font-bold'>Logo</span>
-                            <input type={'text'} required name={'logo'} className='border border-gray-300 rounded-md px-2 py-1' />
-
-                            <span className='text-sm font-bold'>URL <span className='text-xs text-font'>(opcional)</span></span>
-                            <input type={'url'} name={'url'} className='border border-gray-300 rounded-md px-2 py-1' />
-
-                            <span className='text-sm font-bold'>Descripción <span className='text-xs text-font'>(opcional)</span></span>
-                            <textarea rows={3} name={'description'} className='border border-gray-300 rounded-md px-2 py-1' />
-
-                            <span className='text-sm font-bold'>Localidad</span>
-                            <input type={'text'} required name={'location'} className='border border-gray-300 rounded-md px-2 py-1' />
-
-                            <span className='text-sm font-bold'>Ranking <span className='text-xs text-font'>(opcional)</span></span>
-                            <input type={'number'} name={'ranking'} defaultValue={0} min={0} max={100} className='border border-gray-300 rounded-md px-2 py-1' />
-
-                            <span className='text-sm font-bold'>Tipo</span>
-                            <select required name={'type'} className='border border-gray-300 rounded-md px-2 py-1'>
-                                <option value={Type.Publica}>Pública</option>
-                                <option value={Type.Privada}>Privada</option>
-                            </select>
-
-                            <button className='bg-primary text-white font-bold rounded-full w-min px-4 mt-2' type={'submit'}>Guardar</button>
-                        </form>
-                    )}
-                    {status === 'region' && (
-                        <>
-                            <form onSubmit={(e) => handleSaveRegion(e)} className='flex flex-col gap-1'>
-                                <span className='text-sm font-bold'>Nombre</span>
-                                <input type={'text'} required name={'name'} className='border border-gray-300 rounded-md px-2 py-1' />
-
-                                <div className='flex gap-2 mt-2'>
-                                    <button className='bg-primary text-white font-bold rounded-full w-min px-4' onClick={() => setStatus('universidad')} type={'button'}>Regresar</button>
-                                    <button className='bg-primary text-white font-bold rounded-full w-min px-4' type={'submit'}>Guardar</button>
-                                </div>
-                            </form>
-                            <div>
-                                <h3 className='font-bold text-lg md:text-xl text-end'>Regiones</h3>
-                                <div className='flex flex-col gap-2'>
-                                    {regions?.map((region) => (
-                                        <div key={region.id} className='flex flex-col gap-1'>
-                                            <span className='text-sm font-bold'>{region.name}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </>
-                    )}
-                </div>
+                                <span className='w-[2px] h-5 bg-[#d9d9d9] last:hidden' />
+                            </>
+                        ))}
+                    </div>
+                    <div onClick={() => setStatus(status.length > 0 ? '' : 'universidades')}
+                        className={`flex gap-3 px-3 md:px-5 py-2 font-semibold text-font hover:opacity-70 cursor-pointer`}>
+                        <div className='flex justify-center items-center relative'>
+                            <div className='w-[12px] h-[2px] rounded-full bg-font' />
+                            <div className='absolute w-[12px] h-[2px] rounded-full bg-font rotate-90' />
+                        </div>
+                        <h2 className='text-xs select-none'>Agregar <span className='lowercase'>universidad</span></h2>
+                    </div>
+                </section>
             </div>
         </Layout>
     )
