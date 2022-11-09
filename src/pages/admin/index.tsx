@@ -1,6 +1,9 @@
 import { Type } from '@prisma/client'
 import Layout from 'components/layout'
+import List from 'components/list'
+import Image from 'next/image'
 import { FormEvent, useState } from 'react'
+import Skeleton from 'react-loading-skeleton'
 import { trpc } from 'utils/trpc'
 
 export default function Admin() {
@@ -13,6 +16,7 @@ export default function Admin() {
     const { mutate: regionCreate } = trpc.useMutation(['region.create'])
 
     const [status, setStatus] = useState('universidades')
+    const [addUniversity, setAddUniversity] = useState(false)
 
     const handleSaveUniversity = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -63,25 +67,27 @@ export default function Admin() {
                 <section className='grid gap-2'>
                     <div className='flex items-center gap-1 sm:gap-6 bg-[#ececec] rounded-xl px-2 overflow-x-auto'>
                         {menu.map(({ name, count }) => (
-                            <>
-                                <div key={name} className={`flex md:flex-row items-center justify-between font-bold gap-2 py-2 px-1 md:px-3 transition-colors cursor-pointer 
-                                    ${status === name ? 'text-primary hover:text-primary/70' : 'text-font hover:text-font/70'}`} onClick={() => setStatus(name)}>
+                            <div key={name} >
+                                <div className={`flex md:flex-row items-center justify-between font-bold gap-2 py-2 px-1 md:px-3 transition-colors cursor-pointer 
+                                    ${status === name ? 'text-primary' : 'text-font hover:text-font/70'}`} onClick={() => setStatus(name)}>
                                     <h2 className='text-xs capitalize'>{name}</h2>
-                                    <div className={`grid place-content-center rounded-full w-6 h-6 ${status === name ? 'bg-primary/20' : 'bg-[#d9d9d9]'}`}>
-                                        <h1 className='text-[13px]'>{count}</h1>
-                                    </div>
+                                    {count ?
+                                        <div className={`grid place-content-center rounded-full w-6 h-6 ${status === name ? 'bg-primary/20' : 'bg-[#d9d9d9]'}`}>
+                                            <h1 className='text-[13px]'>{count}</h1>
+                                        </div>
+                                        : <Skeleton circle={true} baseColor={'#d9d9d9'} width={30} containerClassName={'skeleton-container'} inline={true} height={30} />}
                                 </div>
                                 <span className='w-[2px] h-5 bg-[#d9d9d9] last:hidden' />
-                            </>
+                            </div>
                         ))}
                     </div>
-                    <div onClick={() => setStatus(status.length > 0 ? '' : 'universidades')}
-                        className={`flex gap-3 px-3 md:px-5 py-2 font-semibold text-font hover:opacity-70 cursor-pointer`}>
+                    <div onClick={() => setAddUniversity(!addUniversity)}
+                        className={`flex gap-3 px-3 md:px-5 py-2 w-min font-semibold text-font hover:opacity-70 cursor-pointer ml-auto`}>
                         <div className='flex justify-center items-center relative'>
                             <div className='w-[12px] h-[2px] rounded-full bg-font' />
                             <div className='absolute w-[12px] h-[2px] rounded-full bg-font rotate-90' />
                         </div>
-                        <h2 className='text-xs select-none'>Agregar <span className='lowercase'>universidad</span></h2>
+                        <h2 className='text-xs select-none whitespace-nowrap'>Agregar <span className='lowercase'>universidad</span></h2>
                     </div>
                 </section>
             </div>
