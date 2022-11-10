@@ -153,6 +153,66 @@ export default function Admin() {
                         </form>
                     </div>
                 )}
+
+                {status === 'universidad' && (
+                    <section className='rounded-xl overflow-x-auto'>
+                        <table className='table-auto text-font text-xs w-full'>
+                            <thead className='bg-primary text-white'>
+                                <tr className='text-left'>
+                                    <th className='py-3 px-4'>Id</th>
+                                    <th className='py-3 px-4'>Nombre</th>
+                                    <th className='py-3 px-4'>Localidad</th>
+                                    <th className='py-3 px-4'>Ranking</th>
+                                    <th className='py-3 px-4'>Tipo</th>
+                                    <th className='py-3 px-4'>URL</th>
+                                    <th className='py-3 px-4'>Descripción</th>
+                                    <th className='py-3 px-4'>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {universities && universities.map(({ id, name, subname, logo, url, description, location, ranking, type }, index) => (
+                                    <tr key={id} className='hover:bg-hover font-semibold'>
+                                        <td className='py-3 px-4'>
+                                            <h3 className='text-xs'>{index + 1}</h3>
+                                        </td>
+                                        <td className='py-3 px-4'>
+                                            <div className='flex gap-4'>
+                                                <div className='grid place-content-center w-8 h-8 relative'>
+                                                    <Image src={logo} alt={name} layout={'fill'} objectFit={'contain'} />
+                                                </div>
+                                                <div className='flex flex-col justify-center gap-0'>
+                                                    <h2 className='text-black text-xs font-bold leading-none whitespace-nowrap'>{name}</h2>
+                                                    <h3 className='text-[14px] text-font font-medium'>{subname}</h3>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className='py-3 px-4'>
+                                            <h3 className='text-xs'>{location}</h3>
+                                        </td>
+                                        <td className='py-3 px-4'>
+                                            <h3 className='text-xs'>{ranking}</h3>
+                                        </td>
+                                        <td className='py-3 px-4'>
+                                            <h3 className='text-xs'>{type}</h3>
+                                        </td>
+                                        <td className='py-3 px-4'>
+                                            <h3 className='text-xs'>{url}</h3>
+                                        </td>
+                                        <td className='py-3 px-4'>
+                                            <h3 className='text-xs'>{description}</h3>
+                                        </td>
+                                        <td className='py-3 px-4'>
+                                            <div className='flex gap-6'>
+                                                <button className='font-bold w-min text-primary hover:opacity-80' type={'button'}>Editar</button>
+                                                <button className='font-bold w-min text-[#ff0000] hover:opacity-80' type={'button'}>Eliminar</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </section>
+                )}
             </div>
         </Layout>
     )
