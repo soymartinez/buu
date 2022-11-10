@@ -109,6 +109,50 @@ export default function Admin() {
                         </div>
                     </div>
                 </section>
+
+                {modal && status === 'universidad' && (
+                    <div className='absolute inset-0 bg-white/90 z-50 flex justify-center gap-4 py-[70px] md:py-[80px] px-4 md:px-8 w-full max-w-[1280px] mx-auto'>
+                        <form onSubmit={(e) => handleSaveUniversity(e)} className='flex flex-col gap-1 w-full h-min md:w-auto bg-white p-4 border rounded-xl'>
+                            <h1 className='font-bold text-xl text-primary md:text-2xl'>Agregar universidad</h1>
+                            <div className='grid md:grid-cols-2 gap-2'>
+                                <div className='flex flex-col gap-1'>
+                                    <span className='text-sm font-bold'>Nombre</span>
+                                    <input type={'text'} required name={'name'} className='border border-gray-300 rounded-md px-2 py-1' />
+                                </div>
+                                <div className='flex flex-col gap-1'>
+                                    <span className='text-sm font-bold'>Subnombre <span className='text-xs text-font'>(opcional)</span></span>
+                                    <input type={'text'} name={'subname'} className='border border-gray-300 rounded-md px-2 py-1' />
+                                </div>
+                            </div>
+
+                            <span className='text-sm font-bold'>Logo</span>
+                            <input type={'text'} required name={'logo'} className='border border-gray-300 rounded-md px-2 py-1' />
+
+                            <span className='text-sm font-bold'>URL <span className='text-xs text-font'>(opcional)</span></span>
+                            <input type={'url'} name={'url'} className='border border-gray-300 rounded-md px-2 py-1' />
+
+                            <span className='text-sm font-bold'>Descripción <span className='text-xs text-font'>(opcional)</span></span>
+                            <textarea rows={3} name={'description'} className='border border-gray-300 rounded-md px-2 py-1' />
+
+                            <span className='text-sm font-bold'>Localidad</span>
+                            <input type={'text'} required name={'location'} className='border border-gray-300 rounded-md px-2 py-1' />
+
+                            <span className='text-sm font-bold'>Ranking <span className='text-xs text-font'>(opcional)</span></span>
+                            <input type={'number'} name={'ranking'} defaultValue={0} min={0} max={100} className='border border-gray-300 rounded-md px-2 py-1' />
+
+                            <span className='text-sm font-bold'>Tipo</span>
+                            <select required name={'type'} className='border border-gray-300 rounded-md px-2 py-1'>
+                                <option value={Type.Publica}>Pública</option>
+                                <option value={Type.Privada}>Privada</option>
+                            </select>
+
+                            <div className='flex gap-2'>
+                                <button className='bg-primary hover:opacity-90 text-white font-bold rounded-full w-min px-4 mt-2' type={'submit'}>Guardar</button>
+                                <button className='bg-white hover:opacity-80 text-back border font-bold rounded-full w-min px-4 mt-2' onClick={() => setModal(false)} >Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+                )}
             </div>
         </Layout>
     )
