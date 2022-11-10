@@ -292,8 +292,8 @@ export default function Admin() {
                                         </td>
                                         <td className='py-3 px-4'>
                                             <select className='bg-trasparent'>
-                                                {carrers.map(({ name }) => (
-                                                    <option className='text-xs whitespace-nowrap'>{name}</option>
+                                                {carrers.map(({ id, name }) => (
+                                                    <option key={id} className='text-xs whitespace-nowrap'>{name}</option>
                                                 ))}
                                             </select>
                                         </td>
