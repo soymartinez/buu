@@ -309,6 +309,61 @@ export default function Admin() {
                         </table>
                     </section>
                 )}
+
+                {status === 'carrera' && (
+                    <section className='rounded-xl overflow-x-auto'>
+                        <table className='table-auto text-font text-xs w-full'>
+                            <thead className='bg-primary text-white'>
+                                <tr className='text-left'>
+                                    <th className='py-3 px-4'>Id</th>
+                                    <th className='py-3 px-4'>Nombre</th>
+                                    <th className='py-3 px-4'>Modalidad</th>
+                                    <th className='py-3 px-4'>Semestres</th>
+                                    <th className='py-3 px-4 whitespace-nowrap'>Plan de estudios</th>
+                                    <th className='py-3 px-4'>Campus</th>
+                                    <th className='py-3 px-4'>Universidad</th>
+                                    <th className='py-3 px-4'>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {carrers && carrers.map(({ id, name, modality, semesters, curriculum, campus, university }, index) => (
+                                    <tr key={id} className='hover:bg-hover font-semibold'>
+                                        <td className='py-3 px-4'>
+                                            <h3 className='text-xs'>{index + 1}</h3>
+                                        </td>
+                                        <td className='py-3 px-4'>
+                                            <h2 className='text-black text-xs font-bold leading-none whitespace-nowrap'>{name}</h2>
+                                        </td>
+                                        <td className='py-3 px-4'>
+                                            <h3 className='text-xs'>{modality}</h3>
+                                        </td>
+                                        <td className='py-3 px-4'>
+                                            <h3 className='text-xs'>{semesters}</h3>
+                                        </td>
+                                        <td className='py-3 px-4'>
+                                            <h3 className='text-xs'>{curriculum}</h3>
+                                        </td>
+                                        <td className='py-3 px-4'>
+                                            <h3 className='text-xs whitespace-nowrap'>{campus.name}</h3>
+                                        </td>
+                                        <td className='flex items-center gap-2 py-3 px-4'>
+                                            <div className='grid place-content-center w-6 h-6 relative'>
+                                                <Image src={university.logo} alt={university.name} layout={'fill'} objectFit={'contain'} />
+                                            </div>
+                                            <h2 className='text-xs font-bold leading-none whitespace-nowrap'>{name}</h2>
+                                        </td>
+                                        <td className='py-3 px-4'>
+                                            <div className='flex gap-6'>
+                                                <button className='font-bold w-min text-primary hover:opacity-80' type={'button'}>Editar</button>
+                                                <button className='font-bold w-min text-[#ff0000] hover:opacity-80' type={'button'}>Eliminar</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </section>
+                )}
             </div>
         </Layout>
     )
