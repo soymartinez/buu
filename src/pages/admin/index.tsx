@@ -245,6 +245,70 @@ export default function Admin() {
                         </table>
                     </section>
                 )}
+
+                {status === 'campus' && (
+                    <section className='rounded-xl overflow-x-auto'>
+                        <table className='table-auto text-font text-xs w-full'>
+                            <thead className='bg-primary text-white'>
+                                <tr className='text-left'>
+                                    <th className='py-3 px-4'>Id</th>
+                                    <th className='py-3 px-4'>Nombre</th>
+                                    <th className='py-3 px-4'>Subnombre</th>
+                                    <th className='py-3 px-4'>URL</th>
+                                    <th className='py-3 px-4'>Dirección</th>
+                                    <th className='py-3 px-4'>Contacto</th>
+                                    <th className='py-3 px-4'>Locación</th>
+                                    <th className='py-3 px-4'>Región</th>
+                                    <th className='py-3 px-4'>Carreras</th>
+                                    <th className='py-3 px-4'>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {campus && campus.map(({ id, name, subname, url, direction, contact, location, region, carrers }, index) => (
+                                    <tr key={id} className='hover:bg-hover font-semibold'>
+                                        <td className='py-3 px-4'>
+                                            <h3 className='text-xs'>{index + 1}</h3>
+                                        </td>
+                                        <td className='py-3 px-4'>
+                                            <h2 className='text-black text-xs font-bold leading-none whitespace-nowrap'>{name}</h2>
+                                        </td>
+                                        <td className='py-3 px-4'>
+                                            <h3 className='text-xs'>{subname}</h3>
+                                        </td>
+                                        <td className='py-3 px-4'>
+                                            <h3 className='text-xs'>{url}</h3>
+                                        </td>
+                                        <td className='py-3 px-4'>
+                                            <h3 className='text-xs w-56'>{direction}</h3>
+                                        </td>
+                                        <td className='py-3 px-4'>
+                                            <h3 className='text-xs'>{contact}</h3>
+                                        </td>
+                                        <td className='py-3 px-4'>
+                                            <h3 className='text-xs'>{location}</h3>
+                                        </td>
+                                        <td className='py-3 px-4'>
+                                            <h3 className='text-xs'>{region.name}</h3>
+                                        </td>
+                                        <td className='py-3 px-4'>
+                                            <select className='bg-trasparent'>
+                                                {carrers.map(({ name }) => (
+                                                    <option className='text-xs whitespace-nowrap'>{name}</option>
+                                                ))}
+                                            </select>
+                                        </td>
+                                        <td className='py-3 px-4'>
+                                            <div className='flex gap-6'>
+                                                <button className='font-bold w-min text-primary hover:opacity-80' type={'button'}>Editar</button>
+                                                <button className='font-bold w-min text-[#ff0000] hover:opacity-80' type={'button'}>Eliminar</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </section>
+                )}
             </div>
         </Layout>
     )
