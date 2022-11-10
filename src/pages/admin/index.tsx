@@ -213,6 +213,38 @@ export default function Admin() {
                         </table>
                     </section>
                 )}
+
+                {status === 'región' && (
+                    <section className='rounded-xl overflow-x-auto'>
+                        <table className='table-auto text-font text-xs w-full'>
+                            <thead className='bg-primary text-white'>
+                                <tr className='text-left'>
+                                    <th className='py-3 px-4'>Id</th>
+                                    <th className='py-3 px-4'>Nombre</th>
+                                    <th className='py-3 px-4'>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {regions && regions.map(({ id, name }, index) => (
+                                    <tr key={id} className='hover:bg-hover font-semibold'>
+                                        <td className='py-3 px-4'>
+                                            <h3 className='text-xs'>{index + 1}</h3>
+                                        </td>
+                                        <td className='py-3 px-4 w-full'>
+                                            <h2 className='text-black text-xs font-bold leading-none whitespace-nowrap'>{name}</h2>
+                                        </td>
+                                        <td className='py-3 px-4'>
+                                            <div className='flex gap-6'>
+                                                <button className='font-bold w-min text-primary hover:opacity-80' type={'button'}>Editar</button>
+                                                <button className='font-bold w-min text-[#ff0000] hover:opacity-80' type={'button'}>Eliminar</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </section>
+                )}
             </div>
         </Layout>
     )
