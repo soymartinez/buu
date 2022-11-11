@@ -1,6 +1,7 @@
 import Logo from 'components/logo'
 import { signIn } from 'next-auth/react'
 import Head from 'next/head'
+import Link from 'next/link'
 
 export default function Signin() {
     return (
@@ -10,7 +11,11 @@ export default function Signin() {
             </Head>
             <div className='flex flex-col gap-2 justify-start h-4/6 items-center place-self-center lg:justify-self-end lg:mx-16 xl:mx-24 w-full px-4 sm:p-0 sm:w-[380px]'>
                 <div className='flex flex-col justify-center items-center -space-y-2'>
-                    <Logo className='w-20' fill={'#2524D1'} />
+                    <Link href={'/'}>
+                        <a>
+                            <Logo className='w-20' fill={'#2524D1'} />
+                        </a>
+                    </Link>
                     <h1 className='font-bold text-xl'>Bienvenido</h1>
                 </div>
                 <p className='text-font text-xs mb-6'>Por favor, introduzca sus datos.</p>
