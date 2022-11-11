@@ -18,7 +18,7 @@ export default function Header() {
     }, [])
 
     return (
-        <header className='bg-secondary w-screen h-64 overflow-hidden'>
+        <header className='bg-secondary h-64 overflow-hidden w-full'>
             <div className='flex flex-col relative gap-4 justify-center items-start pt-[60px] px-4 md:px-8 h-full max-w-[1280px] mx-auto'>
                 <h1 className='font-bold text-xl md:text-2xl z-20 mix-blend-difference text-white mr-24'>Encuentra La Mejor Universidad Para Ti</h1>
                 <div className='flex justify-between z-20 gap-2 md:pl-6 pl-4 pr-2 py-2 bg-gradient-to-r from-white to-[#ffffffcc] backdrop-blur-sm rounded-full text-sm w-full'>
