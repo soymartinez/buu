@@ -6,6 +6,7 @@ import GithubProvider from 'next-auth/providers/github'
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "../../../server/db/client";
 import { env } from "../../../env/server.mjs";
+import { Role } from "@prisma/client";
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
@@ -13,7 +14,7 @@ export const authOptions: NextAuthOptions = {
     session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
-        session.user.role = user.role;
+        session.user.role = user.role as Role;
       }
       return session;
     },
