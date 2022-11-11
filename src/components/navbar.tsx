@@ -88,15 +88,41 @@ export default function Navbar() {
           </div>
           {renderHamburger()}
         </div>
-        <div className={`absolute z-40 inset-0 transition-transform py-6 px-1 duration-200 h-screen bg-black/95 ${isOpen ? null : 'translate-x-full'} pt-16 md:hidden`}>
-          <div className='flex flex-col gap-1 font-semibold text-sm'>
-            {menu.map((item, index) => (
-              <Link key={index} href={item.link}>
-                <a className='transition-colors cursor-pointer px-3 py-1 rounded-md hover:bg-black/80 text-white'>
-                  {item.name}
-                </a>
-              </Link>
-            ))}
+        <div className={`absolute overflow-x-hidden z-40 inset-0 transition-transform py-16 px-1 md:hidden duration-200 h-screen bg-black/95 ${isOpen ? null : 'translate-x-full'}`}>
+          <div className='flex flex-col justify-between h-full w-full font-semibold text-sm'>
+            <div className='flex flex-col gap-1'>
+              {menu.map((item, index) => (
+                <Link key={index} href={item.link}>
+                  <a className={`transition-colors cursor-pointer px-3 py-1 rounded-md hover:bg-black/80 text-font ${item.link === asPath && 'text-white'}
+                    ${item.role === 'admin' && data?.user?.role !== 'ADMIN' ? 'hidden' : ''}`}>
+                    {item.name}
+                  </a>
+                </Link>
+              ))}
+            </div>
+            <div className='px-3 py-1 flex justify-end'>
+              {status === 'loading' ? <Skeleton width={125} height={41} inline={true} containerClassName={'skeleton-container'} borderRadius={20} />
+                : (
+                  <>
+                    {data?.user ?
+                      <div className='flex items-center justify-between w-full'>
+                        <span onClick={() => signOut()} className='block whitespace-nowrap hover:text-font text-white cursor-pointer transition-colors font-medium'>Cerrar sesión</span>
+                        <div onMouseEnter={() => setMounted(true)} onMouseLeave={() => setMounted(false)} className='flex items-center gap-2 relative cursor-pointer'>
+                          <h1 className='text-white font-bold'>{name[0]} {name[1] && name[1]?.charAt(0) + '.'}</h1>
+                          <Image src={data.user.image!} alt={data.user.name!} width={35} height={35} className='rounded-full' />
+                        </div>
+                      </div>
+                      :
+                      <div className='w-min whitespace-nowrap transition-colors text-white hover:text-opacity-80'>
+                        <Link href={'/login'}>
+                          <a>
+                            Iniciar sesión
+                          </a>
+                        </Link>
+                      </div>}
+                  </>
+                )}
+            </div>
           </div>
         </div>
       </div>
