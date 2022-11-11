@@ -1,10 +1,31 @@
 import { Type } from '@prisma/client'
 import Layout from 'components/layout'
-import List from 'components/list'
+import { NextApiRequest, NextApiResponse } from 'next'
 import Image from 'next/image'
 import { FormEvent, useState } from 'react'
 import Skeleton from 'react-loading-skeleton'
+import { getServerAuthSession } from 'server/common/get-server-auth-session'
 import { trpc } from 'utils/trpc'
+
+export async function getServerSideProps({ req, res }: { req: NextApiRequest; res: NextApiResponse }) {
+    const session = await getServerAuthSession({ req, res })
+    if (!session) {
+        return {
+            redirect: {
+                destination: '/login',
+                permanent: false,
+            },
+        }
+    } else if (session.user?.role !== 'ADMIN') {
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false,
+            },
+        }
+    }
+    return { props: { session } }
+}
 
 export default function Admin() {
     const { data: universities } = trpc.useQuery(['university.getAll'])
