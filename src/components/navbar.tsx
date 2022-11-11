@@ -53,7 +53,8 @@ export default function Navbar() {
             <div className='flex gap-5 lg:gap-8'>
               {menu.map((item, index) => (
                 <Link key={index} href={item.link}>
-                  <a className={`transition-colors hover:text-black ${item.link === asPath ? 'text-black' : null}`}>
+                  <a className={`transition-colors hover:text-black ${item.link === asPath && 'text-black'}
+                    ${item.role === 'admin' && data?.user?.role !== 'ADMIN' ? 'hidden' : ''}`}>
                     {item.name}
                   </a>
                 </Link>
