@@ -60,32 +60,29 @@ export default function Navbar() {
               ))}
             </div>
             <div className='flex items-center gap-2'>
-              {status === 'loading' ? (
-                <Skeleton width={126} height={35} borderRadius={20} />
-              ) : (
-                <>
-                  {data?.user?.name ? (
-                    <div onMouseEnter={() => setMounted(true)} onMouseLeave={() => setMounted(false)} className='flex items-center gap-2 relative cursor-pointer'>
-                      <h1 className='text-black font-bold'>{name[0]} {name[1] && name[1]?.charAt(0) + '.'}</h1>
-                      <Image src={data.user.image!} alt={data.user.name} width={35} height={35} className='rounded-full' />
+              {status === 'loading' ? <Skeleton width={125} height={41} inline={true} containerClassName={'skeleton-container'} borderRadius={20} />
+                : (
+                  <>
+                    {data?.user ?
+                      <div onMouseEnter={() => setMounted(true)} onMouseLeave={() => setMounted(false)} className='flex items-center gap-2 relative cursor-pointer'>
+                        <h1 className='text-black font-bold'>{name[0]} {name[1] && name[1]?.charAt(0) + '.'}</h1>
+                        <Image src={data.user.image!} alt={data.user.name!} width={35} height={35} className='rounded-full' />
 
-                      <div onMouseEnter={() => setMounted(true)}
-                        className={`absolute top-5 pt-5 right-0 transition-all duration-300 ${mounted ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-                        <div className='absolute top-4 right-2 rotate-45 border-8 border-white rounded-sm backdrop-blur-[4px]' />
-                        <div className={`bg-white/95 backdrop-blur-sm rounded-md drop-shadow-2xl grid`}>
-                          <span onClick={() => signOut()} className='block whitespace-nowrap hover:text-black px-5 py-2 transition-colors font-medium'>Cerrar sesión</span>
+                        <div onMouseEnter={() => setMounted(true)}
+                          className={`absolute top-5 pt-5 right-0 transition-all duration-300 ${mounted ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+                          <div className='absolute top-4 right-2 rotate-45 border-8 border-white rounded-sm backdrop-blur-[4px]' />
+                          <div className={`bg-white/95 backdrop-blur-sm rounded-md drop-shadow-2xl grid`}>
+                            <span onClick={() => signOut()} className='block whitespace-nowrap hover:text-black px-5 py-2 transition-colors font-medium'>Cerrar sesión</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ) : (
-                    <Link href={'/login'}>
-                      <a className='rounded-full bg-white/90 border backdrop-blur-sm hover:bg-white transition-colors p-2 md:px-3 md:py-2 text-black'>
-                        Iniciar sesión
-                      </a>
-                    </Link>
-                  )}
-                </>
-              )}
+                      : <Link href={'/login'}>
+                        <a className='rounded-full bg-white/90 border backdrop-blur-sm hover:bg-white transition-colors p-2 md:px-3 md:py-2 text-black'>
+                          Iniciar sesión
+                        </a>
+                      </Link>}
+                  </>
+                )}
             </div>
           </div>
           {renderHamburger()}
