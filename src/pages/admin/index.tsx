@@ -163,7 +163,7 @@ export default function Admin() {
                                     )}
                                 </div>
                             </div>
-                            <input type={'file'} required id={'logo'} onChange={handleFile} name={'logo'} className={'sr-only relative left-14'} />
+                            <input type={'file'} required id={'logo'} accept={'image/png, image/jpeg'} onChange={handleFile} name={'logo'} className={'sr-only relative left-14'} />
 
                             <span className='text-sm font-bold'>URL <span className='text-xs text-font'>(opcional)</span></span>
                             <input type={'url'} name={'url'} className='border border-gray-300 rounded-md px-2 py-1' />
