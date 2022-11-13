@@ -185,7 +185,7 @@ export default function Admin() {
 
                             <div className='flex gap-2'>
                                 <button className='bg-primary hover:opacity-90 text-white font-bold rounded-full w-min px-4 mt-2' type={'submit'}>Guardar</button>
-                                <button className='bg-white hover:opacity-80 text-back border font-bold rounded-full w-min px-4 mt-2' onClick={() => setModal(false)} >Cancelar</button>
+                                <button className='bg-white hover:opacity-80 text-back border font-bold rounded-full w-min px-4 mt-2' onClick={() => {setModal(false); setFile('')}} >Cancelar</button>
                             </div>
                         </form>
                     </div>
