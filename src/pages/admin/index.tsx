@@ -76,8 +76,10 @@ export default function Admin() {
     }
 
     const handleFile = (e: any) => {
-        const file = e.target.files[0]
-        setFile(URL.createObjectURL(file))
+        if (e.target.files[0]) {
+            const file = e.target.files[0]
+            setFile(URL.createObjectURL(file))
+        }
     }
 
     const menu = [
