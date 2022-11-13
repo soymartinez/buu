@@ -38,6 +38,7 @@ export default function Admin() {
 
     const [status, setStatus] = useState('universidad')
     const [modal, setModal] = useState(false)
+    const [file, setFile] = useState('')
 
     const handleSaveUniversity = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -147,7 +148,17 @@ export default function Admin() {
                             </div>
 
                             <span className='text-sm font-bold'>Logo</span>
-                            <input type={'text'} required name={'logo'} className='border border-gray-300 rounded-md px-2 py-1' />
+                            <div className='grid grid-cols-2 gap-4'>
+                                <label htmlFor='logo' className='grid place-content-center hover:bg-hover border rounded-md h-20'>
+                                    <span className='cursor-pointer text-sm'>Seleccionar archivo</span>
+                                </label>
+                                <div className='relative'>
+                                    {file && (
+                                        <Image src={file} alt={'upload'} objectFit={'contain'} layout={'fill'} />
+                                    )}
+                                </div>
+                            </div>
+                            <input type={'file'} required id={'logo'} onChange={(e) => setFile(URL.createObjectURL(e.target.files[0]))} name={'logo'} className={'sr-only relative left-14'} />
 
                             <span className='text-sm font-bold'>URL <span className='text-xs text-font'>(opcional)</span></span>
                             <input type={'url'} name={'url'} className='border border-gray-300 rounded-md px-2 py-1' />
