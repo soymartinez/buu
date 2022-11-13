@@ -75,6 +75,11 @@ export default function Admin() {
         setStatus('carrera')
     }
 
+    const handleFile = (e: any) => {
+        const file = e.target.files[0]
+        setFile(URL.createObjectURL(file))
+    }
+
     const menu = [
         { name: 'universidades', active: 'universidad', count: universities?.length },
         { name: 'regiones', active: 'región', count: regions?.length },
@@ -149,8 +154,8 @@ export default function Admin() {
 
                             <span className='text-sm font-bold'>Logo</span>
                             <div className='grid grid-cols-2 gap-4'>
-                                <label htmlFor='logo' className='grid place-content-center hover:bg-hover border rounded-md h-20'>
-                                    <span className='cursor-pointer text-sm'>Seleccionar archivo</span>
+                                <label htmlFor='logo' className='grid place-content-center cursor-pointer hover:bg-hover border rounded-md h-20'>
+                                    <span className='text-sm'>Seleccionar archivo</span>
                                 </label>
                                 <div className='relative'>
                                     {file && (
@@ -158,7 +163,7 @@ export default function Admin() {
                                     )}
                                 </div>
                             </div>
-                            <input type={'file'} required id={'logo'} onChange={(e) => setFile(URL.createObjectURL(e.target.files[0]))} name={'logo'} className={'sr-only relative left-14'} />
+                            <input type={'file'} required id={'logo'} onChange={handleFile} name={'logo'} className={'sr-only relative left-14'} />
 
                             <span className='text-sm font-bold'>URL <span className='text-xs text-font'>(opcional)</span></span>
                             <input type={'url'} name={'url'} className='border border-gray-300 rounded-md px-2 py-1' />
