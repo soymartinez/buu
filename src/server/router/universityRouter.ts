@@ -1,6 +1,7 @@
 import { createRouter } from "./context";
 import { z } from "zod";
 import { Type } from "@prisma/client";
+import { supabase } from "utils/supabase";
 
 export const universityRouter = createRouter()
   .query("getOneBySubname", {
@@ -37,7 +38,7 @@ export const universityRouter = createRouter()
     input: z.object({
       name: z.string(),
       subname: z.string(),
-      logo: z.string(),
+      logo: z.any(),
       url: z.string(),
       description: z.string(),
       type: z.string(),
@@ -45,11 +46,27 @@ export const universityRouter = createRouter()
       location: z.string(),
     }),
     async resolve({ ctx, input }) {
+      const path = input.name.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ /g, '-')
+      const storage = supabase.storage.from('universities')
+
+      const uploadFile = async () => {
+        let url = ''
+        const { error } = await storage.upload(`logo/${path}`, input.logo)
+        if (error) {
+          const { data: { publicUrl } } = storage.getPublicUrl(`logo/${path}`)
+          url = publicUrl
+        } else {
+          const { data: { publicUrl } } = storage.getPublicUrl(`logo/${path}`)
+          url = publicUrl
+        }
+        return url
+      }
+
       return await ctx.prisma.university.create({
         data: {
           name: input.name,
           subname: input.subname,
-          logo: input.logo,
+          logo: await uploadFile(),
           url: input.url,
           description: input.description,
           type: input.type as Type,
