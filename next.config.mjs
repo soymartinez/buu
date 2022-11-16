@@ -24,7 +24,7 @@ export default defineNextConfig({
     domains: [
       'colaboracion.uv.mx',
       'www.sotavento.mx',
-      'seeklogo.com',
+      'rpwslwtnjdqpfqzmfifr.supabase.co',
       'lh3.googleusercontent.com',
     ],
   }
