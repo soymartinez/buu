@@ -38,27 +38,30 @@ export default function Admin() {
 
     const [status, setStatus] = useState('universidad')
     const [modal, setModal] = useState(false)
-    const [file, setFile] = useState('')
+    const [preview, setPreview] = useState('')
+    const [file, setFile] = useState({} as File | null)
 
     const handleSaveUniversity = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const formData = new FormData(e.target as HTMLFormElement)
-        const data = Object.fromEntries(formData.entries())
-        // universityCreate({
-        //     name: data.name as string,
-        //     subname: data.subname as string,
-        //     logo: data.logo as string,
-        //     url: data.url as string,
-        //     description: data.description as string,
-        //     location: data.location as string,
-        //     ranking: Number(data.ranking),
-        //     type: data.type as Type,
-        // }, {
-        //     onSuccess() {
-        //         setStatus('region')
-        //     },
-        // })
-        setStatus('region')
+        const form = Object.fromEntries(formData.entries())
+
+        universityCreate({
+            name: form.name as string,
+            subname: form.subname as string,
+            logo: file as File,
+            url: form.url as string,
+            description: form.description as string,
+            location: form.location as string,
+            ranking: Number(form.ranking),
+            type: form.type as Type,
+        }, {
+            onSuccess() {
+                // setStatus('región')
+                setModal(false)
+                setFile(null)
+            },
+        })
     }
 
     const handleSaveRegion = (e: FormEvent<HTMLFormElement>) => {
@@ -78,7 +81,8 @@ export default function Admin() {
     const handleFile = (e: any) => {
         if (e.target.files[0]) {
             const file = e.target.files[0]
-            setFile(URL.createObjectURL(file))
+            setFile(file)
+            setPreview(URL.createObjectURL(file))
         }
     }
 
@@ -160,8 +164,8 @@ export default function Admin() {
                                     <span className='text-sm'>Seleccionar archivo</span>
                                 </label>
                                 <div className='relative'>
-                                    {file && (
-                                        <Image src={file} alt={'upload'} objectFit={'contain'} layout={'fill'} />
+                                    {preview && (
+                                        <Image src={preview} alt={'upload'} objectFit={'contain'} layout={'fill'} />
                                     )}
                                 </div>
                             </div>
@@ -187,7 +191,7 @@ export default function Admin() {
 
                             <div className='flex gap-2'>
                                 <button className='bg-primary hover:opacity-90 text-white font-bold rounded-full w-min px-4 mt-2' type={'submit'}>Guardar</button>
-                                <button className='bg-white hover:opacity-80 text-back border font-bold rounded-full w-min px-4 mt-2' onClick={() => {setModal(false); setFile('')}} >Cancelar</button>
+                                <button className='bg-white hover:opacity-80 text-back border font-bold rounded-full w-min px-4 mt-2' onClick={() => { setModal(false); setFile(null) }} >Cancelar</button>
                             </div>
                         </form>
                     </div>
