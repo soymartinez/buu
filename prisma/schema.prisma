@@ -117,7 +117,7 @@ model University {
     url         String?
     description String?
     type        Type     @default(Publica)
-    ranking     Int?     @unique
+    ranking     Int?
     location    String
     country     String?  @default("México")
     regions     Region[]
