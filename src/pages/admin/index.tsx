@@ -57,7 +57,6 @@ export default function Admin() {
             type: form.type as Type,
         }, {
             onSuccess() {
-                // setStatus('región')
                 setModal(false)
                 setFile(null)
             },
@@ -68,14 +67,14 @@ export default function Admin() {
         e.preventDefault()
         const formData = new FormData(e.target as HTMLFormElement)
         const data = Object.fromEntries(formData.entries())
-        // regionCreate({
-        //     name: data.name as string,
-        // }, {
-        //     onSuccess() {
-        //         setStatus('carrer')
-        //     },
-        // })
-        setStatus('carrera')
+        regionCreate({
+            name: data.name as string,
+        }, {
+            onSuccess() {
+                setModal(false)
+                setFile(null)
+            },
+        })
     }
 
     const handleFile = (e: any) => {
@@ -144,8 +143,8 @@ export default function Admin() {
                 </section>
 
                 {modal && status === 'universidad' && (
-                    <div className='absolute inset-0 bg-white/90 z-50 flex justify-center gap-4 py-[70px] md:py-[80px] px-4 md:px-8 w-full max-w-[1280px] mx-auto'>
-                        <form onSubmit={(e) => handleSaveUniversity(e)} className='flex flex-col gap-1 w-full h-min md:w-auto bg-white p-4 border rounded-xl'>
+                    <div className='absolute inset-0 bg-white/90 z-50 flex justify-center mx-auto'>
+                        <form onSubmit={(e) => handleSaveUniversity(e)} className='flex flex-col gap-1 w-full h-min my-[70px] md:my-[80px] md:w-[600px] bg-white p-4 md:border rounded-xl'>
                             <h1 className='font-bold text-xl text-primary md:text-2xl'>Agregar universidad</h1>
                             <div className='grid md:grid-cols-2 gap-2'>
                                 <div className='flex flex-col gap-1'>
@@ -255,6 +254,22 @@ export default function Admin() {
                             </tbody>
                         </table>
                     </section>
+                )}
+
+                {modal && status === 'región' && (
+                    <div className='absolute inset-0 bg-white/90 z-50 flex justify-center mx-auto'>
+                        <form onSubmit={(e) => handleSaveRegion(e)} className='flex flex-col gap-1 w-full h-min my-[70px] md:my-[80px] md:w-[600px] bg-white p-4 md:border rounded-xl'>
+                            <h1 className='font-bold text-xl text-primary md:text-2xl'>Agregar región</h1>
+
+                            <span className='text-sm font-bold'>Nombre</span>
+                            <input type={'text'} required name={'name'} className='border border-gray-300 rounded-md px-2 py-1' />
+
+                            <div className='flex gap-2'>
+                                <button className='bg-primary hover:opacity-90 text-white font-bold rounded-full w-min px-4 mt-2' type={'submit'}>Guardar</button>
+                                <button className='bg-white hover:opacity-80 text-back border font-bold rounded-full w-min px-4 mt-2' onClick={() => setModal(false)} >Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
                 )}
 
                 {status === 'región' && (
