@@ -4,14 +4,14 @@ import superjson from "superjson";
 
 import { universityRouter } from './universityRouter'
 import { protectedExampleRouter } from "./protected-example-router";
-import { carrerRouter } from "./carrerRouter";
+import { careerRouter } from "./careerRouter";
 import { regionRouter } from "./regionRouter";
 import { campusRouter } from "./campusRouter";
 
 export const appRouter = createRouter()
   .transformer(superjson)
   .merge("university.", universityRouter)
-  .merge("carrer.", carrerRouter)
+  .merge("career.", careerRouter)
   .merge("region.", regionRouter)
   .merge("campus.", campusRouter)
   .merge("auth.", protectedExampleRouter);
