@@ -4,7 +4,7 @@ import Skeleton from 'react-loading-skeleton'
 import { trpc } from 'utils/trpc'
 
 export default function Carreras() {
-    const { data } = trpc.useQuery(['carrer.getAll'])
+    const { data } = trpc.useQuery(['career.getAll'])
     return (
         <Layout title='Buu – Carreras'>
             <div className='flex flex-col gap-4 pt-[70px] md:pt-[80px] px-4 md:px-8 w-full max-w-[1280px] mx-auto'>
