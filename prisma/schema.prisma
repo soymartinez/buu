@@ -79,8 +79,8 @@ enum Type {
 
 model Carrer {
     id           Int        @id @default(autoincrement())
-    campusId     Int        @unique
-    universityId Int        @unique
+    campusId     Int
+    universityId Int
     name         String     @unique
     semesters    Int
     curriculum   String?
