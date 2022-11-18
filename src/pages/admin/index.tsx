@@ -1,5 +1,7 @@
-import { Type } from '@prisma/client'
+import { Modality, Type } from '@prisma/client'
+import Dropdown from 'components/dropdown'
 import Layout from 'components/layout'
+import Select from 'components/select'
 import { NextApiRequest, NextApiResponse } from 'next'
 import Image from 'next/image'
 import { FormEvent, useState } from 'react'
@@ -31,10 +33,12 @@ export default function Admin() {
     const { data: universities } = trpc.useQuery(['university.getAll'])
     const { data: regions } = trpc.useQuery(['region.getAll'])
     const { data: campus } = trpc.useQuery(['campus.getAll'])
-    const { data: careers } = trpc.useQuery(['carrer.getAll'])
+    const { data: careers } = trpc.useQuery(['career.getAll'])
 
     const { mutate: universityCreate } = trpc.useMutation(['university.create'])
     const { mutate: regionCreate } = trpc.useMutation(['region.create'])
+    const { mutate: careerCreate } = trpc.useMutation(['career.create'])
+    const { invalidateQueries } = trpc.useContext()
 
     const [status, setStatus] = useState('universidad')
     const [modal, setModal] = useState(false)
@@ -78,6 +82,26 @@ export default function Admin() {
         })
     }
 
+    const handleSaveCareer = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        const formData = new FormData(e.target as HTMLFormElement)
+        const data = Object.fromEntries(formData.entries())
+        console.log(data)
+        careerCreate({
+            name: data.name as string,
+            modality: data.modality as string,
+            semesters: Number(data.semesters),
+            curriculum: data.curriculum as string,
+            universityId: Number(data.universidad),
+            campusId: Number(data.campus),
+        }, {
+            onSuccess() {
+                invalidateQueries(['career.getAll'])
+                setModal(false)
+            },
+        })
+    }
+
     const handleFile = (e: any) => {
         if (e.target.files[0]) {
             const file = e.target.files[0]
@@ -95,7 +119,7 @@ export default function Admin() {
 
     return (
         <Layout title={'Buu – Administrador'}>
-            <div className='flex flex-col gap-4 pt-[70px] md:pt-[80px] px-4 md:px-8 w-full max-w-[1280px] mx-auto'>
+            <div className='flex flex-col gap-4 pt-[70px] md:pt-[80px] px-4 md:px-8 w-full h-screen max-w-[1280px] mx-auto'>
                 <h1 className='font-bold text-xl md:text-2xl mt-4'>Administrador</h1>
                 <section className='grid gap-4'>
                     <div className='flex items-center gap-1 sm:gap-6 bg-[#ececec] rounded-xl px-2 overflow-x-auto'>
@@ -115,13 +139,31 @@ export default function Admin() {
                         ))}
                     </div>
                     <div className='flex flex-col gap-4 lg:flex-row lg:items-center justify-between'>
-                        <div onClick={() => setModal(!modal)}
-                            className={`flex gap-3 px-3 md:px-5 py-2 w-min font-semibold text-font hover:opacity-70 cursor-pointer ml-auto lg:m-0`}>
-                            <div className='flex justify-center items-center relative'>
-                                <div className='w-[12px] h-[2px] rounded-full bg-font' />
-                                <div className='absolute w-[12px] h-[2px] rounded-full bg-font rotate-90' />
-                            </div>
-                            <h2 className='text-xs select-none whitespace-nowrap'>Agregar <span className='lowercase'>{status}</span></h2>
+                        <div className={`text-xs w-min font-semibold text-font ml-auto lg:m-0`}>
+                            {modal
+                                ? <div className='flex gap-3'>
+                                    <button type={'submit'} form={`form-${status}`} className='flex gap-3 px-3 md:px-5 py-2 text-primary hover:opacity-90'>
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fillRule="evenodd" d="M5 3a1 1 0 011-1h8a1 1 0 011 1v12a1 1 0 01-1 1H6a1 1 0 01-1-1V3zm1 2v10h8V5H6z" clipRule="evenodd" />
+                                        </svg>
+                                        <h2 className='select-none whitespace-nowrap'>Guardar {status}</h2>
+                                    </button>
+
+                                    <button onClick={() => setModal(false)} className='flex gap-3 px-3 md:px-5 py-2 hover:opacity-90'>
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                        </svg>
+                                        <h2 className='select-none whitespace-nowrap'>Cancelar</h2>
+                                    </button>
+                                </div>
+                                : <button onClick={() => setModal(true)} className='flex justify-center items-center gap-3 px-3 md:px-5 py-2 hover:opacity-90'>
+                                    <div className='flex justify-center w-4 h-4 items-center relative'>
+                                        <div className='w-[12px] h-[2px] rounded-full bg-font' />
+                                        <div className='absolute w-[12px] h-[2px] rounded-full bg-font rotate-90' />
+                                    </div>
+                                    <h2 className='select-none whitespace-nowrap'>Agregar <span className='lowercase'>{status}</span></h2>
+                                </button>
+                            }
                         </div>
                         <div className='flex flex-row items-center gap-2'>
                             <div className='flex items-center w-full'>
@@ -363,7 +405,7 @@ export default function Admin() {
                                             </li>
                                         ))}
                                     </ul>
-                                    <button type={'button'} onClick={() => {setStatus('carrera'); setIsDropdown(false)}} className='flex items-center w-full p-3 text-xs font-medium border-t border-gray-200 hover:bg-gray-100 hover:underline'>
+                                    <button type={'button'} onClick={() => { setStatus('carrera'); setIsDropdown(false) }} className='flex items-center w-full p-3 text-xs font-medium border-t border-gray-200 hover:bg-gray-100 hover:underline'>
                                         <svg className='w-4 h-4 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 6v6m0 0v6m0-6h6m-6 0H6'></path></svg>
                                         Agregar carrera
                                     </button>
@@ -443,57 +485,88 @@ export default function Admin() {
                 )}
 
                 {status === 'carrera' && (
-                    <section className='rounded-xl overflow-x-auto'>
-                        <table className='table-auto text-font text-xs w-full'>
-                            <thead className='bg-primary text-white'>
-                                <tr className='text-left'>
-                                    <th className='py-3 px-4'>Id</th>
-                                    <th className='py-3 px-4'>Nombre</th>
-                                    <th className='py-3 px-4'>Modalidad</th>
-                                    <th className='py-3 px-4'>Semestres</th>
-                                    <th className='py-3 px-4 whitespace-nowrap'>Plan de estudios</th>
-                                    <th className='py-3 px-4'>Campus</th>
-                                    <th className='py-3 px-4'>Universidad</th>
-                                    <th className='py-3 px-4'>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {careers && careers.map(({ id, name, modality, semesters, curriculum, campus, university }, index) => (
-                                    <tr key={id} className='hover:bg-hover font-semibold'>
-                                        <td className='py-3 px-4'>
-                                            <h3 className='text-xs'>{index + 1}</h3>
-                                        </td>
-                                        <td className='py-3 px-4'>
-                                            <h2 className='text-black text-xs font-bold leading-none whitespace-nowrap'>{name}</h2>
-                                        </td>
-                                        <td className='py-3 px-4'>
-                                            <h3 className='text-xs'>{modality}</h3>
-                                        </td>
-                                        <td className='py-3 px-4'>
-                                            <h3 className='text-xs'>{semesters}</h3>
-                                        </td>
-                                        <td className='py-3 px-4'>
-                                            <h3 className='text-xs'>{curriculum}</h3>
-                                        </td>
-                                        <td className='py-3 px-4'>
-                                            <h3 className='text-xs whitespace-nowrap'>{campus.name}</h3>
-                                        </td>
-                                        <td className='flex items-center gap-2 py-3 px-4'>
-                                            <div className='grid place-content-center w-6 h-6 relative'>
-                                                <Image src={university.logo} alt={university.name} layout={'fill'} objectFit={'contain'} />
-                                            </div>
-                                            <h2 className='text-xs font-bold leading-none whitespace-nowrap'>{name}</h2>
-                                        </td>
-                                        <td className='py-3 px-4'>
-                                            <div className='flex gap-6'>
-                                                <button className='font-bold w-min text-primary hover:opacity-80' type={'button'}>Editar</button>
-                                                <button className='font-bold w-min text-[#ff0000] hover:opacity-80' type={'button'}>Eliminar</button>
-                                            </div>
-                                        </td>
+                    <section className='rounded-xl overflow-x-auto h-full w-full'>
+                        <form id={`form-${status}`} onSubmit={handleSaveCareer}>
+                            <table className='table-auto text-font text-xs w-full'>
+                                <thead className='bg-primary text-white'>
+                                    <tr className='text-left'>
+                                        <th className='py-3 px-4'>Id</th>
+                                        <th className='py-3 px-4'>Nombre</th>
+                                        <th className='py-3 px-4'>Modalidad</th>
+                                        <th className='py-3 px-4'>Semestres</th>
+                                        <th className='py-3 px-4 whitespace-nowrap'>Plan de estudios</th>
+                                        <th className='py-3 px-4'>Universidad</th>
+                                        <th className='py-3 px-4'>Campus</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody className='rounded-b-xl overflow-hidden'>
+                                    {modal && (
+                                        <tr className='font-semibold text-black w-full'>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4' disabled />
+                                            </td>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4 font-bold' name={'name'} required />
+                                            </td>
+                                            <td>
+                                                <Select object={Modality} />
+                                            </td>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4' name={'semesters'} required type={'number'} defaultValue={1} min={1} max={12} />
+                                            </td>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4' placeholder='Opcional' name={'curriculum'} />
+                                            </td>
+                                            <td>
+                                                <Dropdown
+                                                    title='universidad'
+                                                    object={universities}
+                                                    setStatus={setStatus}
+                                                />
+                                            </td>
+                                            <td>
+                                                <Dropdown
+                                                    title='campus'
+                                                    object={campus}
+                                                    setStatus={setStatus}
+                                                />
+                                            </td>
+                                        </tr>
+                                    )}
+
+                                    {careers && careers.map(({ id, name, modality, semesters, curriculum, campus, university }, index) => (
+                                        <tr key={id} className='hover:bg-hover font-semibold border-b-2 border-hover last:border-none'>
+                                            <td>
+                                                <h3 className='py-3 px-4'>{index + 1}</h3>
+                                            </td>
+                                            <td>
+                                                <h2 className='py-3 px-4 text-black font-bold leading-none whitespace-nowrap'>{name}</h2>
+                                            </td>
+                                            <td>
+                                                <h3 className='py-3 px-4'>{modality}</h3>
+                                            </td>
+                                            <td>
+                                                <h3 className='py-3 px-4'>{semesters}</h3>
+                                            </td>
+                                            <td>
+                                                <h3 className='py-3 px-4'>{curriculum}</h3>
+                                            </td>
+                                            <td>
+                                                <div className='py-3 px-4 flex items-center gap-2'>
+                                                    <div className='grid place-content-center w-6 h-6 relative'>
+                                                        <Image src={university.logo} alt={university.name} layout={'fill'} objectFit={'contain'} />
+                                                    </div>
+                                                    <h2 className='font-bold leading-none whitespace-nowrap'>{university.name}</h2>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <h3 className='py-3 px-4 whitespace-nowrap'>{campus.name}</h3>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </form>
                     </section>
                 )}
             </div>
