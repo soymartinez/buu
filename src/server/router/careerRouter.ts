@@ -2,7 +2,7 @@ import { createRouter } from './context'
 import { z } from 'zod'
 import { Modality } from '@prisma/client'
 
-export const carrerRouter = createRouter()
+export const careerRouter = createRouter()
     .query('getAll', {
         async resolve({ ctx }) {
             return await ctx.prisma.carrer.findMany({
