@@ -77,7 +77,7 @@ enum Type {
     Privada
 }
 
-model Carrer {
+model Career {
     id           Int        @id @default(autoincrement())
     campusId     Int
     universityId Int
@@ -98,7 +98,7 @@ model Campus {
     direction String
     contact   String?
     location  String
-    carrers   Carrer[]
+    careers   Career[]
     region    Region   @relation(fields: [regionId], references: [id], onDelete: Cascade)
 }
 
@@ -121,5 +121,5 @@ model University {
     location    String
     country     String?  @default("México")
     regions     Region[]
-    Carrer      Carrer[]
+    careers     Career[]
 }
