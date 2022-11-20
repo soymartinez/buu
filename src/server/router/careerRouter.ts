@@ -5,7 +5,7 @@ import { Modality } from '@prisma/client'
 export const careerRouter = createRouter()
     .query('getAll', {
         async resolve({ ctx }) {
-            return await ctx.prisma.carrer.findMany({
+            return await ctx.prisma.career.findMany({
                 include: {
                     campus: true,
                     university: true,
@@ -23,7 +23,7 @@ export const careerRouter = createRouter()
             campusId: z.number(),
         }),
         async resolve({ ctx, input }) {
-            return await ctx.prisma.carrer.create({
+            return await ctx.prisma.career.create({
                 data: {
                     name: input.name,
                     modality: input.modality as Modality,
