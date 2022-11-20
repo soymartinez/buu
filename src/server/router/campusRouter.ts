@@ -6,7 +6,7 @@ export const campusRouter = createRouter()
             return await ctx.prisma.campus.findMany({
                 include: {
                     region: true,
-                    carrers: true,
+                    careers: true,
                 }
             })
         },

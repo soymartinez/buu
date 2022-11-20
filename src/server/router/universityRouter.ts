@@ -20,7 +20,7 @@ export const universityRouter = createRouter()
             include: {
               campus: {
                 include: {
-                  carrers: true,
+                  careers: true,
                 }
               }
             }
