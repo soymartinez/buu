@@ -22,8 +22,7 @@ export default defineNextConfig({
   },
   images: {
     domains: [
-      'colaboracion.uv.mx',
-      'www.sotavento.mx',
+      'avatars.githubusercontent.com',
       'rpwslwtnjdqpfqzmfifr.supabase.co',
       'lh3.googleusercontent.com',
     ],
