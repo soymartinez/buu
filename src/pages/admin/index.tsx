@@ -1,4 +1,4 @@
-import { Modality, Type } from '@prisma/client'
+import { Level, Modality, Period, Type } from '@prisma/client'
 import Dropdown from 'components/dropdown'
 import Layout from 'components/layout'
 import Select from 'components/select'
@@ -33,7 +33,8 @@ export default function Admin() {
     const { data: universities } = trpc.useQuery(['university.getAll'])
     const { data: regions } = trpc.useQuery(['region.getAll'])
     const { data: campus } = trpc.useQuery(['campus.getAll'])
-    const { data: careers } = trpc.useQuery(['career.getAll'])
+    const { data: careersList } = trpc.useQuery(['career.getAllCareers'])
+    const { data: careersDetails } = trpc.useQuery(['career.getAllCareersDetails'])
 
     const { mutate: universityCreate } = trpc.useMutation(['university.create'])
     const { mutate: regionCreate } = trpc.useMutation(['region.create'])
@@ -45,7 +46,6 @@ export default function Admin() {
     const [modal, setModal] = useState(false)
     const [preview, setPreview] = useState('')
     const [file, setFile] = useState({} as File | null)
-    const [isDropdown, setIsDropdown] = useState(false)
 
     const handleSaveUniversity = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -73,6 +73,7 @@ export default function Admin() {
         e.preventDefault()
         const formData = new FormData(e.target as HTMLFormElement)
         const data = Object.fromEntries(formData.entries())
+
         regionCreate({
             name: data.name as string,
         }, {
@@ -87,7 +88,7 @@ export default function Admin() {
         e.preventDefault()
         const formData = new FormData(e.target as HTMLFormElement)
         const data = Object.fromEntries(formData.entries())
-        
+
         campusCreate({
             name: data.name as string,
             subname: data.subname as string,
@@ -108,17 +109,20 @@ export default function Admin() {
         e.preventDefault()
         const formData = new FormData(e.target as HTMLFormElement)
         const data = Object.fromEntries(formData.entries())
-        console.log(data)
+
         careerCreate({
-            name: data.name as string,
+            career: Number(data.carrera),
+            university: Number(data.universidad),
+            campus: Number(data.campus),
+            level: data.level as Level,
+            area: data.area as string,
+            period: data.period as Period,
+            duration: Number(data.duration),
+            program: data.program as string,
             modality: data.modality as string,
-            semesters: Number(data.semesters),
-            curriculum: data.curriculum as string,
-            universityId: Number(data.universidad),
-            campusId: Number(data.campus),
         }, {
             onSuccess() {
-                invalidateQueries(['career.getAll'])
+                invalidateQueries(['career.getAllCareersDetails'])
                 setModal(false)
             },
         })
@@ -136,7 +140,7 @@ export default function Admin() {
         { name: 'universidades', active: 'universidad', count: universities?.length },
         { name: 'regiones', active: 'región', count: regions?.length },
         { name: 'campus', active: 'campus', count: campus?.length },
-        { name: 'carreras', active: 'carrera', count: careers?.length },
+        { name: 'carreras', active: 'carrera', count: careersDetails?.length },
     ]
 
     return (
@@ -428,7 +432,7 @@ export default function Admin() {
                                                 <h3 className='py-3 px-4'>{index + 1}</h3>
                                             </td>
                                             <td>
-                                                <h2 className='py-3 px-4 text-black text-xs font-bold leading-none whitespace-nowrap'>{name}</h2>
+                                                <h3 className='py-3 px-4 text-black text-xs font-bold leading-none whitespace-nowrap'>{name}</h3>
                                             </td>
                                             <td>
                                                 <h3 className='py-3 px-4'>{subname}</h3>
@@ -470,11 +474,14 @@ export default function Admin() {
                                     <tr className='text-left'>
                                         <th className='py-3 px-4'>Id</th>
                                         <th className='py-3 px-4'>Nombre</th>
-                                        <th className='py-3 px-4'>Modalidad</th>
-                                        <th className='py-3 px-4'>Semestres</th>
-                                        <th className='py-3 px-4 whitespace-nowrap'>Plan de estudios</th>
                                         <th className='py-3 px-4'>Universidad</th>
                                         <th className='py-3 px-4'>Campus</th>
+                                        <th className='py-3 px-4'>Nivel</th>
+                                        <th className='py-3 px-4'>Área<span className='text-gray-200 ml-1'>?</span></th>
+                                        <th className='py-3 px-4'>Periodo</th>
+                                        <th className='py-3 px-4'>Duración</th>
+                                        <th className='py-3 px-4'>Programa<span className='text-gray-200 ml-1'>?</span></th>
+                                        <th className='py-3 px-4'>Modalidad</th>
                                     </tr>
                                 </thead>
                                 <tbody className='rounded-b-xl overflow-hidden'>
@@ -484,16 +491,11 @@ export default function Admin() {
                                                 <input className='w-full bg-hover py-3 px-4' disabled />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4 font-bold' name={'name'} required />
-                                            </td>
-                                            <td>
-                                                <Select object={Modality} />
-                                            </td>
-                                            <td>
-                                                <input className='w-full bg-hover py-3 px-4' name={'semesters'} required type={'number'} defaultValue={1} min={1} max={12} />
-                                            </td>
-                                            <td>
-                                                <input className='w-full bg-hover py-3 px-4' placeholder='Opcional' name={'curriculum'} />
+                                                <Dropdown
+                                                    title='carrera'
+                                                    object={careersList}
+                                                    setStatus={setStatus}
+                                                />
                                             </td>
                                             <td>
                                                 <Dropdown
@@ -509,25 +511,33 @@ export default function Admin() {
                                                     setStatus={setStatus}
                                                 />
                                             </td>
+                                            <td>
+                                                <Select object={Level} name={'level'} />
+                                            </td>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4' name={'area'} />
+                                            </td>
+                                            <td>
+                                                <Select object={Period} name={'period'} />
+                                            </td>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4' name={'duration'} type={'number'} defaultValue={8} min={0} max={18} />
+                                            </td>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4' name={'program'} />
+                                            </td>
+                                            <td>
+                                                <Select object={Modality} name={'modality'} />
+                                            </td>
                                         </tr>
                                     )}
-
-                                    {careers && careers.map(({ id, name, modality, semesters, curriculum, campus, university }, index) => (
+                                    {careersDetails && careersDetails.map(({ id, career, university, campus, level, area, period, duration, program, modality }, index) => (
                                         <tr key={id} className='hover:bg-hover font-semibold border-b-2 border-hover last:border-none'>
                                             <td>
                                                 <h3 className='py-3 px-4'>{index + 1}</h3>
                                             </td>
                                             <td>
-                                                <h2 className='py-3 px-4 text-black font-bold leading-none whitespace-nowrap'>{name}</h2>
-                                            </td>
-                                            <td>
-                                                <h3 className='py-3 px-4'>{modality}</h3>
-                                            </td>
-                                            <td>
-                                                <h3 className='py-3 px-4'>{semesters}</h3>
-                                            </td>
-                                            <td>
-                                                <h3 className='py-3 px-4'>{curriculum}</h3>
+                                                <h3 className='py-3 px-4 text-black text-xs font-bold leading-none whitespace-nowrap'>{career.name}</h3>
                                             </td>
                                             <td>
                                                 <div className='py-3 px-4 flex items-center gap-2'>
@@ -538,7 +548,25 @@ export default function Admin() {
                                                 </div>
                                             </td>
                                             <td>
-                                                <h3 className='py-3 px-4 whitespace-nowrap'>{campus.name}</h3>
+                                                <h3 className='py-3 px-4 w-48'>{campus.name}</h3>
+                                            </td>
+                                            <td>
+                                                <h3 className='py-3 px-4'>{level}</h3>
+                                            </td>
+                                            <td>
+                                                <h3 className='py-3 px-4 whitespace-nowrap'>{area}</h3>
+                                            </td>
+                                            <td>
+                                                <h3 className='py-3 px-4 w-28'>{period}</h3>
+                                            </td>
+                                            <td>
+                                                <h3 className='py-3 px-4'>{duration}</h3>
+                                            </td>
+                                            <td>
+                                                <h3 className='py-3 px-4'>{program}</h3>
+                                            </td>
+                                            <td>
+                                                <h3 className='py-3 px-4'>{modality}</h3>
                                             </td>
                                         </tr>
                                     ))}
