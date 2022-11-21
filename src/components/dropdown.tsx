@@ -25,7 +25,7 @@ export default function Dropdown({ title, object, setStatus }: { title: string, 
                     {object && object.map(({ id, name }: { id: string, name: string }) => (
                         <li key={id} className='flex items-center justify-between text-black hover:bg-hover rounded-lg'>
                             <div className='flex items-center w-full'>
-                                <input onChange={() => { setSelected(name); setIsOpen(false) }} type='radio' value={id} id={id + name} name={title} className='w-3 h-3 m-2 cursor-pointer accent-primary' />
+                                <input onChange={() => { setSelected(name); setIsOpen(false) }} onInvalid={() => setIsOpen(true)} type='radio' required value={id} id={id + name} name={title} className='w-3 h-3 m-2 cursor-pointer accent-primary' />
                                 <label htmlFor={id + name} className='pl-0 p-2 text-xs cursor-pointer w-full'>{name}</label>
                             </div>
                         </li>
