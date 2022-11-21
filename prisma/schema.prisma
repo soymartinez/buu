@@ -77,34 +77,63 @@ enum Type {
     Privada
 }
 
+enum Level {
+    Tecnico
+    Licenciatura
+    Ingenieria
+    Posgrado
+    Maestria
+    Doctorado
+}
+
+enum Period {
+    Anual
+    Semestral
+    Cuatrimestral
+    Trimestral
+    Bimestral
+    Mensual
+}
+
 model Career {
-    id           Int        @id @default(autoincrement())
-    campusId     Int
-    universityId Int
-    name         String     @unique
-    semesters    Int
-    curriculum   String?
-    modality     Modality   @default(Presencial)
-    campus       Campus     @relation(fields: [campusId], references: [id], onDelete: Cascade)
-    university   University @relation(fields: [universityId], references: [id])
+    id             Int        @id @default(autoincrement())
+    career         Careers    @relation(fields: [name], references: [name])
+    university     University @relation(fields: [universityName], references: [name])
+    campus         Campus     @relation(fields: [campusId], references: [id])
+    name           String
+    universityName String
+    campusId       Int
+    level          Level
+    area           String?    @default("No especificado")
+    period         Period     @default(Semestral)
+    duration       Int
+    program        String?
+    modality       Modality   @default(Presencial)
+}
+
+model Careers {
+    id          Int      @id @default(autoincrement())
+    name        String   @unique
+    description String?
+    careers     Career[]
 }
 
 model Campus {
     id        Int      @id @default(autoincrement())
-    regionId  Int      @unique
     name      String
     subname   String?
-    url       String?
     direction String
     contact   String?
+    url       String?
     location  String
     careers   Career[]
     region    Region   @relation(fields: [regionId], references: [id], onDelete: Cascade)
+    regionId  Int
 }
 
 model Region {
     id         Int          @id @default(autoincrement())
-    name       String
+    name       String       @unique
     campus     Campus[]
     university University[]
 }
