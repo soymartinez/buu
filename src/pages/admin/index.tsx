@@ -37,6 +37,7 @@ export default function Admin() {
 
     const { mutate: universityCreate } = trpc.useMutation(['university.create'])
     const { mutate: regionCreate } = trpc.useMutation(['region.create'])
+    const { mutate: campusCreate } = trpc.useMutation(['campus.create'])
     const { mutate: careerCreate } = trpc.useMutation(['career.create'])
     const { invalidateQueries } = trpc.useContext()
 
@@ -79,6 +80,27 @@ export default function Admin() {
                 setModal(false)
                 setFile(null)
             },
+        })
+    }
+
+    const handleSaveCampus = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        const formData = new FormData(e.target as HTMLFormElement)
+        const data = Object.fromEntries(formData.entries())
+        
+        campusCreate({
+            name: data.name as string,
+            subname: data.subname as string,
+            direction: data.direction as string,
+            contact: data.contact as string,
+            url: data.url as string,
+            location: data.location as string,
+            region: Number(data.región),
+        }, {
+            onSuccess() {
+                invalidateQueries(['campus.getAll'])
+                setModal(false)
+            }
         })
     }
 
@@ -347,140 +369,96 @@ export default function Admin() {
                     </section>
                 )}
 
-                {modal && status === 'campus' && (
-                    <div className='absolute inset-0 bg-white/90 z-50 flex justify-center mx-auto'>
-                        <form onSubmit={(e) => handleSaveUniversity(e)} className='flex flex-col gap-1 w-full h-min my-[70px] md:my-[80px] md:w-[600px] bg-white p-4 md:border rounded-xl'>
-                            <h1 className='font-bold text-xl text-primary md:text-2xl'>Agregar campus</h1>
-                            <div className='grid md:grid-cols-2 gap-2'>
-                                <div className='flex flex-col gap-1'>
-                                    <span className='text-sm font-bold'>Nombre</span>
-                                    <input type={'text'} required name={'name'} className='border rounded-md px-2 py-1' />
-                                </div>
-                                <div className='flex flex-col gap-1'>
-                                    <span className='text-sm font-bold'>Subnombre <span className='text-xs text-font'>(opcional)</span></span>
-                                    <input type={'text'} name={'subname'} className='border rounded-md px-2 py-1' />
-                                </div>
-                            </div>
-
-                            <span className='text-sm font-bold'>URL<span className='text-xs text-font'>(opcional)</span></span>
-                            <input type={'url'} name={'url'} className='border rounded-md px-2 py-1' />
-
-                            <span className='text-sm font-bold'>Dirección</span>
-                            <input type={'text'} required name={'address'} className='border rounded-md px-2 py-1' />
-
-                            <span className='text-sm font-bold'>Contacto<span className='text-xs text-font'>(opcional)</span></span>
-                            <input type={'text'} required name={'contact'} className='border rounded-md px-2 py-1' />
-
-                            <span className='text-sm font-bold'>Locación</span>
-                            <input type={'text'} required name={'location'} className='border rounded-md px-2 py-1' />
-
-                            <span className='text-sm font-bold'>Región</span>
-                            <input type={'text'} required name={'region'} className='border rounded-md px-2 py-1' />
-
-                            <span className='text-sm font-bold'>Carreras</span>
-                            <div className='relative'>
-                                <button onClick={() => setIsDropdown(!isDropdown)} className='inline-flex items-center border rounded-md px-2 py-1 w-full text-center text-sm text-black hover:bg-hover' type='button'>
-                                    Selecciona las carreras
-                                    <svg className={`ml-auto w-5 h-5 text-font transition-all ${isDropdown && 'rotate-180'}`} fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'><path fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'></path></svg>
-                                </button>
-
-                                <div className={`${!isDropdown ? 'hidden' : 'focus:border-black'} absolute bg-white bottom-10 z-10 w-60 rounded-md border shadow-lg`}>
-                                    <div className='flex items-center w-full p-3'>
-                                        <label className='sr-only'>Buscar</label>
-                                        <div className='relative w-full'>
-                                            <div className='flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none'>
-                                                <svg className='w-5 h-5 text-font' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'><path fillRule='evenodd' d='M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z' clipRule='evenodd'></path></svg>
-                                            </div>
-                                            <input type='text' id='table-search' className='placeholder:text-font block p-2 pl-10 w-full text-xs rounded-lg border' placeholder='Buscar por nombre' />
-                                        </div>
-                                    </div>
-
-                                    <ul className='overflow-y-auto px-3 pb-3 h-48 text-sm'>
-                                        {careers && careers.map(({ id, name }) => (
-                                            <li key={id} className='flex items-center justify-between p-2 text-black hover:bg-hover rounded-lg'>
-                                                <div className='flex items-center'>
-                                                    <input type='checkbox' className='w-3 h-3 cursor-pointer' />
-                                                    <span className='ml-2 text-xs'>{name}</span>
-                                                </div>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                    <button type={'button'} onClick={() => { setStatus('carrera'); setIsDropdown(false) }} className='flex items-center w-full p-3 text-xs font-medium border-t border-gray-200 hover:bg-gray-100 hover:underline'>
-                                        <svg className='w-4 h-4 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 6v6m0 0v6m0-6h6m-6 0H6'></path></svg>
-                                        Agregar carrera
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className='flex gap-2'>
-                                <button className='bg-primary hover:opacity-90 text-white font-bold rounded-full w-min px-4 mt-2' type={'submit'}>Guardar</button>
-                                <button className='bg-white hover:opacity-80 text-back border font-bold rounded-full w-min px-4 mt-2' onClick={() => { setModal(false); setIsDropdown(false) }} >Cancelar</button>
-                            </div>
-                        </form>
-                    </div>
-                )}
-
                 {status === 'campus' && (
-                    <section className='rounded-xl overflow-x-auto'>
-                        <table className='table-auto text-font text-xs w-full'>
-                            <thead className='bg-primary text-white'>
-                                <tr className='text-left'>
-                                    <th className='py-3 px-4'>Id</th>
-                                    <th className='py-3 px-4'>Nombre</th>
-                                    <th className='py-3 px-4'>Subnombre</th>
-                                    <th className='py-3 px-4'>URL</th>
-                                    <th className='py-3 px-4'>Dirección</th>
-                                    <th className='py-3 px-4'>Contacto</th>
-                                    <th className='py-3 px-4'>Locación</th>
-                                    <th className='py-3 px-4'>Región</th>
-                                    <th className='py-3 px-4'>Carreras</th>
-                                    <th className='py-3 px-4'>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {campus && campus.map(({ id, name, subname, url, direction, contact, location, region, carrers }, index) => (
-                                    <tr key={id} className='hover:bg-hover font-semibold'>
-                                        <td className='py-3 px-4'>
-                                            <h3 className='text-xs'>{index + 1}</h3>
-                                        </td>
-                                        <td className='py-3 px-4'>
-                                            <h2 className='text-black text-xs font-bold leading-none whitespace-nowrap'>{name}</h2>
-                                        </td>
-                                        <td className='py-3 px-4'>
-                                            <h3 className='text-xs'>{subname}</h3>
-                                        </td>
-                                        <td className='py-3 px-4'>
-                                            <h3 className='text-xs'>{url}</h3>
-                                        </td>
-                                        <td className='py-3 px-4'>
-                                            <h3 className='text-xs w-56'>{direction}</h3>
-                                        </td>
-                                        <td className='py-3 px-4'>
-                                            <h3 className='text-xs'>{contact}</h3>
-                                        </td>
-                                        <td className='py-3 px-4'>
-                                            <h3 className='text-xs'>{location}</h3>
-                                        </td>
-                                        <td className='py-3 px-4'>
-                                            <h3 className='text-xs'>{region.name}</h3>
-                                        </td>
-                                        <td className='py-3 px-4'>
-                                            <select className='bg-trasparent'>
-                                                {carrers.map(({ id, name }) => (
-                                                    <option key={id} className='text-xs whitespace-nowrap'>{name}</option>
-                                                ))}
-                                            </select>
-                                        </td>
-                                        <td className='py-3 px-4'>
-                                            <div className='flex gap-6'>
-                                                <button className='font-bold w-min text-primary hover:opacity-80' type={'button'}>Editar</button>
-                                                <button className='font-bold w-min text-[#ff0000] hover:opacity-80' type={'button'}>Eliminar</button>
-                                            </div>
-                                        </td>
+                    <section className='rounded-xl overflow-x-auto h-full w-full mb-4'>
+                        <form id={`form-${status}`} onSubmit={handleSaveCampus}>
+                            <table className='table-auto text-font text-xs w-full'>
+                                <thead className='bg-primary text-white'>
+                                    <tr className='text-left'>
+                                        <th className='py-3 px-4'>Id</th>
+                                        <th className='py-3 px-4'>Nombre</th>
+                                        <th className='py-3 px-4'>Subnombre<span className='text-gray-200 ml-1'>?</span></th>
+                                        <th className='py-3 px-4'>Dirección</th>
+                                        <th className='py-3 px-4'>Contacto<span className='text-gray-200 ml-1'>?</span></th>
+                                        <th className='py-3 px-4'>URL<span className='text-gray-200 ml-1'>?</span></th>
+                                        <th className='py-3 px-4'>Locación</th>
+                                        <th className='py-3 px-4'>Región</th>
+                                        <th className='py-3 px-4'>Carreras<span className='text-gray-200 ml-1'>[ ]</span></th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody className='rounded-b-xl overflow-hidden'>
+                                    {modal && (
+                                        <tr className='font-semibold text-black w-full'>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4' disabled />
+                                            </td>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4 font-bold' name={'name'} required />
+                                            </td>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4' name={'subname'} />
+                                            </td>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4' name={'direction'} required />
+                                            </td>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4' name={'contact'} />
+                                            </td>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4' name={'url'} type={'url'} />
+                                            </td>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4' name={'location'} required />
+                                            </td>
+                                            <td>
+                                                <Dropdown
+                                                    title='región'
+                                                    object={regions}
+                                                    setStatus={setStatus}
+                                                />
+                                            </td>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4 cursor-not-allowed text-center' placeholder='--' disabled />
+                                            </td>
+                                        </tr>
+                                    )}
+                                    {campus && campus.map(({ id, name, subname, url, direction, contact, location, region, careers }, index) => (
+                                        <tr key={id} className='hover:bg-hover font-semibold border-b-2 border-hover last:border-none'>
+                                            <td>
+                                                <h3 className='py-3 px-4'>{index + 1}</h3>
+                                            </td>
+                                            <td>
+                                                <h2 className='py-3 px-4 text-black text-xs font-bold leading-none whitespace-nowrap'>{name}</h2>
+                                            </td>
+                                            <td>
+                                                <h3 className='py-3 px-4'>{subname}</h3>
+                                            </td>
+                                            <td>
+                                                <h3 className='py-3 px-4 w-56'>{direction}</h3>
+                                            </td>
+                                            <td>
+                                                <h3 className='py-3 px-4 w-32'>{contact}</h3>
+                                            </td>
+                                            <td>
+                                                <h3 className='py-3 px-4 w-40 truncate'>{url}</h3>
+                                            </td>
+                                            <td>
+                                                <h3 className='py-3 px-4 min-w-[150px] whitespace-nowrap w-full'>{location}</h3>
+                                            </td>
+                                            <td>
+                                                <h3 className='py-3 px-4 min-w-[200px] whitespace-nowrap w-full'>{region.name}</h3>
+                                            </td>
+                                            <td>
+                                                <div className='py-3 px-4 flex items-center'>
+                                                    <h3 className='px-2 py-1 bg-gray-200 rounded-md rounded-r-none'>{careers.length}</h3>
+                                                    <span className='px-2 py-1 bg-hover rounded-md rounded-l-none'>carreras</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </form>
                     </section>
                 )}
 
