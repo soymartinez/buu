@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export default function Select({ object }: { object: object }) {
+export default function Select({ object, name }: { object: object, name: string }) {
     const [isOpen, setIsOpen] = useState(false)
     const [selected, setSelected] = useState(Object.keys(object)[0])
     return (
@@ -13,7 +13,7 @@ export default function Select({ object }: { object: object }) {
                     {Object.values(object).map((value, index) => (
                         <li key={index} className='flex items-center justify-between text-black hover:bg-hover rounded-lg'>
                             <div className='flex items-center w-full'>
-                                <input hidden onChange={() => { setIsOpen(false); setSelected(value) }} checked={selected === value} id={value} type='radio' value={value} name='modality' className='w-3 h-3 cursor-pointer accent-primary' />
+                                <input hidden onChange={() => { setIsOpen(false); setSelected(value) }} checked={selected === value} id={value} type='radio' value={value} name={name} className='w-3 h-3 cursor-pointer accent-primary' />
                                 <label htmlFor={value} className={`text-xs cursor-pointer p-2 w-full`}>{value}</label>
                             </div>
                         </li>
