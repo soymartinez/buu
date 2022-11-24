@@ -78,8 +78,8 @@ export default function Admin() {
             name: data.name as string,
         }, {
             onSuccess() {
+                invalidateQueries(['region.getAll'])
                 setModal(false)
-                setFile(null)
             },
         })
     }
@@ -325,51 +325,61 @@ export default function Admin() {
                     </section>
                 )}
 
-                {modal && status === 'región' && (
-                    <div className='absolute inset-0 bg-white/90 z-50 flex justify-center mx-auto'>
-                        <form onSubmit={(e) => handleSaveRegion(e)} className='flex flex-col gap-1 w-full h-min my-[70px] md:my-[80px] md:w-[600px] bg-white p-4 md:border rounded-xl'>
-                            <h1 className='font-bold text-xl text-primary md:text-2xl'>Agregar región</h1>
-
-                            <span className='text-sm font-bold'>Nombre</span>
-                            <input type={'text'} required name={'name'} className='border border-gray-300 rounded-md px-2 py-1' />
-
-                            <div className='flex gap-2'>
-                                <button className='bg-primary hover:opacity-90 text-white font-bold rounded-full w-min px-4 mt-2' type={'submit'}>Guardar</button>
-                                <button className='bg-white hover:opacity-80 text-back border font-bold rounded-full w-min px-4 mt-2' onClick={() => setModal(false)} >Cancelar</button>
-                            </div>
-                        </form>
-                    </div>
-                )}
-
                 {status === 'región' && (
-                    <section className='rounded-xl overflow-x-auto'>
-                        <table className='table-auto text-font text-xs w-full'>
-                            <thead className='bg-primary text-white'>
-                                <tr className='text-left'>
-                                    <th className='py-3 px-4'>Id</th>
-                                    <th className='py-3 px-4'>Nombre</th>
-                                    <th className='py-3 px-4'>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {regions && regions.map(({ id, name }, index) => (
-                                    <tr key={id} className='hover:bg-hover font-semibold'>
-                                        <td className='py-3 px-4'>
-                                            <h3 className='text-xs'>{index + 1}</h3>
-                                        </td>
-                                        <td className='py-3 px-4 w-full'>
-                                            <h2 className='text-black text-xs font-bold leading-none whitespace-nowrap'>{name}</h2>
-                                        </td>
-                                        <td className='py-3 px-4'>
-                                            <div className='flex gap-6'>
-                                                <button className='font-bold w-min text-primary hover:opacity-80' type={'button'}>Editar</button>
-                                                <button className='font-bold w-min text-[#ff0000] hover:opacity-80' type={'button'}>Eliminar</button>
-                                            </div>
-                                        </td>
+                    <section className='rounded-xl overflow-x-auto h-full w-full mb-4'>
+                        <form id={`form-${status}`} onSubmit={handleSaveRegion}>
+                            <table className='table-auto text-font text-xs w-full'>
+                                <thead className='bg-primary text-white sticky top-0'>
+                                    <tr className='text-left'>
+                                        <th className='py-3 px-4'>Id</th>
+                                        <th className='py-3 px-4'>Nombre</th>
+                                        <th className='py-3 px-4'>Universidades<span className='text-gray-200 ml-1'>[ ]</span></th>
+                                        <th className='py-3 px-4 whitespace-nowrap'>Campus<span className='text-gray-200 ml-1'>[ ]</span></th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody className='rounded-b-xl overflow-hidden'>
+                                    {modal && (
+                                        <tr className='font-semibold text-black w-full'>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4' disabled />
+                                            </td>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4 font-bold' name={'name'} required />
+                                            </td>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4 cursor-not-allowed text-center' placeholder='--' disabled />
+                                            </td>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4 cursor-not-allowed text-center' placeholder='--' disabled />
+                                            </td>
+                                        </tr>
+                                    )}
+                                    {regions && regions.map(({ id, name, university, campus }, index) => (
+                                        <tr key={id} className='hover:bg-hover font-semibold border-b-2 border-hover last:border-none'>
+                                            <td>
+                                                <h3 className='py-3 px-4'>{index + 1}</h3>
+                                            </td>
+                                            <td className='w-full'>
+                                                <h3 className='py-3 px-4 text-black text-xs font-bold leading-none whitespace-nowrap'>{name}</h3>
+                                            </td>
+
+                                            <td>
+                                                <div className='py-3 px-4 flex items-center'>
+                                                    <h3 className='px-2 py-1 bg-gray-200 rounded-md rounded-r-none'>{university.length}</h3>
+                                                    <span className='px-2 py-1 bg-hover rounded-md rounded-l-none'>universidades</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className='py-3 px-4 flex items-center'>
+                                                    <h3 className='px-2 py-1 bg-gray-200 rounded-md rounded-r-none'>{campus.length}</h3>
+                                                    <span className='px-2 py-1 bg-hover rounded-md rounded-l-none'>campus</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </form>
                     </section>
                 )}
 
