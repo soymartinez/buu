@@ -119,16 +119,18 @@ model Careers {
 }
 
 model Campus {
-    id        Int      @id @default(autoincrement())
-    name      String
-    subname   String?
-    direction String
-    contact   String?
-    url       String?
-    location  String
-    careers   Career[]
-    region    Region   @relation(fields: [regionId], references: [id], onDelete: Cascade)
-    regionId  Int
+    id           Int        @id @default(autoincrement())
+    name         String
+    subname      String?
+    direction    String
+    contact      String?
+    url          String?
+    location     String
+    careers      Career[]
+    university   University @relation(fields: [universityId], references: [id])
+    region       Region     @relation(fields: [regionId], references: [id], onDelete: Cascade)
+    universityId Int
+    regionId     Int
 }
 
 model Region {
@@ -151,4 +153,5 @@ model University {
     country     String?  @default("México")
     regions     Region[]
     careers     Career[]
+    Campus      Campus[]
 }
