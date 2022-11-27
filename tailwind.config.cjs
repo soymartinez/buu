@@ -15,7 +15,20 @@ module.exports = {
       },
       trasparent: 'transparent',
     },
-    extend: {},
+    extend: {
+      keyframes: {
+        highlight: {
+          '10%': {
+            background: '#2524d1',
+            color: '#FFFFFF',
+          },
+          '40%': {
+            background: '#2524d1',
+            color: '#FFFFFF',
+          },
+        },
+      }
+    },
   },
   plugins: [],
 };
