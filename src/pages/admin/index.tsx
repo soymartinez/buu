@@ -42,10 +42,10 @@ export default function Admin() {
     const { mutate: careerCreate } = trpc.useMutation(['career.create'])
     const { invalidateQueries } = trpc.useContext()
 
+    const [success, setSuccess] = useState(0)
     const [status, setStatus] = useState('universidad')
     const [modal, setModal] = useState(false)
     const [preview, setPreview] = useState('')
-    const [file, setFile] = useState({} as File | null)
 
     const handleSaveUniversity = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -55,16 +55,18 @@ export default function Admin() {
         universityCreate({
             name: form.name as string,
             subname: form.subname as string,
-            logo: file as File,
+            logo: form.logo as File,
             url: form.url as string,
             description: form.description as string,
             location: form.location as string,
             ranking: Number(form.ranking),
             type: form.type as Type,
         }, {
-            onSuccess() {
+            onSuccess({ id }) {
+                setSuccess(id)
+                invalidateQueries(['university.getAll'])
                 setModal(false)
-                setFile(null)
+                setPreview('')
             },
         })
     }
@@ -131,7 +133,6 @@ export default function Admin() {
     const handleFile = (e: any) => {
         if (e.target.files[0]) {
             const file = e.target.files[0]
-            setFile(file)
             setPreview(URL.createObjectURL(file))
         }
     }
@@ -175,7 +176,7 @@ export default function Admin() {
                                         <h2 className='select-none whitespace-nowrap'>Guardar {status}</h2>
                                     </button>
 
-                                    <button onClick={() => setModal(false)} className='flex gap-3 px-3 md:px-5 py-2 hover:opacity-90'>
+                                    <button onClick={() => { setModal(false); setPreview('') }} className='flex gap-3 px-3 md:px-5 py-2 hover:opacity-90'>
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                             <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                                         </svg>
@@ -211,117 +212,128 @@ export default function Admin() {
                     </div>
                 </section>
 
-                {modal && status === 'universidad' && (
-                    <div className='absolute inset-0 bg-white/90 z-50 flex justify-center mx-auto'>
-                        <form onSubmit={(e) => handleSaveUniversity(e)} className='flex flex-col gap-1 w-full h-min my-[70px] md:my-[80px] md:w-[600px] bg-white p-4 md:border rounded-xl'>
-                            <h1 className='font-bold text-xl text-primary md:text-2xl'>Agregar universidad</h1>
-                            <div className='grid md:grid-cols-2 gap-2'>
-                                <div className='flex flex-col gap-1'>
-                                    <span className='text-sm font-bold'>Nombre</span>
-                                    <input type={'text'} required name={'name'} className='border border-gray-300 rounded-md px-2 py-1' />
-                                </div>
-                                <div className='flex flex-col gap-1'>
-                                    <span className='text-sm font-bold'>Subnombre <span className='text-xs text-font'>(opcional)</span></span>
-                                    <input type={'text'} name={'subname'} className='border border-gray-300 rounded-md px-2 py-1' />
-                                </div>
-                            </div>
-
-                            <span className='text-sm font-bold'>Logo</span>
-                            <div className='grid grid-cols-2 gap-4'>
-                                <label htmlFor='logo' className='grid place-content-center cursor-pointer hover:bg-hover border rounded-md h-20'>
-                                    <span className='text-sm'>Seleccionar archivo</span>
-                                </label>
-                                <div className='relative'>
-                                    {preview && (
-                                        <Image src={preview} alt={'upload'} objectFit={'contain'} layout={'fill'} />
-                                    )}
-                                </div>
-                            </div>
-                            <input type={'file'} required id={'logo'} accept={'image/png, image/jpeg'} onChange={handleFile} name={'logo'} className={'sr-only relative left-14'} />
-
-                            <span className='text-sm font-bold'>URL <span className='text-xs text-font'>(opcional)</span></span>
-                            <input type={'url'} name={'url'} className='border border-gray-300 rounded-md px-2 py-1' />
-
-                            <span className='text-sm font-bold'>Descripción <span className='text-xs text-font'>(opcional)</span></span>
-                            <textarea rows={3} name={'description'} className='border border-gray-300 rounded-md px-2 py-1' />
-
-                            <span className='text-sm font-bold'>Localidad</span>
-                            <input type={'text'} required name={'location'} className='border border-gray-300 rounded-md px-2 py-1' />
-
-                            <span className='text-sm font-bold'>Ranking <span className='text-xs text-font'>(opcional)</span></span>
-                            <input type={'number'} name={'ranking'} defaultValue={0} min={0} max={100} className='border border-gray-300 rounded-md px-2 py-1' />
-
-                            <span className='text-sm font-bold'>Tipo</span>
-                            <select required name={'type'} className='border border-gray-300 rounded-md px-2 py-1'>
-                                <option value={Type.Publica}>Pública</option>
-                                <option value={Type.Privada}>Privada</option>
-                            </select>
-
-                            <div className='flex gap-2'>
-                                <button className='bg-primary hover:opacity-90 text-white font-bold rounded-full w-min px-4 mt-2' type={'submit'}>Guardar</button>
-                                <button className='bg-white hover:opacity-80 text-back border font-bold rounded-full w-min px-4 mt-2' onClick={() => { setModal(false); setFile(null) }} >Cancelar</button>
-                            </div>
-                        </form>
-                    </div>
-                )}
-
                 {status === 'universidad' && (
-                    <section className='rounded-xl overflow-x-auto'>
-                        <table className='table-auto text-font text-xs w-full'>
-                            <thead className='bg-primary text-white'>
-                                <tr className='text-left'>
-                                    <th className='py-3 px-4'>Id</th>
-                                    <th className='py-3 px-4'>Nombre</th>
-                                    <th className='py-3 px-4'>Localidad</th>
-                                    <th className='py-3 px-4'>Ranking</th>
-                                    <th className='py-3 px-4'>Tipo</th>
-                                    <th className='py-3 px-4'>URL</th>
-                                    <th className='py-3 px-4'>Descripción</th>
-                                    <th className='py-3 px-4'>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {universities && universities.map(({ id, name, subname, logo, url, description, location, ranking, type }, index) => (
-                                    <tr key={id} className='hover:bg-hover font-semibold'>
-                                        <td className='py-3 px-4'>
-                                            <h3 className='text-xs'>{index + 1}</h3>
-                                        </td>
-                                        <td className='py-3 px-4'>
-                                            <div className='flex gap-4'>
-                                                <div className='grid place-content-center w-8 h-8 relative'>
-                                                    <Image src={logo} alt={name} layout={'fill'} objectFit={'contain'} />
-                                                </div>
-                                                <div className='flex flex-col justify-center gap-0'>
-                                                    <h2 className='text-black text-xs font-bold leading-none whitespace-nowrap'>{name}</h2>
-                                                    <h3 className='text-[14px] text-font font-medium'>{subname}</h3>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className='py-3 px-4'>
-                                            <h3 className='text-xs'>{location}</h3>
-                                        </td>
-                                        <td className='py-3 px-4'>
-                                            <h3 className='text-xs'>{ranking}</h3>
-                                        </td>
-                                        <td className='py-3 px-4'>
-                                            <h3 className='text-xs'>{type}</h3>
-                                        </td>
-                                        <td className='py-3 px-4'>
-                                            <h3 className='text-xs'>{url}</h3>
-                                        </td>
-                                        <td className='py-3 px-4'>
-                                            <h3 className='text-xs'>{description}</h3>
-                                        </td>
-                                        <td className='py-3 px-4'>
-                                            <div className='flex gap-6'>
-                                                <button className='font-bold w-min text-primary hover:opacity-80' type={'button'}>Editar</button>
-                                                <button className='font-bold w-min text-[#ff0000] hover:opacity-80' type={'button'}>Eliminar</button>
-                                            </div>
-                                        </td>
+                    <section className='rounded-xl overflow-x-auto h-full w-full mb-4'>
+                        <form id={`form-${status}`} onSubmit={handleSaveUniversity}>
+                            <table className='table-auto text-font text-xs w-full'>
+                                <thead className='bg-primary text-white sticky top-0 z-10'>
+                                    <tr className='text-left'>
+                                        <th className='py-3 px-4'>Id</th>
+                                        <th className='py-3 px-4'>Nombre</th>
+                                        <th className='py-3 px-4'>Localidad</th>
+                                        <th className='py-3 px-4'>Ranking<span className='text-gray-200 ml-1'>?</span></th>
+                                        <th className='py-3 px-4'>Tipo</th>
+                                        <th className='py-3 px-4'>URL<span className='text-gray-200 ml-1'>?</span></th>
+                                        <th className='py-3 px-4'>Descripción<span className='text-gray-200 ml-1'>?</span></th>
+                                        <th className='py-3 px-4 whitespace-nowrap'>Regiones<span className='text-gray-200 ml-1'>[ ]</span></th>
+                                        <th className='py-3 px-4 whitespace-nowrap'>Campus<span className='text-gray-200 ml-1'>[ ]</span></th>
+                                        <th className='py-3 px-4 whitespace-nowrap'>Carreras<span className='text-gray-200 ml-1'>[ ]</span></th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody className='rounded-b-xl overflow-hidden'>
+                                    {modal && (
+                                        <tr className='font-semibold text-black w-full'>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4' disabled />
+                                            </td>
+                                            <td>
+                                                <div className='w-full bg-hover py-1 px-4 flex gap-4'>
+                                                    <div className='grid place-content-center w-8 h-8 relative'>
+                                                        <label htmlFor='logo' className='bg-secondary rounded-full w-8 cursor-pointer'>
+                                                            {!preview
+                                                                && <svg xmlns="http://www.w3.org/2000/svg" className='w-8 h-8 text-gray-100' fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                                                </svg>}
+                                                            {preview && <Image src={preview} alt={'upload'} objectFit={'contain'} layout={'fill'} />}
+                                                        </label>
+                                                        <input type={'file'} id={'logo'} className={'sr-only right-4 bottom-0'} accept={'image/png, image/jpeg'} onChange={handleFile} name={'logo'} required />
+                                                    </div>
+                                                    <div className='w-full flex flex-col justify-center gap-0'>
+                                                        <input className='bg-trasparent text-black text-xs font-bold outline-none leading-none whitespace-nowrap' placeholder={'Nombre'} name={'name'} required />
+                                                        <input className='bg-trasparent text-[14px] outline-none text-font font-medium' placeholder={'Acrónimo'} name={'subname'} />
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4' name={'location'} />
+                                            </td>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4' name={'ranking'} type={'number'} />
+                                            </td>
+                                            <td>
+                                                <Select object={Type} name={'type'} />
+                                            </td>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4' name={'url'} type={'url'} />
+                                            </td>
+                                            <td>
+                                                <textarea className='w-full bg-hover py-3 px-4 max-w-full resize-none' rows={1} name={'description'} />
+                                            </td>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4 cursor-not-allowed text-center' placeholder='--' disabled />
+                                            </td>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4 cursor-not-allowed text-center' placeholder='--' disabled />
+                                            </td>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4 cursor-not-allowed text-center' placeholder='--' disabled />
+                                            </td>
+                                        </tr>
+                                    )}
+                                    {universities && universities.map(({ id, name, subname, logo, url, description, location, ranking, type, regions, campus, careers }, index) => (
+                                        <tr key={id} className={`hover:bg-hover font-semibold border-b-2 border-hover last:border-none ${id === success && 'animate-[highlight_1s_ease-in-out_1]'}`}>
+                                            <td>
+                                                <h3 className='py-3 px-4'>{index + 1}</h3>
+                                            </td>
+                                            <td className='w-full'>
+                                                <div className='py-3 px-4 flex gap-4'>
+                                                    <div className='grid place-content-center w-8 h-8 relative'>
+                                                        <Image src={logo} alt={name} layout={'fill'} objectFit={'contain'} />
+                                                    </div>
+                                                    <div className='flex flex-col justify-center gap-0'>
+                                                        <h2 className='text-black text-xs font-bold leading-none whitespace-nowrap'>{name}</h2>
+                                                        <h3 className='text-[14px] text-font font-medium'>{subname}</h3>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <h3 className='py-3 px-4'>{location}</h3>
+                                            </td>
+                                            <td>
+                                                <h3 className='py-3 px-4'>{ranking}</h3>
+                                            </td>
+                                            <td>
+                                                <h3 className='py-3 px-4'>{type}</h3>
+                                            </td>
+                                            <td>
+                                                <h3 className='py-3 px-4 w-40 whitespace-nowrap truncate'>{url}</h3>
+                                            </td>
+                                            <td>
+                                                <h3 className='py-3 px-4 w-40 whitespace-nowrap truncate'>{description}</h3>
+                                            </td>
+                                            <td>
+                                                <div className='py-3 px-4 flex items-center'>
+                                                    <h3 className='px-2 py-1 bg-gray-200 rounded-md rounded-r-none'>{regions.length}</h3>
+                                                    <span className='px-2 py-1 bg-hover rounded-md rounded-l-none'>regiones</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className='py-3 px-4 flex items-center'>
+                                                    <h3 className='px-2 py-1 bg-gray-200 rounded-md rounded-r-none'>{campus.length}</h3>
+                                                    <span className='px-2 py-1 bg-hover rounded-md rounded-l-none'>campus</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className='py-3 px-4 flex items-center'>
+                                                    <h3 className='px-2 py-1 bg-gray-200 rounded-md rounded-r-none'>{careers.length}</h3>
+                                                    <span className='px-2 py-1 bg-hover rounded-md rounded-l-none'>carreras</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </form>
                     </section>
                 )}
 
