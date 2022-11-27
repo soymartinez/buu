@@ -56,16 +56,14 @@ export const universityRouter = createRouter()
       const storage = supabase.storage.from('universities')
 
       const uploadFile = async () => {
-        let url = ''
-        const { error } = await storage.upload(`logo/${path}`, input.logo)
-        if (error) {
-          const { data: { publicUrl } } = storage.getPublicUrl(`logo/${path}`)
-          url = publicUrl
-        } else {
-          const { data: { publicUrl } } = storage.getPublicUrl(`logo/${path}`)
-          url = publicUrl
-        }
-        return url
+        const { error } = await storage.upload(`logo/${path}`, input.logo, {
+          cacheControl: '3600',
+          upsert: true,
+          contentType: 'image/png'
+        })
+        if (error) console.log('Error uploading file: ', error)
+        const { data: { publicUrl } } = storage.getPublicUrl(`logo/${path}`)
+        return publicUrl
       }
 
       return await ctx.prisma.university.create({
