@@ -31,7 +31,13 @@ export const universityRouter = createRouter()
   })
   .query("getAll", {
     async resolve({ ctx }) {
-      return await ctx.prisma.university.findMany()
+      return await ctx.prisma.university.findMany({
+        include: {
+          regions: true,
+          campus: true,
+          careers: true,
+        }
+      })
     },
   })
   .mutation('create', {
