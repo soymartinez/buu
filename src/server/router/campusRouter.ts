@@ -36,6 +36,11 @@ export const campusRouter = createRouter()
                             id: input.region
                         }
                     },
+                    university: {
+                        connect: {
+                            id: 1,
+                        },
+                    },
                 }
             })
         },
