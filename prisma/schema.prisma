@@ -125,7 +125,7 @@ model Campus {
     direction    String
     contact      String?
     url          String?
-    location     String
+    location     String?
     careers      Career[]
     university   University @relation(fields: [universityId], references: [id])
     region       Region     @relation(fields: [regionId], references: [id], onDelete: Cascade)
