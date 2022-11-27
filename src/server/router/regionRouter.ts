@@ -4,7 +4,12 @@ import { z } from 'zod'
 export const regionRouter = createRouter()
     .query('getAll', {
         async resolve({ ctx }) {
-            return await ctx.prisma.region.findMany()
+            return await ctx.prisma.region.findMany({
+                include: {
+                    campus: true,
+                    university: true,
+                }
+            })
         }
     })
     .mutation('create', {
