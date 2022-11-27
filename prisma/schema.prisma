@@ -153,5 +153,5 @@ model University {
     country     String?  @default("México")
     regions     Region[]
     careers     Career[]
-    Campus      Campus[]
+    campus      Campus[]
 }
