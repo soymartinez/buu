@@ -234,7 +234,7 @@ export default function Admin() {
                                 </thead>
                                 <tbody className='rounded-b-xl overflow-hidden'>
                                     {modal && (
-                                        <tr className='font-semibold text-black w-full'>
+                                        <tr className='font-semibold text-black w-full sticky top-10 z-20'>
                                             <td>
                                                 <input className='w-full bg-hover py-3 px-4' disabled />
                                             </td>
@@ -268,7 +268,7 @@ export default function Admin() {
                                             <td>
                                                 <input className='w-full bg-hover py-3 px-4' name={'url'} type={'url'} />
                                             </td>
-                                            <td>
+                                            <td className='flex items-center'>
                                                 <textarea className='w-full bg-hover py-3 px-4 max-w-full resize-none' rows={1} name={'description'} />
                                             </td>
                                             <td>
@@ -353,7 +353,7 @@ export default function Admin() {
                                 </thead>
                                 <tbody className='rounded-b-xl overflow-hidden'>
                                     {modal && (
-                                        <tr className='font-semibold text-black w-full'>
+                                        <tr className='font-semibold text-black w-full sticky top-10 z-20'>
                                             <td>
                                                 <input className='w-full bg-hover py-3 px-4' disabled />
                                             </td>
@@ -417,7 +417,7 @@ export default function Admin() {
                                 </thead>
                                 <tbody className='rounded-b-xl overflow-hidden'>
                                     {modal && (
-                                        <tr className='font-semibold text-black w-full'>
+                                        <tr className='font-semibold text-black w-full sticky top-10 z-20'>
                                             <td>
                                                 <input className='w-full bg-hover py-3 px-4' disabled />
                                             </td>
@@ -521,7 +521,7 @@ export default function Admin() {
                                 </thead>
                                 <tbody className='rounded-b-xl overflow-hidden'>
                                     {modal && (
-                                        <tr className='font-semibold text-black w-full'>
+                                        <tr className='font-semibold text-black w-full sticky top-10 z-20'>
                                             <td>
                                                 <input className='w-full bg-hover py-3 px-4' disabled />
                                             </td>
