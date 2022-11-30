@@ -21,6 +21,7 @@ export const campusRouter = createRouter()
             contact: z.string(),
             url: z.string(),
             location: z.string(),
+            university: z.number(),
             region: z.number(),
         }),
         async resolve({ ctx, input }) {
@@ -32,15 +33,15 @@ export const campusRouter = createRouter()
                     contact: input.contact,
                     url: input.url,
                     location: input.location,
+                    university: {
+                        connect: {
+                            id: input.university,
+                        },
+                    },
                     region: {
                         connect: {
                             id: input.region
                         }
-                    },
-                    university: {
-                        connect: {
-                            id: 1,
-                        },
                     },
                 }
             })
