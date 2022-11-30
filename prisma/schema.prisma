@@ -119,7 +119,7 @@ model Careers {
 }
 
 model Campus {
-    id           Int         @id @default(autoincrement())
+    id           Int        @id @default(autoincrement())
     name         String
     subname      String?
     direction    String
@@ -127,8 +127,8 @@ model Campus {
     url          String?
     location     String?
     careers      Career[]
-    university   University? @relation(fields: [universityId], references: [id])
-    region       Region      @relation(fields: [regionId], references: [id], onDelete: Cascade)
+    university   University @relation(fields: [universityId], references: [id])
+    region       Region     @relation(fields: [regionId], references: [id], onDelete: Cascade)
     universityId Int
     regionId     Int
 }
