@@ -8,7 +8,7 @@ export default function Select({ object, name }: { object: object, name: string 
             <button type={'button'} onClick={() => setIsOpen(!isOpen)} className='inline-flex w-full bg-hover py-3 px-4' >
                 {selected}
             </button>
-            <div className={`${!isOpen ? 'hidden' : ''} absolute bg-white z-50 rounded-b-md border border-hover shadow-lg w-full`}>
+            <div className={`${!isOpen ? 'hidden' : ''} absolute bg-white z-20 rounded-b-md border border-hover shadow-lg w-full`}>
                 <ul className='overflow-y-auto p-1 text-sm'>
                     {Object.values(object).map((value, index) => (
                         <li key={index} className='flex items-center justify-between text-black hover:bg-hover rounded-lg'>
