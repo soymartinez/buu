@@ -341,7 +341,7 @@ export default function Admin() {
                     <section className='rounded-xl overflow-x-auto h-full w-full mb-4'>
                         <form id={`form-${status}`} onSubmit={handleSaveRegion}>
                             <table className='table-auto text-font text-xs w-full'>
-                                <thead className='bg-primary text-white sticky top-0'>
+                                <thead className='bg-primary text-white sticky top-0 z-10'>
                                     <tr className='text-left'>
                                         <th className='py-3 px-4'>Id</th>
                                         <th className='py-3 px-4'>Nombre</th>
@@ -399,7 +399,7 @@ export default function Admin() {
                     <section className='rounded-xl overflow-x-auto h-full w-full mb-4'>
                         <form id={`form-${status}`} onSubmit={handleSaveCampus}>
                             <table className='table-auto text-font text-xs w-full'>
-                                <thead className='bg-primary text-white'>
+                                <thead className='bg-primary text-white sticky top-0 z-10'>
                                     <tr className='text-left'>
                                         <th className='py-3 px-4'>Id</th>
                                         <th className='py-3 px-4'>Nombre</th>
@@ -492,7 +492,7 @@ export default function Admin() {
                     <section className='rounded-xl overflow-x-auto h-full w-full'>
                         <form id={`form-${status}`} onSubmit={handleSaveCareer}>
                             <table className='table-auto text-font text-xs w-full'>
-                                <thead className='bg-primary text-white'>
+                                <thead className='bg-primary text-white sticky top-0 z-10'>
                                     <tr className='text-left'>
                                         <th className='py-3 px-4'>Id</th>
                                         <th className='py-3 px-4'>Nombre</th>
