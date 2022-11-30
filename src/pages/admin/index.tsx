@@ -98,9 +98,11 @@ export default function Admin() {
             contact: data.contact as string,
             url: data.url as string,
             location: data.location as string,
+            university: Number(data.universidad),
             region: Number(data.región),
         }, {
-            onSuccess() {
+            onSuccess({ id }) {
+                setSuccess(id)
                 invalidateQueries(['campus.getAll'])
                 setModal(false)
             }
@@ -408,6 +410,7 @@ export default function Admin() {
                                         <th className='py-3 px-4'>Contacto<span className='text-gray-200 ml-1'>?</span></th>
                                         <th className='py-3 px-4'>URL<span className='text-gray-200 ml-1'>?</span></th>
                                         <th className='py-3 px-4'>Locación</th>
+                                        <th className='py-3 px-4'>Universidad</th>
                                         <th className='py-3 px-4'>Región</th>
                                         <th className='py-3 px-4'>Carreras<span className='text-gray-200 ml-1'>[ ]</span></th>
                                     </tr>
@@ -438,6 +441,13 @@ export default function Admin() {
                                             </td>
                                             <td>
                                                 <Dropdown
+                                                    title='universidad'
+                                                    object={universities}
+                                                    setStatus={setStatus}
+                                                />
+                                            </td>
+                                            <td>
+                                                <Dropdown
                                                     title='región'
                                                     object={regions}
                                                     setStatus={setStatus}
@@ -448,8 +458,8 @@ export default function Admin() {
                                             </td>
                                         </tr>
                                     )}
-                                    {campus && campus.map(({ id, name, subname, url, direction, contact, location, region, careers }, index) => (
-                                        <tr key={id} className='hover:bg-hover font-semibold border-b-2 border-hover last:border-none'>
+                                    {campus && campus.map(({ id, name, subname, url, direction, contact, location, region, careers, university }, index) => (
+                                        <tr key={id} className={`hover:bg-hover font-semibold border-b-2 border-hover last:border-none ${id === success && 'animate-[highlight_1s_ease-in-out_1]'}`}>
                                             <td>
                                                 <h3 className='py-3 px-4'>{index + 1}</h3>
                                             </td>
@@ -472,7 +482,10 @@ export default function Admin() {
                                                 <h3 className='py-3 px-4 min-w-[150px] whitespace-nowrap w-full'>{location}</h3>
                                             </td>
                                             <td>
-                                                <h3 className='py-3 px-4 min-w-[200px] whitespace-nowrap w-full'>{region.name}</h3>
+                                                <h3 className='py-3 px-4 min-w-[250px] whitespace-nowrap w-full'>{university.name}</h3>
+                                            </td>
+                                            <td>
+                                                <h3 className='py-3 px-4 min-w-[250px] whitespace-nowrap w-full'>{region.name}</h3>
                                             </td>
                                             <td>
                                                 <div className='py-3 px-4 flex items-center'>
