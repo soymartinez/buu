@@ -21,6 +21,11 @@ export const universityRouter = createRouter()
           regions: {
             include: {
               campus: {
+                where: {
+                  university: {
+                    subname: input?.text?.toUpperCase(),
+                  }
+                },
                 include: {
                   careers: true,
                 }
