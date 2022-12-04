@@ -13,7 +13,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 export default function Universidad({ id }: { id: string }) {
     const { data } = trpc.useQuery(['university.getOneBySubname', { text: id }])
 
-    const tags = 'text-xs md:text-sm bg-primary hover:bg-opacity-95 whitespace-nowrap text-white rounded-full w-min px-4 py-1 font-bold'
+    const tags = 'text-xs md:text-sm bg-primary hover:bg-opacity-95 whitespace-nowrap whitespace-nowrap text-white rounded-full w-min px-4 py-1 font-bold'
 
     return (
         <Layout title={`Buu – ${id?.toLocaleString().toUpperCase()}`}>
