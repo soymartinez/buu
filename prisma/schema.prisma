@@ -128,7 +128,7 @@ model Campus {
     location     String?
     careers      Career[]
     university   University @relation(fields: [universityId], references: [id])
-    region       Region     @relation(fields: [regionId], references: [id], onDelete: Cascade)
+    region       Region     @relation(fields: [regionId], references: [id])
     universityId Int
     regionId     Int
 }
