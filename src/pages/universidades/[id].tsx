@@ -17,7 +17,7 @@ export default function Universidad({ id }: { id: string }) {
     const [isOpen, setIsOpen] = useState(false)
     const tags = 'text-xs md:text-xs bg-primary hover:bg-opacity-95 whitespace-nowrap whitespace-nowrap text-white rounded-full w-min px-4 py-1 font-bold'
 
-    useEffect(() => { setSelected(data?.regions.length! > 1 ? 'Todos' : data?.regions[0]?.name!) }, [data])
+    useEffect(() => { setSelected(data?.regions && data?.regions.length > 1 ? 'Todos' : data!.regions[0]!.name) }, [data])
     return (
         <Layout title={`Buu – ${id?.toLocaleString().toUpperCase()}`}>
             <div className='flex flex-col gap-4 pt-[70px] md:pt-[80px] px-4 md:px-8 w-full max-w-[1280px] mx-auto'>
@@ -90,7 +90,7 @@ export default function Universidad({ id }: { id: string }) {
                             </button>
                             <div className={`${!isOpen ? 'hidden' : ''} absolute bg-white z-20 rounded-lg border min-w-full border-hover shadow-lg mt-1 right-0`}>
                                 <ul className='overflow-y-auto p-1'>
-                                    {data?.regions.length! > 1 && <li className='cursor-pointer hover:bg-hover p-2 rounded-md' onClick={() => { setSelected('Todos'); setIsOpen(false) }}>Todos</li>}
+                                    {data && data?.regions.length > 1 && <li className='cursor-pointer hover:bg-hover p-2 rounded-md' onClick={() => { setSelected('Todos'); setIsOpen(false) }}>Todos</li>}
                                     {data?.regions.map(({ name }, index) => (
                                         <li key={index} className='flex items-center justify-between hover:bg-hover rounded-md'>
                                             <div className='flex items-center w-full'>
