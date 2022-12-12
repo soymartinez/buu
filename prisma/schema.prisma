@@ -126,6 +126,8 @@ model Campus {
     contact      String?
     url          String?
     location     String?
+    latitude     Float      @default(0)
+    longitude    Float      @default(0)
     careers      Career[]
     university   University @relation(fields: [universityId], references: [id])
     region       Region     @relation(fields: [regionId], references: [id])
