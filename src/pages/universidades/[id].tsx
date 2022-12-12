@@ -4,7 +4,7 @@ import { trpc } from 'utils/trpc'
 import Image from 'next/image'
 import Skeleton from 'react-loading-skeleton'
 import { useEffect, useState } from 'react'
-import dynamic from 'next/dynamic'
+import Map from 'components/map'
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     return {
@@ -18,7 +18,6 @@ export default function Universidad({ id }: { id: string }) {
     const [isOpen, setIsOpen] = useState(false)
     const tags = 'text-xs md:text-xs bg-primary hover:bg-opacity-95 whitespace-nowrap whitespace-nowrap text-white rounded-full w-min px-4 py-1 font-bold'
 
-    const Map = dynamic(() => import('components/map'), { ssr: false })
     const bounds = data?.campus.map(({ latitude, longitude }) => [latitude, longitude]) ?? []
     const marker = data?.campus.map(({ name, direction, latitude, longitude }) => {
         return {
