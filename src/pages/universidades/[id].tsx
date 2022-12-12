@@ -4,6 +4,7 @@ import { trpc } from 'utils/trpc'
 import Image from 'next/image'
 import Skeleton from 'react-loading-skeleton'
 import { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     return {
@@ -16,6 +17,16 @@ export default function Universidad({ id }: { id: string }) {
     const [selected, setSelected] = useState('')
     const [isOpen, setIsOpen] = useState(false)
     const tags = 'text-xs md:text-xs bg-primary hover:bg-opacity-95 whitespace-nowrap whitespace-nowrap text-white rounded-full w-min px-4 py-1 font-bold'
+
+    const Map = dynamic(() => import('components/map'), { ssr: false })
+    const bounds = data?.campus.map(({ latitude, longitude }) => [latitude, longitude]) ?? []
+    const marker = data?.campus.map(({ name, direction, latitude, longitude }) => {
+        return {
+            title: name,
+            subname: direction,
+            position: [latitude, longitude]
+        }
+    }) ?? []
 
     useEffect(() => setSelected(data?.regions[1]?.name ? 'Todos' : data?.regions[0]?.name ?? ''), [data])
     return (
@@ -48,32 +59,18 @@ export default function Universidad({ id }: { id: string }) {
                                         </p>
                                     </a>
                                 </>
-                            ) : <Skeleton width={450} height={24} borderRadius={50} />}
+                            ) : <Skeleton height={24} borderRadius={50} />}
                         </div>
                     </section>
-                    <section className='col-span-2 flex flex-col gap-4'>
-                        <h1 className='font-bold text-md md:text-lg text-black/60 mb-2'>Ubicación</h1>
-                        <div className='flex gap-4'>
-                            <div className='rounded-lg bg-gray-100 w-10 h-10'></div>
-                            <div>
-                                <h2 className='text-sm text-font font-bold'>Lorem ipsum</h2>
-                                <span className='text-xs text-font'>Lorem ipsum dolor sit amet consectetur</span>
-                            </div>
-                        </div>
-                        <div className='flex gap-4'>
-                            <div className='rounded-lg bg-gray-100 w-10 h-10'></div>
-                            <div>
-                                <h2 className='text-sm text-font font-bold'>Lorem ipsum</h2>
-                                <span className='text-xs text-font'>Lorem ipsum dolor sit</span>
-                            </div>
-                        </div>
-                        <div className='flex gap-4'>
-                            <div className='rounded-lg bg-gray-100 w-10 h-10'></div>
-                            <div>
-                                <h2 className='text-sm text-font font-bold'>Lorem ipsum</h2>
-                                <span className='text-xs text-font'>Lorem ipsum dolor sit amet</span>
-                            </div>
-                        </div>
+                    <section className='col-span-2 flex flex-col gap-2'>
+                        {data
+                            ? <Map
+                                icon={data.logo}
+                                bounds={bounds}
+                                marker={marker}
+                                className='h-[325px] rounded-3xl z-10'
+                            />
+                            : <Skeleton height={325} containerClassName={'skeleton-container'} borderRadius={'1.5rem'} inline={true} />}
                     </section>
                 </div>
 
