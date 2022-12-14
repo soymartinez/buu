@@ -40,6 +40,16 @@ export const universityRouter = createRouter()
       })
     },
   })
+  .query('get', {
+    input: z.object({
+      take: z.number().nullish(),
+    }).nullish(),
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.university.findMany({
+        take: input?.take ?? undefined,
+      })
+    }
+  })
   .query("getAll", {
     async resolve({ ctx }) {
       return await ctx.prisma.university.findMany({
