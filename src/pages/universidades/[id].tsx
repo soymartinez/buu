@@ -64,7 +64,6 @@ export default function Universidad({ id }: { id: string }) {
                     <section className='col-span-2 flex flex-col gap-2'>
                         {data
                             ? <Map
-                                icon={data.logo}
                                 bounds={bounds}
                                 marker={marker}
                                 className='h-[325px] rounded-3xl z-10'
