@@ -3,9 +3,11 @@ import { University } from '@prisma/client'
 import { trpc } from 'utils/trpc'
 import Card from './card'
 import Skeleton from 'react-loading-skeleton'
+import { useRouter } from 'next/router'
 
 export default function List() {
-    const { data } = trpc.useQuery(['university.getAll'])
+    const { asPath } = useRouter()
+    const { data } = trpc.useQuery(['university.get', { take: asPath === '/' ? 5 : undefined }])
     return (
         <div className='flex flex-col gap-2'>
             {data ? data?.map((item: University, index: number) => (
