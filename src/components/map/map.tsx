@@ -4,16 +4,14 @@ import { useEffect } from 'react'
 import 'leaflet/dist/leaflet.css'
 
 import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
-import iconUrl from 'leaflet/dist/images/marker-icon.png';
+import iconUrl from '../../../public/pin.png';
 
 export default function Map(
     {
-        icon,
         className,
         bounds,
         marker,
     }: {
-        icon?: string,
         className?: string,
         bounds: number[][],
         marker: {
@@ -26,11 +24,11 @@ export default function Map(
     useEffect(() => {
         L.Icon.Default.mergeOptions({
             iconRetinaUrl: iconRetinaUrl.src,
-            iconUrl: icon || iconUrl.src,
+            iconUrl: iconUrl.src,
             shadowUrl: '',
-            iconSize: [40, 40],
-            className: 'object-contain bg-white/90 rounded-lg shadow-lg',
-            iconAnchor: [20, 30],
+            iconSize: [50, 50],
+            className: 'object-contain',
+            iconAnchor: [25, 30],
         })
     }, [])
 
