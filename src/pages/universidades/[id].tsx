@@ -47,16 +47,21 @@ export default function Universidad({ id }: { id: string }) {
         <Layout title={`Buu – ${id?.toLocaleString().toUpperCase()}`}>
             <div className='flex flex-col gap-4 pt-[70px] md:pt-[80px] px-4 md:px-8 w-full max-w-[1280px] mx-auto'>
                 <div className='grid grid-cols-6 mt-4 gap-8'>
-                    <section className='col-span-4 rounded-3xl bg-gray-100 px-10 py-8'>
+                    <section className={`col-span-4 rounded-3xl ${data ? 'bg-gradient-to-r from-black/80' : ''} px-10 py-8 relative overflow-hidden`}>
+                        {data && data?.images[0]
+                            ? <div className='inset-0 absolute -z-10'>
+                                <Image src={data.images[0]} alt={data.name} layout={'fill'} objectFit={'cover'} className={'select-none'} />
+                            </div>
+                            : <div className='bg-gray-100 absolute inset-0' />}
                         <div className='flex justify-between mb-4'>
                             <div className='w-full'>
-                                <h1 className='font-bold text-xl md:text-2xl min-w-full'>{data?.name || <Skeleton width={'50%'} />}</h1>
-                                <p className='text-sm md:text-base font-medium uppercase'>{data?.subname || <Skeleton width={80} />}</p>
+                                <h1 className='text-white font-bold text-xl md:text-2xl min-w-full'>{data?.name || <Skeleton width={'50%'} />}</h1>
+                                <p className='text-white text-sm md:text-base font-medium uppercase'>{data?.subname || <Skeleton width={80} />}</p>
                             </div>
-                            {data ? <Image src={data?.logo} alt={data?.name} width={70} height={70} objectFit={'contain'} />
+                            {data ? <Image src={data?.logo} alt={data?.name} width={70} height={70} objectFit={'contain'} className={''} />
                                 : <Skeleton width={70} height={70} containerClassName={'skeleton-container'} />}
                         </div>
-                        <p className='text-font text-sm line-clamp-3 w-3/4'>{data?.description || <Skeleton count={3} />}</p>
+                        <p className='text-white/70 text-font text-sm line-clamp-3 w-3/4'>{data?.description || <Skeleton count={3} />}</p>
                         <div className='flex gap-1 flex-wrap mt-10'>
                             {data ? (
                                 <>
