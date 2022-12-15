@@ -5,6 +5,8 @@ import Image from 'next/image'
 import Skeleton from 'react-loading-skeleton'
 import { useEffect, useState } from 'react'
 import Map from 'components/map'
+import Link from 'next/link'
+import FourOhFour from 'components/404'
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     return {
@@ -28,6 +30,19 @@ export default function Universidad({ id }: { id: string }) {
     }) ?? []
 
     useEffect(() => setSelected(data?.regions[1]?.name ? 'Todos' : data?.regions[0]?.name ?? ''), [data])
+
+    if (data === null) return (
+        <FourOhFour
+            title='Universidad no encontrada'
+            icon='awe'
+        >
+            Intenta con otra o puedes buscar
+            <Link href={'/universidades'}>
+                <a className='text-primary font-bold hover:opacity-90 animate-pulse'> aquí </a>
+            </Link>
+            todas las universidades
+        </FourOhFour>
+    )
     return (
         <Layout title={`Buu – ${id?.toLocaleString().toUpperCase()}`}>
             <div className='flex flex-col gap-4 pt-[70px] md:pt-[80px] px-4 md:px-8 w-full max-w-[1280px] mx-auto'>
