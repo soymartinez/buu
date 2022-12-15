@@ -147,6 +147,7 @@ model University {
     name        String   @unique
     subname     String?  @unique
     logo        String
+    images      String[]
     url         String?
     description String?
     type        Type     @default(Publica)
