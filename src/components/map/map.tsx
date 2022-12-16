@@ -38,6 +38,7 @@ export default function Map(
             center={bounds.length > 1 ? undefined : bounds[0] as L.LatLngExpression}
             className={`w-full ${className}`}
             attributionControl={false}
+            zoomControl={false}
             maxZoom={18}
             minZoom={1}
             zoom={15}
