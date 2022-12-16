@@ -6,7 +6,7 @@ import { signOut, useSession } from 'next-auth/react'
 import Skeleton from 'react-loading-skeleton'
 import Image from 'next/image'
 
-export default function Navbar() {
+export default function Navbar({ visible }: { visible: boolean }) {
   const [isOpen, setIsOpen] = useState(false)
   const [name, setName] = useState([''])
   const [mounted, setMounted] = useState(false)
@@ -40,7 +40,7 @@ export default function Navbar() {
   }, [data])
 
   return (
-    <nav className={`py-3 md:py-4 fixed inset-x-0 z-50 w-full transition-all duration-300
+    <nav className={`${visible ? 'visible' : 'hidden md:block'} py-3 md:py-4 fixed inset-x-0 z-50 w-full transition-all duration-300
     ${scroll ? `border-b border-secondary bg-white/95 backdrop-blur-sm` : `bg-trasparent border-trasparent`} ${isOpen ? 'text-white' : null}`}>
       <div className='flex flex-col max-w-[1280px] mx-auto px-4 md:px-8' onClick={() => isOpen ? setIsOpen(false) : null}>
         <div className='flex gap-10 text-xl justify-between md:justify-start items-center z-50 md:text-black font-bold h-8'>
