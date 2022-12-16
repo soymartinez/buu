@@ -4,9 +4,10 @@ import Navbar from './navbar'
 interface LayoutProps {
   children: React.ReactNode
   title?: string
+  navbar?: boolean
 }
 
-export default function Layout({ title, children }: LayoutProps) {
+export default function Layout({ title, navbar = true, children }: LayoutProps) {
   return (
     <div>
       <Head>
@@ -22,7 +23,7 @@ export default function Layout({ title, children }: LayoutProps) {
         <meta name='theme-color' content='#ffffff'></meta>
       </Head>
 
-      <Navbar />
+      <Navbar visible={navbar} />
       <main className='flex flex-col gap-4'>{children}</main>
     </div>
   )
