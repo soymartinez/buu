@@ -52,7 +52,7 @@ export default function Universidad({ id }: { id: string }) {
                             ? <div className='inset-0 absolute -z-10'>
                                 <Image src={data.images[0]} alt={data.name} layout={'fill'} objectFit={'cover'} className={'select-none'} />
                             </div>
-                            : <div className='bg-gray-100 absolute inset-0' />}
+                            : <div className='bg-gray-100 absolute inset-0 -z-10' />}
                         <div className='flex justify-between mb-4'>
                             <div className='w-full'>
                                 <h1 className='text-white font-bold text-xl md:text-2xl min-w-full'>{data?.name || <Skeleton width={'50%'} />}</h1>
