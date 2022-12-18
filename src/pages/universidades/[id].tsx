@@ -3,7 +3,7 @@ import Layout from 'components/layout'
 import { trpc } from 'utils/trpc'
 import Image from 'next/image'
 import Skeleton from 'react-loading-skeleton'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Map from 'components/map'
 import Link from 'next/link'
 import FourOhFour from 'components/404'
@@ -19,6 +19,8 @@ export default function Universidad({ id }: { id: string }) {
     const [selected, setSelected] = useState('')
     const [isOpen, setIsOpen] = useState(false)
     const [like, setLike] = useState(false)
+    const chips = useRef<HTMLDivElement>(null)
+    const [overflow, setOverflow] = useState({ left: false, right: false, translateX: 0 })
     const tags = 'flex justify-center items-center gap-1 text-[14px] md:text-xs bg-[#efefef] hover:bg-opacity-95 whitespace-nowrap rounded-full w-min px-2 md:px-4 py-2 font-medium md:font-bold'
 
     const bounds = data?.campus.map(({ latitude, longitude }) => [latitude, longitude]) ?? []
@@ -30,6 +32,22 @@ export default function Universidad({ id }: { id: string }) {
         }
     }) ?? []
 
+    // console.log(chips.current?.scrollWidth > chips.current?.clientWidth ? 'true' : 'false')
+    // console.log('scrollWidth', chips.current?.scrollWidth)
+    // console.log('clientWidth', chips.current?.clientWidth)
+    // detect if the chips are overflowing and if the overflow is to the right
+
+    useEffect(() => {
+        if (chips.current) {
+            if (chips.current?.scrollWidth > chips.current?.clientWidth) {
+                setOverflow({ ...overflow, right: true })
+                if (chips.current?.scrollLeft > 0) {
+                    setOverflow({ ...overflow, left: true })
+                }
+            }
+            console.log(overflow)
+        }
+    }, [])
     useEffect(() => setSelected(data?.regions[1]?.name ? 'Todos' : data?.regions[0]?.name ?? ''), [data])
 
     if (data === null) return (
@@ -110,9 +128,33 @@ export default function Universidad({ id }: { id: string }) {
                                         {data?.description || <Skeleton count={3} />}
                                     </p>
                                 </div>
-                                <div className='flex gap-2 md:flex-wrap overflow-x-auto md:mt-9'>
-                                    {data ? (
-                                        <>
+                                {data ? (
+                                    <div className={`flex items-center relative overflow-hidden md:mt-9`}>
+                                        <button
+                                            onClick={() => setOverflow({
+                                                ...overflow,
+                                                translateX: overflow.translateX + 100 < 0 ? overflow.translateX + 100 : 0,
+                                            })}
+                                            hidden={overflow.right}
+                                            className='md:hidden absolute p-1 rounded-full bg-white hover:bg-[#efefef] shadow-[0_0_15px_25px_white] left-0 z-10'>
+                                            <svg
+                                                className='cursor-pointer z-10 w-[31px] h-[31px]'
+                                                viewBox='0 0 24 24'
+                                            >
+                                                <path fill="none" d="M0 0h24v24H0z" />
+                                                <path
+                                                    d="M14.53 7.53a.75.75 0 0 0-1.06-1.06l-5 5a.75.75 0 0 0 0 1.061l5 5a.75.75 0 0 0 1.06-1.061L10.06 12Z"
+                                                    fill="#000"
+                                                />
+                                            </svg>
+                                        </button>
+                                        <div
+                                            ref={chips}
+                                            style={{
+                                                // scrollBehavior: 'smooth',
+                                                transform: `translateX(${overflow.translateX}px)`
+                                            }}
+                                            className={`flex gap-2 items-center md:flex-wrap`}>
                                             <p className={`${tags} ${!data.type && 'hidden'}`}>
                                                 <svg className='w-3 h-3' viewBox='0 0 24 24'>
                                                     <path
@@ -195,9 +237,27 @@ export default function Universidad({ id }: { id: string }) {
                                                     Sitio web
                                                 </p>
                                             </a>
-                                        </>
-                                    ) : <Skeleton width={300} height={36} borderRadius={9999} />}
-                                </div>
+                                        </div>
+                                        <button
+                                            onClick={() => setOverflow({
+                                                ...overflow,
+                                                translateX: chips.current && overflow.translateX - 100 < chips.current?.scrollWidth ? 0 : overflow.translateX - 100,
+                                            })}
+                                            hidden={overflow.left}
+                                            className='md:hidden absolute p-1 rounded-full bg-white hover:bg-[#efefef] shadow-[0_0_15px_25px_white] right-0 -scale-x-100'>
+                                            <svg
+                                                className='cursor-pointer z-10 w-[31px] h-[31px]'
+                                                viewBox='0 0 24 24'
+                                            >
+                                                <path fill="none" d="M0 0h24v24H0z" />
+                                                <path
+                                                    d="M14.53 7.53a.75.75 0 0 0-1.06-1.06l-5 5a.75.75 0 0 0 0 1.061l5 5a.75.75 0 0 0 1.06-1.061L10.06 12Z"
+                                                    fill="#000"
+                                                />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                ) : <Skeleton width={300} height={36} borderRadius={9999} />}
                             </div>
                         </div>
                     </section>
