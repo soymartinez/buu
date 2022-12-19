@@ -57,7 +57,7 @@ export default function Universidad({ id }: { id: string }) {
         <Layout title={`Buu – ${id?.toLocaleString().toUpperCase()}`} navbar={false}>
             <div className='flex flex-col gap-4 md:pt-[80px] pxx-4 md:px-8 w-full max-w-[1280px] mx-auto'>
                 <div className='grid grid-cols-6 md:mt-4 gap-4 md:gap-8'>
-                    <section className={`col-span-6 md:col-span-4 md:rounded-3xl -space-y-3 md:space-y-0 ${data ? 'md:bg-gradient-to-r from-black/70' : ''} md:px-10 md:py-8 relative md:overflow-hidden`}>
+                    <section className={`col-span-6 lg:col-span-4 md:rounded-3xl -space-y-3 md:space-y-0 ${data ? 'md:bg-gradient-to-r from-black/70' : ''} md:px-10 md:py-8 relative md:overflow-hidden`}>
                         <div className='hidden md:block'>
                             {data && data?.images[0]
                                 ? <div className='inset-0 absolute -z-10'>
@@ -254,24 +254,22 @@ export default function Universidad({ id }: { id: string }) {
                             </div>
                         </div>
                     </section>
-                    <section className='h-40 md:h-[325px] col-span-6 md:col-span-2 px-4 md:p-0'>
-                        <div className='flex flex-col gap-1'>
-                            <h3 className='text-black font-semibold text-xs md:hidden'>{data?.description ? 'Ubicación:' : <Skeleton width={130} />}</h3>
-                            {data
-                                ? <Map
-                                    bounds={bounds}
-                                    marker={marker}
-                                    className='h-40 md:h-[325px] rounded-2xl md:rounded-3xl z-10'
-                                />
-                                : <>
-                                    <div className={'hidden md:flex'}>
-                                        <Skeleton height={325} containerClassName={'skeleton-container'} borderRadius={'1.5rem'} inline={true} />
-                                    </div>
-                                    <div className={'md:hidden'}>
-                                        <Skeleton height={200} containerClassName={'skeleton-container'} borderRadius={'1rem'} inline={true} />
-                                    </div>
-                                </>}
-                        </div>
+                    <section className='h-40 md:hidden lg:block lg:h-full flex flex-col gap-1 col-span-6 lg:col-span-2 px-4 md:p-0'>
+                        <h3 className='text-black font-semibold text-xs md:hidden'>{data?.description ? 'Ubicación:' : <Skeleton width={130} />}</h3>
+                        {data
+                            ? <Map
+                                bounds={bounds}
+                                marker={marker}
+                                className='h-40 lg:h-full rounded-2xl md:rounded-3xl z-10'
+                            />
+                            : <>
+                                <div className={'hidden lg:flex'}>
+                                    <Skeleton height={325} containerClassName={'skeleton-container'} borderRadius={'1.5rem'} inline={true} />
+                                </div>
+                                <div className={'lg:hidden'}>
+                                    <Skeleton height={170} containerClassName={'skeleton-container'} borderRadius={'1rem'} inline={true} />
+                                </div>
+                            </>}
                     </section>
                 </div>
 
