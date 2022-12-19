@@ -120,7 +120,7 @@ export default function Universidad({ id }: { id: string }) {
                                     </p>
                                 </div>
                                 {data ? (
-                                    <div className={`flex items-center relative md:mt-9`}>
+                                    <div className={`flex items-center relative overflow-hidden md:mt-9`}>
                                         <button
                                             onClick={() => setOverflow({
                                                 ...overflow,
