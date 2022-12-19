@@ -250,7 +250,7 @@ export default function Universidad({ id }: { id: string }) {
                                             </svg>
                                         </button>
                                     </div>
-                                ) : <Skeleton width={300} height={36} borderRadius={9999} />}
+                                ) : <Skeleton width={300} className={'md:mt-9'} height={36} borderRadius={9999} />}
                             </div>
                         </div>
                     </section>
