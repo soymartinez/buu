@@ -32,13 +32,15 @@ export default function Universidad({ id }: { id: string }) {
         }
     }) ?? []
 
-    useEffect(() => {
+    const handleResize = () => {
         if (chips.current) {
             const { scrollWidth, clientWidth } = chips.current
             setOverflow({ ...overflow, overflow: scrollWidth > clientWidth, diff: (scrollWidth - clientWidth) + overflow.translateX })
             if (overflow.diff < 0) setOverflow({ ...overflow, translateX: 0, diff: 0 })
         }
-    }, [chips.current, overflow])
+    }
+
+    useEffect(() => { handleResize(); window.addEventListener("resize", handleResize, false) }, [data, overflow.translateX])
     useEffect(() => setSelected(data?.regions[1]?.name ? 'Todos' : data?.regions[0]?.name ?? ''), [data])
 
     if (data === null) return (
