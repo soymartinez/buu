@@ -274,7 +274,7 @@ export default function Universidad({ id }: { id: string }) {
                 </div>
 
                 <div className='grid grid-cols-6 gap-8 mt-4 text-sm md:text-base'>
-                    <div className='flex justify-between items-center col-span-4 gap-2'>
+                    <div className='flex justify-between items-center col-span-6 lg:col-span-4 gap-2 px-4 md:p-0'>
                         <h1 className='font-bold text-md md:text-lg text-black/60'>Campus</h1>
                         <div className='relative text-xs text-black/60 font-bold'>
                             <button type={'button'} onClick={() => { data?.regions.length === 1 ? null : setIsOpen(!isOpen) }} className='inline-flex w-full whitespace-nowrap rounded-md text-font bg-hover py-2 px-4' >
@@ -308,7 +308,7 @@ export default function Universidad({ id }: { id: string }) {
                 </div>
 
                 <div className='grid grid-cols-6 gap-8 text-sm md:text-base'>
-                    <div className='col-span-4 grid grid-cols-4 gap-2'>
+                    <div className='col-span-6 lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 px-4 md:p-0'>
                         {data ? data.campus.filter(({ region }) => { return selected === 'Todos' ? true : selected === region.name })
                             .map(({ id, name, location }) => (
                                 <div key={id} className={`rounded-3xl bg-gray-100 h-48`}>
