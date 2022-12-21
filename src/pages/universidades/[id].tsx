@@ -312,23 +312,32 @@ export default function Universidad({ id }: { id: string }) {
                 <div className='grid grid-cols-6 gap-8 text-sm md:text-base'>
                     <div className='col-span-6 lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 px-4 md:p-0'>
                         {data ? data.campus.filter(({ region }) => { return selected === 'Todos' ? true : selected === region.name })
-                            .map(({ id, name, location }) => (
-                                <div key={id} className={`rounded-3xl bg-gray-100 h-48`}>
-                                    <div className='flex flex-col gap-2 justify-end h-full p-4'>
-                                        <h1 className='text-xs line-clamp-2'>{name}</h1>
-                                        <div className='flex items-center gap-2'>
-                                            <svg className='w-3 h-3' x='0px' y='0px' viewBox='0 0 512 512'>
-                                                <g>
-                                                    <path d='M256,31c-77.7,0-140.6,63-140.6,140.6C115.4,312.2,256,481,256,481s140.6-168.8,140.6-309.4C396.6,94,333.7,31,256,31z
+                            .map(({ id, name, images, location }) => (
+                                <div key={id} className={`rounded-2xl md:rounded-3xl md:h-48 relative border border-gray-100 overflow-hidden`}>
+                                    <div className='absolute w-full h-full -z-10'>
+                                        {images && images.length
+                                            ? <div className='inset-0 absolute -z-10'>
+                                                <Image src={images[0] || ''} alt={name} layout={'fill'} objectFit={'cover'} className={'select-none'} />
+                                            </div>
+                                            : <div className='bg-gray-100 absolute inset-0 -z-10' />}
+                                    </div>
+                                    <div className='flex items-end h-full w-full'>
+                                        <div className={`flex flex-col justify-end md:justify-between h-24 md:h-[75px] w-full text-white bg-black/60 p-4 md:pt-2`}>
+                                            <h1 className='text-[14px] font-medium leading-4 line-clamp-1'>{name}</h1>
+                                            <div className='flex items-center gap-2'>
+                                                <svg className='w-3 h-3' fill='#fff' x='0px' y='0px' viewBox='0 0 512 512'>
+                                                    <g>
+                                                        <path d='M256,31c-77.7,0-140.6,63-140.6,140.6C115.4,312.2,256,481,256,481s140.6-168.8,140.6-309.4C396.6,94,333.7,31,256,31z
                                                         M256,257.8c-47.6,0-86.1-38.6-86.1-86.1s38.6-86.1,86.1-86.1s86.1,38.6,86.1,86.1S303.6,257.8,256,257.8z M201.5,171.6
                                                         c0-30.1,24.4-54.5,54.5-54.5s54.5,24.4,54.5,54.5c0,30.1-24.4,54.5-54.5,54.5S201.5,201.7,201.5,171.6z'/>
-                                                </g>
-                                            </svg>
-                                            <span className='text-xs'>{location}</span>
+                                                    </g>
+                                                </svg>
+                                                <span className='text-[13px] leading-4'>{location}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            )) : <Skeleton className='h-48' inline={true} containerClassName={'skeleton-container'} borderRadius={'1.5rem'} count={4} />}
+                            )) : <Skeleton className='h-24 md:h-48' inline={true} containerClassName={'skeleton-container'} borderRadius={'1.5rem'} count={4} />}
                     </div>
                 </div>
             </div >
