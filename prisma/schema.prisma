@@ -122,6 +122,7 @@ model Campus {
     id           Int        @id @default(autoincrement())
     name         String
     subname      String?
+    images       String[]
     direction    String
     contact      String?
     url          String?
