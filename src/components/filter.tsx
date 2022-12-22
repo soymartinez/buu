@@ -2,9 +2,11 @@ import { useState } from 'react'
 
 export default function Filter() {
 
-    const [isOpenState, setIsOpenState] = useState(false)
+    const [open, setOpen] = useState(false)
 
-    const Arrow = ({ className }: any) => (
+    const Arrow = ({ className }: {
+        className: string
+    }) => (
         <svg
             width={12}
             height={12}
@@ -19,31 +21,62 @@ export default function Filter() {
     )
 
     return (
-        <aside>
-            <ul className='flex gap-4'>
-                <li className=''>
-                    <div onClick={() => setIsOpenState(!isOpenState)} className='flex items-center gap-2 font-bold select-none'>
-                        Estados <Arrow className={isOpenState ? '-rotate-90' : '-rotate-180'} />
-                    </div>
-                    <ul className={`${isOpenState ? 'block' : 'hidden'} transition-all pl-4`}>
-                        <li>Veracruz</li>
-                        <li>Ciudad de México</li>
-                        <li>Nuevo León</li>
-                    </ul>
-                </li>
-                <li>
-                    <a href='#'>
-                        <div className='flex items-center gap-2 font-bold'>
-                            Carreras <Arrow className={'-rotate-180'} />
+        <aside className='hidden lg:flex'>
+            <div className='flex flex-col gap-4 w-44'>
+                <div className='flex flex-col gap-2'>
+                    <h1 className='flex items-center gap-2 text-sm font-bold mt-2'>Filtro</h1>
+                    <div className='flex flex-col gap-3'>
+                        <div className='flex items-center gap-2 w-full'>
+                            <input
+                                type={'checkbox'}
+                                required
+                                value={''}
+                                id={''}
+                                name={''}
+                                className='w-4 h-4 cursor-pointer accent-primary' />
+                            <label htmlFor={''} className='text-xs font-medium cursor-pointer w-full'>{'Pública'}</label>
                         </div>
-                    </a>
-                    <ul className='hidden pl-4'>
-                        <li>Medicina</li>
-                        <li>Odontología</li>
-                        <li>Enfermería</li>
-                    </ul>
-                </li>
-            </ul>
-        </aside>
+                        <div className='flex items-center gap-2 w-full'>
+                            <input
+                                type={'checkbox'}
+                                required
+                                value={''}
+                                id={''}
+                                name={''}
+                                className='w-4 h-4 cursor-pointer accent-primary' />
+                            <label htmlFor={''} className='text-xs font-medium cursor-pointer w-full'>{'Privada'}</label>
+                        </div>
+                    </div>
+                </div>
+                <div className='flex flex-col gap-2'>
+                    <h1 className='flex items-center gap-2 text-sm font-bold mt-2 select-none cursor-pointer'
+                        onClick={() => setOpen(!open)}>
+                        Especialidad
+                        <Arrow className={`${open ? '-rotate-180' : '-rotate-90'}`} /></h1>
+                    <div className={`flex flex-col gap-3 ${open ? 'h-auto' : 'h-0'} overflow-hidden`}>
+                        <div className='flex items-center gap-2 w-full'>
+                            <input
+                                type={'checkbox'}
+                                required
+                                value={''}
+                                id={''}
+                                name={''}
+                                className='w-4 h-4 cursor-pointer accent-primary' />
+                            <label htmlFor={''} className='text-xs font-medium cursor-pointer w-full'>{'Ingeniería de Software'}</label>
+                        </div>
+                        <div className='flex items-center gap-2 w-full'>
+                            <input
+                                type={'checkbox'}
+                                required
+                                value={''}
+                                id={''}
+                                name={''}
+                                className='w-4 h-4 cursor-pointer accent-primary' />
+                            <label htmlFor={''} className='text-xs font-medium cursor-pointer w-full'>{'Administración de Empresas'}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside >
     )
 }
