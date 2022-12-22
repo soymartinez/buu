@@ -9,7 +9,8 @@ export default function List() {
     const { asPath } = useRouter()
     const { data } = trpc.useQuery(['university.get', { take: asPath === '/' ? 5 : undefined }])
     return (
-        <div className='flex flex-col gap-2'>
+        <div className='flex flex-col gap-4 lg:gap-2 w-full'>
+            {asPath === '/' && <h1 className='text-md font-bold bg-white mt-3 leading-none lg:hidden'>Populares</h1>}
             {data ? data?.map((item: University, index: number) => (
                 <Link href={`/universidades/${item.subname?.toLocaleLowerCase()}`} key={index}>
                     <a>
