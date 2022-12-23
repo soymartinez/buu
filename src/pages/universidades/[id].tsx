@@ -256,13 +256,13 @@ export default function Universidad({ id }: { id: string }) {
                             </div>
                         </div>
                     </section>
-                    <section className='h-40 md:hidden lg:block lg:h-full flex flex-col gap-1 col-span-6 lg:col-span-2 px-4 md:p-0'>
+                    <section className='h-40 md:hidden lg:h-full flex flex-col gap-1 col-span-6 lg:col-span-2 px-4 md:p-0'>
                         <h3 className='text-black font-semibold text-xs md:hidden'>{data?.description ? 'Ubicación:' : <Skeleton width={130} />}</h3>
                         {data
                             ? <Map
                                 bounds={bounds}
                                 marker={marker}
-                                className='h-40 lg:h-full rounded-2xl md:rounded-3xl z-10'
+                                className='h-full rounded-2xl md:rounded-3xl z-10'
                             />
                             : <>
                                 <div className={'hidden lg:flex'}>
@@ -272,6 +272,66 @@ export default function Universidad({ id }: { id: string }) {
                                     <Skeleton height={170} containerClassName={'skeleton-container'} borderRadius={'1rem'} inline={true} />
                                 </div>
                             </>}
+                    </section>
+                    <section className='col-span-6 lg:col-span-2'>
+                        <div className='grid row-span-4 h-full px-4 md:px-0 gap-4'>
+                            <h1 className='font-bold text-sm md:text-base text-black/60 h-min'>Grado Académico</h1>
+                            <div className='flex gap-4 h-min truncate'>
+                                <div>
+                                    <div className='flex items-center justify-center w-12 h-12 bg-hover rounded-xl'>
+                                        <svg
+                                            width='30px'
+                                            height='30px'
+                                            viewBox='0 0 32 32'
+                                            xmlns='http://www.w3.org/2000/svg'
+                                        >
+                                            <title />
+                                            <path d='M11.588,16.369l10.018,10.85a3.869,3.869,0,0,0,2.763,1.271h.1a3.851,3.851,0,0,0,3.846-3.933,3.879,3.879,0,0,0-1.261-2.773L16.2,11.768A7,7,0,0,0,6.493,3.381a1,1,0,0,0-.269,1.607L9.515,8.271,8.1,9.687,4.806,6.4A1,1,0,0,0,3.2,6.676a6.993,6.993,0,0,0,8.389,9.693ZM4.562,8.983l2.832,2.825a1,1,0,0,0,1.413,0l2.83-2.83a1,1,0,0,0,0-1.415L8.8,4.736a5,5,0,0,1,5.308,6.919,1,1,0,0,0,.241,1.129L25.707,23.26a1.853,1.853,0,0,1,.612,1.342,1.827,1.827,0,0,1-.543,1.348l0,0a1.867,1.867,0,0,1-1.353.537,1.844,1.844,0,0,1-1.337-.619L12.6,14.522a1,1,0,0,0-1.131-.24,5,5,0,0,1-6.912-5.3Z' />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div className='flex flex-col justify-around w-full truncate'>
+                                    <h1 className='font-bold text-[16px] text-black/60'>Carreras Técnicas</h1>
+                                    <span className='font-semibold text-[15px] text-font/70 truncate'>Relacionada con la operación</span>
+                                </div>
+                            </div>
+                            <div className='flex gap-4 h-min truncate'>
+                                <div>
+                                    <div className='flex items-center justify-center w-12 h-12 bg-hover rounded-xl'>
+                                        <svg
+                                            width='30px'
+                                            height='30px'
+                                            viewBox='0 0 32 32'
+                                        >
+                                            <title />
+                                            <path d='M7,26H25a1,1,0,0,0,1-1V19a1,1,0,0,0-1-1H14V7a1,1,0,0,0-1-1H7A1,1,0,0,0,6,7V25A1,1,0,0,0,7,26Zm7-6h2v1a1,1,0,0,0,2,0V20h2v1a1,1,0,0,0,2,0V20h2v4H14ZM8,8h4v2H11a1,1,0,0,0,0,2h1v2H11a1,1,0,0,0,0,2h1v2H8ZM8,20h4v4H8Z' />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div className='flex flex-col justify-around w-full truncate'>
+                                    <h1 className='font-bold text-[16px] text-black/60'>Ingenierías</h1>
+                                    <span className='font-semibold text-[15px] text-font/70 truncate'>Aplicación de conocimientos científicos</span>
+                                </div>
+                            </div>
+                            <div className='flex gap-4 h-min truncate'>
+                                <div>
+                                    <div className='flex items-center justify-center w-12 h-12 bg-hover rounded-xl'>
+                                        <svg
+                                            width='30px'
+                                            height='30px'
+                                            viewBox='0 0 32 32'
+                                        >
+                                            <title />
+                                            <path d='M21.3,5.54,7.161,19.682c-.01.01-.013.023-.022.033a.99.99,0,0,0-.172.26c-.01.021-.022.041-.03.063s-.013.023-.017.036L4.8,26.437A1,1,0,0,0,6.063,27.7l6.364-2.121c.013,0,.023-.013.036-.017s.041-.02.063-.03a.99.99,0,0,0,.26-.172c.01-.009.023-.012.033-.022L26.96,11.2a4,4,0,0,0,0-5.657A4.1,4.1,0,0,0,21.3,5.54ZM7.328,25.172l.977-2.932,1.955,1.955Zm4.783-1.954L9.282,20.389,21.3,8.368,24.132,11.2ZM25.546,9.783,22.717,6.954a2.048,2.048,0,0,1,2.829,0,2,2,0,0,1,0,2.829ZM21.3,11.2a1,1,0,0,1,0,1.414l-7.778,7.778a1,1,0,0,1-1.414-1.414L19.889,11.2A1,1,0,0,1,21.3,11.2Z' />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div className='flex flex-col justify-around w-full truncate'>
+                                    <h1 className='font-bold text-[16px] text-black/60'>Licenciaturas</h1>
+                                    <span className='font-semibold text-[15px] text-font/70 truncate'>Grado académico de educación superior</span>
+                                </div>
+                            </div>
+                        </div>
                     </section>
                 </div>
 
@@ -307,6 +367,7 @@ export default function Universidad({ id }: { id: string }) {
                             </div>
                         </div>
                     </div>
+                    <h1 className='font-bold text-md md:text-lg text-black/60 hidden xl:flex'>Ubicaciones</h1>
                 </div>
 
                 <div className='grid grid-cols-6 gap-8 text-sm md:text-base'>
@@ -321,7 +382,7 @@ export default function Universidad({ id }: { id: string }) {
                                             </div>
                                             : <div className='bg-gray-100 absolute inset-0 -z-10' />}
                                     </div>
-                                    <div className='flex items-end h-full w-full'>
+                                    <div className='flex items-end h-full'>
                                         <div className={`flex flex-col justify-end md:justify-between h-24 md:h-[75px] w-full text-white bg-black/60 p-4 md:pt-2`}>
                                             <h1 className='text-[14px] font-medium leading-4 line-clamp-1'>{name}</h1>
                                             <div className='flex items-center gap-2'>
@@ -339,6 +400,23 @@ export default function Universidad({ id }: { id: string }) {
                                 </div>
                             )) : <Skeleton className='h-24 md:h-48' inline={true} containerClassName={'skeleton-container'} borderRadius={'1.5rem'} count={4} />}
                     </div>
+                    <section className='hidden lg:flex lg:h-full flex-col gap-1 col-span-6 lg:col-span-2 px-4 md:p-0'>
+                        <h3 className='text-black font-semibold text-xs md:hidden'>{data?.description ? 'Ubicación:' : <Skeleton width={130} />}</h3>
+                        {data
+                            ? <Map
+                                bounds={bounds}
+                                marker={marker}
+                                className='h-full rounded-2xl md:rounded-3xl z-10'
+                            />
+                            : <>
+                                <div className={'hidden lg:flex'}>
+                                    <Skeleton height={240} containerClassName={'skeleton-container'} borderRadius={'1.5rem'} inline={true} />
+                                </div>
+                                <div className={'lg:hidden'}>
+                                    <Skeleton height={170} containerClassName={'skeleton-container'} borderRadius={'1rem'} inline={true} />
+                                </div>
+                            </>}
+                    </section>
                 </div>
             </div >
         </Layout >
