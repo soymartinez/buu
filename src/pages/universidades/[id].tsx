@@ -256,7 +256,7 @@ export default function Universidad({ id }: { id: string }) {
                             </div>
                         </div>
                     </section>
-                    <section className='h-40 md:hidden lg:h-full flex flex-col gap-1 col-span-6 lg:col-span-2 px-4 md:p-0'>
+                    <section className='h-40 md:hidden flex flex-col gap-1 col-span-6 lg:col-span-2 px-4 md:p-0'>
                         <h3 className='text-black font-semibold text-xs md:hidden'>{data?.description ? 'Ubicación:' : <Skeleton width={130} />}</h3>
                         {data
                             ? <Map
@@ -406,7 +406,7 @@ export default function Universidad({ id }: { id: string }) {
                             ? <Map
                                 bounds={bounds}
                                 marker={marker}
-                                className='h-full rounded-2xl md:rounded-3xl z-10'
+                                className='min-h-[240px] h-full rounded-2xl md:rounded-3xl z-10'
                             />
                             : <>
                                 <div className={'hidden lg:flex'}>
