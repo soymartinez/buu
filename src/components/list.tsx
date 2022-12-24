@@ -8,7 +8,7 @@ import { useRouter } from 'next/router'
 export default function List({
     search = '',
 }: {
-    search: string,
+    search?: string,
 }) {
     const { asPath } = useRouter()
     const { data } = trpc.useQuery(['university.get', {
