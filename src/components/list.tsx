@@ -5,9 +5,16 @@ import Card from './card'
 import Skeleton from 'react-loading-skeleton'
 import { useRouter } from 'next/router'
 
-export default function List() {
+export default function List({
+    search = '',
+}: {
+    search: string,
+}) {
     const { asPath } = useRouter()
-    const { data } = trpc.useQuery(['university.get', { take: asPath === '/' ? 5 : undefined }])
+    const { data } = trpc.useQuery(['university.get', {
+        take: asPath === '/' ? 5 : undefined,
+        name: search,
+    }])
     return (
         <div className='flex flex-col gap-4 lg:gap-2 w-full'>
             {asPath === '/' && <h1 className='text-md font-bold bg-white mt-3 leading-none lg:hidden'>Populares</h1>}
