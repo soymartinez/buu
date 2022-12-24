@@ -42,11 +42,28 @@ export const universityRouter = createRouter()
   })
   .query('get', {
     input: z.object({
-      take: z.number().nullish(),
+      take: z.number().optional(),
+      name: z.string().optional(),
     }).nullish(),
     async resolve({ ctx, input }) {
       return await ctx.prisma.university.findMany({
-        take: input?.take ?? undefined,
+        take: input?.take,
+        where: {
+          OR: [
+            {
+              name: {
+                contains: input?.name,
+                mode: 'insensitive',
+              },
+            },
+            {
+              subname: {
+                contains: input?.name,
+                mode: 'insensitive',
+              },
+            },
+          ],
+        }
       })
     }
   })
