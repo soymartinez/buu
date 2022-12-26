@@ -44,6 +44,7 @@ export const universityRouter = createRouter()
     input: z.object({
       take: z.number().optional(),
       name: z.string().optional(),
+      chips: z.array(z.string()),
       filter: z.object({
         public: z.boolean().optional(),
         private: z.boolean().optional(),
@@ -72,6 +73,14 @@ export const universityRouter = createRouter()
               input?.filter?.public ? 'Publica' : 'Privada',
               input?.filter?.private ? 'Privada' : 'Publica',
             ],
+          },
+          careers: {
+            some: input?.chips?.length ? {
+              name: {
+                in: input?.chips,
+                mode: 'insensitive',
+              }
+            } : undefined,
           },
         }
       })
