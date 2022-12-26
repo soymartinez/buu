@@ -44,6 +44,10 @@ export const universityRouter = createRouter()
     input: z.object({
       take: z.number().optional(),
       name: z.string().optional(),
+      filter: z.object({
+        public: z.boolean().optional(),
+        private: z.boolean().optional(),
+      }),
     }).nullish(),
     async resolve({ ctx, input }) {
       return await ctx.prisma.university.findMany({
@@ -63,6 +67,12 @@ export const universityRouter = createRouter()
               },
             },
           ],
+          type: {
+            in: [
+              input?.filter?.public ? 'Publica' : 'Privada',
+              input?.filter?.private ? 'Privada' : 'Publica',
+            ],
+          },
         }
       })
     }
