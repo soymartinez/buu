@@ -7,13 +7,16 @@ import { useRouter } from 'next/router'
 
 export default function List({
     search = '',
+    filter = {},
 }: {
     search?: string,
+    filter?: object,
 }) {
     const { asPath } = useRouter()
     const { data } = trpc.useQuery(['university.get', {
         take: asPath === '/' ? 5 : undefined,
         name: search,
+        filter: filter,
     }])
     return (
         <div className='flex flex-col gap-4 lg:gap-2 w-full'>
