@@ -7,13 +7,14 @@ import { useState } from 'react'
 
 export default function Home() {
   const [search, setSearch] = useState('')
+  const [filter, setFilter] = useState({})
   return (
     <Layout title='Buu – Encuentra la mejor universidad para ti'>
       <Header setSearch={setSearch} />
       <Chips />
       <section className='flex gap-4 px-4 md:px-8 w-full max-w-[1280px] mx-auto'>
-        <Filter />
-        <List search={search} />
+        <Filter setFilter={setFilter} />
+        <List search={search} filter={filter} />
       </section>
     </Layout>
   )
