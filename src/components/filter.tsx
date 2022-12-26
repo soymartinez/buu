@@ -1,8 +1,20 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-export default function Filter() {
+export interface Filter {
+    public: boolean,
+    private: boolean,
+}
 
+export default function Filter({ setFilter }: { setFilter: (filter: Filter) => void, }) {
     const [open, setOpen] = useState(false)
+    const [filter, set] = useState<Filter>({
+        public: false,
+        private: false,
+    })
+
+    useEffect(() => {
+        setFilter(filter)
+    }, [filter])
 
     const Arrow = ({ className }: {
         className: string
@@ -28,23 +40,23 @@ export default function Filter() {
                     <div className='flex flex-col gap-3'>
                         <div className='flex items-center gap-2 w-full'>
                             <input
+                                onChange={(e) => set({ ...filter, public: e.target.checked })}
                                 type={'checkbox'}
-                                required
-                                value={''}
-                                id={''}
-                                name={''}
+                                id={'public'}
+                                name={'public'}
+                                checked={filter.public}
                                 className='w-4 h-4 cursor-pointer accent-primary' />
-                            <label htmlFor={''} className='text-xs font-medium cursor-pointer w-full'>{'Pública'}</label>
+                            <label htmlFor={'public'} className='text-xs font-medium cursor-pointer w-full'>{'Pública'}</label>
                         </div>
                         <div className='flex items-center gap-2 w-full'>
                             <input
+                                onChange={(e) => set({ ...filter, private: e.target.checked })}
                                 type={'checkbox'}
-                                required
-                                value={''}
-                                id={''}
-                                name={''}
+                                id={'private'}
+                                name={'private'}
+                                checked={filter.private}
                                 className='w-4 h-4 cursor-pointer accent-primary' />
-                            <label htmlFor={''} className='text-xs font-medium cursor-pointer w-full'>{'Privada'}</label>
+                            <label htmlFor={'private'} className='text-xs font-medium cursor-pointer w-full'>{'Privada'}</label>
                         </div>
                     </div>
                 </div>
