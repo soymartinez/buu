@@ -2,8 +2,16 @@ import Logo from 'components/logo'
 import { signIn } from 'next-auth/react'
 import Head from 'next/head'
 import Link from 'next/link'
+import { FormEvent, useState } from 'react'
 
 export default function Signin() {
+    const [email, setEmail] = useState('')
+
+    async function signInWithEmail(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault()
+        signIn('email', { email, callbackUrl: '/', redirect: false })
+    }
+
     return (
         <div className='w-screen h-screen grid lg:grid-cols-2'>
             <Head>
@@ -19,8 +27,8 @@ export default function Signin() {
                     <h1 className='font-bold text-xl'>Bienvenido</h1>
                 </div>
                 <p className='text-font text-xs mb-6'>Por favor, introduzca sus datos.</p>
-                <form className='flex flex-col gap-3 w-full'>
-                    <input type={'text'} required name={'email'} placeholder={'Correo electrónico'} className='text-xs w-full border rounded-md p-3 hover:border-font' />
+                <form onSubmit={(e) => signInWithEmail(e)} className='flex flex-col gap-3 w-full'>
+                    <input onChange={({ target }) => setEmail(target.value)} type={'text'} required name={'email'} placeholder={'Correo electrónico'} className='text-xs w-full border rounded-md p-3 hover:border-font' />
                     <button className='w-full bg-primary rounded-md p-2 font-semibold text-white hover:bg-opacity-90 transition-colors' type={'submit'}>Continuar</button>
                 </form>
                 <div className='flex gap-6 my-3 w-full justify-center items-center'>
