@@ -67,7 +67,9 @@ export default function Navbar({ visible }: { visible: boolean }) {
                     {data?.user ?
                       <div onMouseEnter={() => setMounted(true)} onMouseLeave={() => setMounted(false)} className='flex items-center gap-2 relative cursor-pointer'>
                         <h1 className='text-black font-bold'>{name[0]} {name[1] && name[1]?.charAt(0) + '.'}</h1>
-                        <Image src={data.user.image!} alt={data.user.name!} width={35} height={35} className='rounded-full' />
+                        {data.user.image
+                          ? <Image src={data.user.image} alt={data.user.name || ''} width={35} height={35} className='rounded-full' />
+                          : <div className='w-7 h-7 rounded-full bg-primary flex items-center justify-center' />}
 
                         <div onMouseEnter={() => setMounted(true)}
                           className={`absolute top-5 pt-5 right-0 transition-all duration-300 ${mounted ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
@@ -109,7 +111,9 @@ export default function Navbar({ visible }: { visible: boolean }) {
                         <span onClick={() => signOut()} className='block whitespace-nowrap hover:text-font text-white cursor-pointer transition-colors font-medium'>Cerrar sesión</span>
                         <div onMouseEnter={() => setMounted(true)} onMouseLeave={() => setMounted(false)} className='flex items-center gap-2 relative cursor-pointer'>
                           <h1 className='text-white font-bold'>{name[0]} {name[1] && name[1]?.charAt(0) + '.'}</h1>
-                          <Image src={data.user.image!} alt={data.user.name!} width={35} height={35} className='rounded-full' />
+                          {data.user.image
+                            ? <Image src={data.user.image} alt={data.user.name || ''} width={35} height={35} className='rounded-full' />
+                            : <div className='w-7 h-7 rounded-full bg-primary flex items-center justify-center' />}
                         </div>
                       </div>
                       :
