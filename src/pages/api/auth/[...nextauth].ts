@@ -1,6 +1,9 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
+import EmailProvider from 'next-auth/providers/email'
 import GoogleProvider from 'next-auth/providers/google'
 import GithubProvider from 'next-auth/providers/github'
+
+import { sendVerification } from 'utils/customEmail'
 
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
@@ -22,6 +25,18 @@ export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
   providers: [
+    EmailProvider({
+      server: env.EMAIL_SERVER,
+      from: env.EMAIL_FROM,
+      async sendVerificationRequest({
+        identifier: email, url, provider: { server, from },
+      }) {
+        await sendVerification({
+          email, url, provider: { server, from },
+        })
+      },
+      maxAge: 10 * 60, // 10 minutes
+    }),
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
