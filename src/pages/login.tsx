@@ -1,10 +1,11 @@
 import Logo from 'components/logo'
-import { signIn } from 'next-auth/react'
+import { GetServerSidePropsContext } from 'next'
+import { getCsrfToken, signIn } from 'next-auth/react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { FormEvent, useState } from 'react'
 
-export default function Signin() {
+export default function Signin({ csrfToken }: { csrfToken: string }) {
     const [email, setEmail] = useState('')
 
     async function signInWithEmail(e: FormEvent<HTMLFormElement>) {
@@ -27,8 +28,9 @@ export default function Signin() {
                     <h1 className='font-bold text-xl'>Bienvenido</h1>
                 </div>
                 <p className='text-font text-xs mb-6'>Por favor, introduzca sus datos.</p>
-                <form onSubmit={(e) => signInWithEmail(e)} className='flex flex-col gap-3 w-full'>
-                    <input onChange={({ target }) => setEmail(target.value)} type={'text'} required name={'email'} placeholder={'Correo electrónico'} className='text-xs w-full border rounded-md p-3 hover:border-font' />
+                <form onSubmit={(e) => signInWithEmail(e)} className='flex flex-col gap-3 w-full' method='post' action='/api/auth/signin/email'>
+                    <input name={'csrfToken'} type={'hidden'} defaultValue={csrfToken} />
+                    <input onChange={({ target }) => setEmail(target.value)} type={'email'} required name={'email'} placeholder={'Correo electrónico'} className='text-xs w-full border rounded-md p-3 hover:border-font' />
                     <button className='w-full bg-primary rounded-md p-2 font-semibold text-white hover:bg-opacity-90 transition-colors' type={'submit'}>Continuar</button>
                 </form>
                 <div className='flex gap-6 my-3 w-full justify-center items-center'>
@@ -60,4 +62,11 @@ export default function Signin() {
             </div>
         </div>
     )
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+    const csrfToken = await getCsrfToken(context)
+    return {
+        props: { csrfToken },
+    }
 }
