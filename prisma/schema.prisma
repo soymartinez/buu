@@ -93,6 +93,7 @@ enum Period {
     Trimestral
     Bimestral
     Mensual
+    Ciclo
 }
 
 model Career {
