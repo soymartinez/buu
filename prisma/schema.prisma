@@ -81,7 +81,7 @@ enum Level {
     Tecnico
     Licenciatura
     Ingenieria
-    Posgrado
+    Especialidad
     Maestria
     Doctorado
 }
