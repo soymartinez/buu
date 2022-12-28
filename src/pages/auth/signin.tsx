@@ -1,16 +1,25 @@
+import Loading from 'components/icons/loading'
 import Logo from 'components/logo'
 import { GetServerSidePropsContext } from 'next'
-import { getCsrfToken, signIn } from 'next-auth/react'
+import { getCsrfToken, signIn, SignInResponse } from 'next-auth/react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { FormEvent, useState } from 'react'
 
-export default function Signin({ csrfToken }: { csrfToken: string }) {
+export default function SignIn({ csrfToken }: { csrfToken: string }) {
+    const [loading, setLoading] = useState(false)
     const [email, setEmail] = useState('')
+    const [res, setRes] = useState<SignInResponse | undefined>(undefined)
 
     async function signInWithEmail(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
+        setLoading(true)
         signIn('email', { email, callbackUrl: '/', redirect: false })
+            .then((res: SignInResponse | undefined) => {
+                setRes(res)
+                setLoading(false)
+            })
+            .catch((err) => console.log(err))
     }
 
     return (
@@ -30,8 +39,35 @@ export default function Signin({ csrfToken }: { csrfToken: string }) {
                 <p className='text-font text-xs mb-6'>Por favor, introduzca sus datos.</p>
                 <form onSubmit={(e) => signInWithEmail(e)} className='flex flex-col gap-3 w-full' method='post' action='/api/auth/signin/email'>
                     <input name={'csrfToken'} type={'hidden'} defaultValue={csrfToken} />
-                    <input onChange={({ target }) => setEmail(target.value)} type={'email'} required name={'email'} placeholder={'Correo electrónico'} className='text-xs w-full border rounded-md p-3 hover:border-font' />
-                    <button className='w-full bg-primary rounded-md p-2 font-semibold text-white hover:bg-opacity-90 transition-colors' type={'submit'}>Continuar</button>
+                    {res === undefined &&
+                        <input onChange={({ target }) => setEmail(target.value)}
+                            type={'email'}
+                            required
+                            name={'email'}
+                            placeholder={'Correo electrónico'}
+                            className='text-xs w-full border rounded-md p-3 hover:border-font' />}
+                    {res?.ok &&
+                        <div className='text-xs w-full border rounded-md p-3 px-2 border-trasparent transition'>
+                            <p className='text-xs'>
+                                Revisa tu correo electrónico para iniciar sesión.
+                            </p>
+                        </div>}
+                    {res?.error &&
+                        <div className='text-xs w-full border rounded-md py-1 px-2 border-trasparent transition'>
+                            <p className='text-xs'>
+                                Error al iniciar sesión. Por favor, {' '}
+                                <strong onClick={() => setRes(undefined)} className='text-primary/90 hover:text-primary cursor-pointer'>inténtelo de nuevo</strong>.
+                            </p>
+                        </div>}
+                    <button className={`w-full  rounded-md p-2 font-semibold hover:bg-opacity-90 transition-colors 
+                        ${res?.ok ? 'bg-hover text-black cursor-not-allowed' : `${res?.error ? 'bg-[#ed2672] text-white' : 'bg-primary text-white'}`} 
+                        ${!res?.error && 'bg-[#]'}`}
+                        disabled={res?.ok || loading || Boolean(res?.error)}
+                        type={'submit'}>
+                        <div className='flex justify-center items-center transition-all duration-300'>
+                            Continuar {loading && <Loading />}
+                        </div>
+                    </button>
                 </form>
                 <div className='flex gap-6 my-3 w-full justify-center items-center'>
                     <p className='h-[2px] w-full bg-gray-200 rounded-full' />
