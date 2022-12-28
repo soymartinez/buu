@@ -79,7 +79,7 @@ export default function Navbar({ visible }: { visible: boolean }) {
                           </div>
                         </div>
                       </div>
-                      : <Link href={'/login'}>
+                      : <Link href={'/auth/signin'}>
                         <a className='rounded-full bg-white/90 border backdrop-blur-sm hover:bg-white transition-colors p-2 md:px-3 md:py-2 text-black'>
                           Iniciar sesión
                         </a>
@@ -118,7 +118,7 @@ export default function Navbar({ visible }: { visible: boolean }) {
                       </div>
                       :
                       <div className='w-min whitespace-nowrap transition-colors text-white hover:text-opacity-80'>
-                        <Link href={'/login'}>
+                        <Link href={'/auth/signin'}>
                           <a>
                             Iniciar sesión
                           </a>
