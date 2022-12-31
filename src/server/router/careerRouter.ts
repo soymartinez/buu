@@ -83,3 +83,15 @@ export const careerRouter = createRouter()
             })
         }
     })
+    .mutation('delete', {
+        input: z.object({
+            id: z.number(),
+        }),
+        async resolve({ ctx, input }) {
+            return await ctx.prisma.career.delete({
+                where: {
+                    id: input.id,
+                }
+            })
+        },
+    })
