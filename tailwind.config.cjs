@@ -13,6 +13,7 @@ module.exports = {
         100: '#f4f4f4',
         200: '#dadada',
       },
+      error: '#ff5555',
       trasparent: 'transparent',
     },
     extend: {
