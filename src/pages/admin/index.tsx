@@ -1,6 +1,7 @@
 import { Level, Modality, Period, Type } from '@prisma/client'
 import Dropdown from 'components/dropdown'
 import Layout from 'components/layout'
+import Modal from 'components/modal'
 import Select from 'components/select'
 import { NextApiRequest, NextApiResponse } from 'next'
 import Image from 'next/image'
@@ -40,12 +41,30 @@ export default function Admin() {
     const { mutate: regionCreate } = trpc.useMutation(['region.create'])
     const { mutate: campusCreate } = trpc.useMutation(['campus.create'])
     const { mutate: careerCreate } = trpc.useMutation(['career.create'])
+
+    const { mutate: deleteCareer } = trpc.useMutation(['career.delete'])
+
     const { invalidateQueries } = trpc.useContext()
 
     const [success, setSuccess] = useState(0)
     const [status, setStatus] = useState('universidad')
-    const [modal, setModal] = useState(false)
+    const [modal, setModal] = useState({
+        title: '',
+        message: '',
+        textButton: '',
+        background: 'white' as 'white' | 'primary' | 'warning' | 'error',
+        handler: () => { },
+        open: false,
+    })
+    const [row, setRow] = useState(false)
     const [preview, setPreview] = useState('')
+    const [selected, setSelected] = useState<number[]>([])
+
+    const handleSelected = (id: number) => {
+        selected.some((selectId) => selectId === id)
+            ? setSelected(selected.filter((selectId) => selectId !== id))
+            : setSelected([...selected, id])
+    }
 
     const handleSaveUniversity = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -65,7 +84,7 @@ export default function Admin() {
             onSuccess({ id }) {
                 setSuccess(id)
                 invalidateQueries(['university.getAll'])
-                setModal(false)
+                setRow(false)
                 setPreview('')
             },
         })
@@ -81,7 +100,7 @@ export default function Admin() {
         }, {
             onSuccess() {
                 invalidateQueries(['region.getAll'])
-                setModal(false)
+                setRow(false)
             },
         })
     }
@@ -104,7 +123,7 @@ export default function Admin() {
             onSuccess({ id }) {
                 setSuccess(id)
                 invalidateQueries(['campus.getAll'])
-                setModal(false)
+                setRow(false)
             }
         })
     }
@@ -127,9 +146,25 @@ export default function Admin() {
         }, {
             onSuccess() {
                 invalidateQueries(['career.getAllCareersDetails'])
-                setModal(false)
+                setRow(false)
             },
         })
+    }
+
+    const handleDelete = () => {
+        setModal({ ...modal, open: false })
+        switch (status) {
+            case 'carrera':
+                selected.map((id) => {
+                    deleteCareer({ id }, {
+                        onSuccess() {
+                            invalidateQueries(['career.getAllCareersDetails'])
+                        },
+                    })
+                })
+                break
+        }
+        setSelected([])
     }
 
     const handleFile = (e: any) => {
@@ -148,12 +183,21 @@ export default function Admin() {
 
     return (
         <Layout title={'Buu – Administrador'}>
+            <Modal
+                title={modal.title}
+                message={modal.message}
+                button={modal.textButton}
+                background={modal.background}
+                setModal={(v: boolean) => setModal({ ...modal, open: v })}
+                setHandler={modal.handler}
+                open={modal.open}
+            />
             <div className='flex flex-col gap-4 pt-[70px] md:pt-[80px] px-4 md:px-8 w-full h-screen max-w-[1280px] mx-auto'>
                 <h1 className='font-bold text-xl md:text-2xl mt-4'>Administrador</h1>
                 <section className='grid gap-4'>
                     <div className='flex items-center gap-1 sm:gap-6 bg-[#ececec] rounded-xl px-2 overflow-x-auto'>
                         {menu.map(({ name, active, count }) => (
-                            <div key={name} onClick={() => { setStatus(active); setModal(false) }}>
+                            <div key={name} onClick={() => { setStatus(active); setRow(false); setSelected([]) }}>
                                 <div className={`flex md:flex-row items-center justify-between font-bold gap-2 py-2 px-1 md:px-3 transition-colors cursor-pointer 
                                     ${status === active ? 'text-primary' : 'text-font hover:text-font/70'}`}>
                                     <h2 className='text-xs capitalize'>{name}</h2>
@@ -168,30 +212,48 @@ export default function Admin() {
                         ))}
                     </div>
                     <div className='flex flex-col gap-4 lg:flex-row lg:items-center justify-between'>
-                        <div className={`text-xs w-min font-semibold text-font ml-auto lg:m-0`}>
-                            {modal
-                                ? <div className='flex gap-3'>
-                                    <button type={'submit'} form={`form-${status}`} className='flex gap-3 px-3 md:px-5 py-2 text-primary hover:opacity-90'>
+                        <div className={`flex gap-5 px-3 md:px-5 text-xs w-min font-semibold text-font ml-auto lg:m-0`}>
+                            {row
+                                ? <div className='flex gap-5'>
+                                    <button type={'submit'} form={`form-${status}`} className='flex gap-2 py-2 text-primary hover:opacity-90'>
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                             <path fillRule="evenodd" d="M5 3a1 1 0 011-1h8a1 1 0 011 1v12a1 1 0 01-1 1H6a1 1 0 01-1-1V3zm1 2v10h8V5H6z" clipRule="evenodd" />
                                         </svg>
                                         <h2 className='select-none whitespace-nowrap'>Guardar {status}</h2>
                                     </button>
 
-                                    <button onClick={() => { setModal(false); setPreview('') }} className='flex gap-3 px-3 md:px-5 py-2 hover:opacity-90'>
+                                    <button onClick={() => { setRow(false); setPreview('') }} className='flex gap-2 py-2 hover:opacity-90'>
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                             <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                                         </svg>
                                         <h2 className='select-none whitespace-nowrap'>Cancelar</h2>
                                     </button>
                                 </div>
-                                : <button onClick={() => setModal(true)} className='flex justify-center items-center gap-3 px-3 md:px-5 py-2 hover:opacity-90'>
-                                    <div className='flex justify-center w-4 h-4 items-center relative'>
-                                        <div className='w-[12px] h-[2px] rounded-full bg-font' />
-                                        <div className='absolute w-[12px] h-[2px] rounded-full bg-font rotate-90' />
-                                    </div>
-                                    <h2 className='select-none whitespace-nowrap'>Agregar <span className='lowercase'>{status}</span></h2>
-                                </button>
+                                : <>
+                                    <button onClick={() => setRow(true)} className='flex justify-center items-center gap-2 py-2 hover:opacity-90'>
+                                        <div className='flex justify-center w-4 h-4 items-center relative'>
+                                            <div className='w-[12px] h-[2px] rounded-full bg-font' />
+                                            <div className='absolute w-[12px] h-[2px] rounded-full bg-font rotate-90' />
+                                        </div>
+                                        <h2 className='select-none whitespace-nowrap'>Agregar <span className='lowercase'>{status}</span></h2>
+                                    </button>
+                                    {selected.length > 0 &&
+                                        <button onClick={() => setModal({
+                                            title: `Confirmar borrado de registro`,
+                                            message: `Está a punto de eliminar el registro de forma permanente de la base de datos.`,
+                                            textButton: 'Eliminar',
+                                            background: 'warning',
+                                            handler: () => handleDelete(),
+                                            open: true,
+                                        })} className='flex justify-center items-center gap-2 py-2 hover:opacity-90'>
+                                            <div className='flex justify-center w-4 h-4 items-center relative'>
+                                                <div className='w-[12px] h-[2px] rounded-full bg-error' />
+                                            </div>
+                                            <h2 className='select-none whitespace-nowrap text-error'>
+                                                Eliminar {selected.length} registros
+                                            </h2>
+                                        </button>}
+                                </>
                             }
                         </div>
                         <div className='flex flex-row items-center gap-2'>
@@ -233,7 +295,7 @@ export default function Admin() {
                                     </tr>
                                 </thead>
                                 <tbody className='rounded-b-xl overflow-hidden'>
-                                    {modal && (
+                                    {row && (
                                         <tr className='font-semibold text-black w-full sticky top-10 z-20'>
                                             <td>
                                                 <input className='w-full bg-hover py-3 px-4' disabled />
@@ -352,7 +414,7 @@ export default function Admin() {
                                     </tr>
                                 </thead>
                                 <tbody className='rounded-b-xl overflow-hidden'>
-                                    {modal && (
+                                    {row && (
                                         <tr className='font-semibold text-black w-full sticky top-10 z-20'>
                                             <td>
                                                 <input className='w-full bg-hover py-3 px-4' disabled />
@@ -416,7 +478,7 @@ export default function Admin() {
                                     </tr>
                                 </thead>
                                 <tbody className='rounded-b-xl overflow-hidden'>
-                                    {modal && (
+                                    {row && (
                                         <tr className='font-semibold text-black w-full sticky top-10 z-20'>
                                             <td>
                                                 <input className='w-full bg-hover py-3 px-4' disabled />
@@ -507,6 +569,7 @@ export default function Admin() {
                             <table className='table-auto text-font text-xs w-full'>
                                 <thead className='bg-primary text-white sticky top-0 z-30'>
                                     <tr className='text-left'>
+                                        <th className='py-3 px-4'></th>
                                         <th className='py-3 px-4'>Id</th>
                                         <th className='py-3 px-4'>Nombre</th>
                                         <th className='py-3 px-4'>Universidad</th>
@@ -520,8 +583,11 @@ export default function Admin() {
                                     </tr>
                                 </thead>
                                 <tbody className='rounded-b-xl overflow-hidden'>
-                                    {modal && (
+                                    {row && (
                                         <tr className='font-semibold text-black w-full sticky top-10 z-20'>
+                                            <td>
+                                                <input className='w-full bg-hover py-3 px-4' disabled />
+                                            </td>
                                             <td>
                                                 <input className='w-full bg-hover py-3 px-4' disabled />
                                             </td>
@@ -567,7 +633,13 @@ export default function Admin() {
                                         </tr>
                                     )}
                                     {careersDetails && careersDetails.map(({ id, career, university, campus, level, area, period, duration, program, modality }, index) => (
-                                        <tr key={id} className='hover:bg-hover font-semibold border-b-2 border-hover last:border-none'>
+                                        <tr key={id} onClick={() => handleSelected(id)} className='cursor-pointer hover:bg-hover font-semibold border-b-2 border-hover last:border-none'>
+                                            <td>
+                                                <div className='py-3 px-4 flex items-center justify-center'>
+                                                    <input onClick={() => handleSelected(id)} type={'checkbox'} className='w-3 h-3 cursor-pointer accent-primary'
+                                                        readOnly checked={selected?.some(selectId => selectId === id)} name={career.name} disabled={row} />
+                                                </div>
+                                            </td>
                                             <td>
                                                 <h3 className='py-3 px-4'>{index + 1}</h3>
                                             </td>
