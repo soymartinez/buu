@@ -1,13 +1,14 @@
-import { Dispatch, SetStateAction, useEffect } from 'react'
+import { useEffect } from 'react'
 import Warning from './icons/warning'
 
-export default function Modal({ title, message, button, background, setModal, setHandle }: {
+export default function Modal({ title, message, button, background, setModal, setHandler, open }: {
     title: string,
     message: string,
     button: string,
     background?: 'white' | 'primary' | 'warning' | 'error',
-    setModal: Dispatch<SetStateAction<boolean>>,
-    setHandle: (status: boolean) => void,
+    setModal: any,
+    setHandler: (status: boolean) => void,
+    open: boolean
 }) {
     useEffect(() => {
         const container = document.getElementById('container')
@@ -24,7 +25,7 @@ export default function Modal({ title, message, button, background, setModal, se
     }, [])
 
     return (
-        <div className={`absolute inset-0 opacity-100 transition-opacity duration-500 z-50 h-screen w-screen p-4 flex justify-center items-center bg-black/80`}
+        <div className={`${open ? '' : 'hidden'} absolute inset-0 opacity-100 transition-opacity duration-500 z-50 h-screen w-screen p-4 flex justify-center items-center bg-black/80`}
             id={'container'}
             onClick={() => setModal(false)}
         >
@@ -40,8 +41,7 @@ export default function Modal({ title, message, button, background, setModal, se
                     <p className='text-xs'>{message}</p>
                 </section>
                 <footer className='flex justify-end p-4 py-2 bg-white border-t'>
-                    <button className='px-2 py-1 text-[14px] font-bold text-white bg-primary hover:opacity-90 rounded-md' onClick={() => setModal(false)}>Cancelar</button>
-                    <button className='px-2 py-1 text-[14px] font-bold text-white bg-error hover:opacity-90 rounded-md' onClick={() => setHandle(true)}>{button}</button>
+                    <button className='px-2 py-1 text-[14px] font-bold text-white bg-error hover:opacity-90 rounded-md' onClick={() => setHandler(true)}>{button}</button>
                 </footer>
             </div>
         </ div>
