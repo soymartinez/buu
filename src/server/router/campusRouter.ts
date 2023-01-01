@@ -47,3 +47,15 @@ export const campusRouter = createRouter()
             })
         },
     })
+    .mutation('delete', {
+        input: z.object({
+            id: z.number(),
+        }),
+        async resolve({ ctx, input }) {
+            return await ctx.prisma.campus.delete({
+                where: {
+                    id: input.id,
+                }
+            })
+        },
+    })
