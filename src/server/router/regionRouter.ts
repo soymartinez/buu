@@ -24,3 +24,15 @@ export const regionRouter = createRouter()
             })
         }
     })
+    .mutation('delete', {
+        input: z.object({
+            id: z.number()
+        }),
+        async resolve({ ctx, input }) {
+            return await ctx.prisma.region.delete({
+                where: {
+                    id: input.id
+                }
+            })
+        }
+    })
