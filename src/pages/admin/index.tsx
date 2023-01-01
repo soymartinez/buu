@@ -53,6 +53,7 @@ export default function Admin() {
         message: '',
         textButton: '',
         background: 'white' as 'white' | 'primary' | 'warning' | 'error',
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         handler: () => { },
         open: false,
     })
