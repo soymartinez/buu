@@ -137,3 +137,15 @@ export const universityRouter = createRouter()
       })
     }
   })
+  .mutation('delete', {
+    input: z.object({
+      id: z.number()
+    }),
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.university.delete({
+        where: {
+          id: input.id
+        }
+      })
+    }
+  })
