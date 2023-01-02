@@ -610,8 +610,8 @@ export default function Admin() {
                             <table className='table-auto text-font text-xs w-full'>
                                 <thead className='bg-primary text-white sticky top-0 z-30'>
                                     <tr className='text-left'>
-                                        <th className='py-3 px-4'></th>
-                                        <th className='py-3 px-4'>Id</th>
+                                        <th className='py-3 px-4 sticky left-0 bg-primary'></th>
+                                        <th className='py-3 px-4 sticky left-[57px] bg-primary flex border-r-4 border-[#3d3fe9]'>Id</th>
                                         <th className='py-3 px-4'>Nombre</th>
                                         <th className='py-3 px-4'>Universidad</th>
                                         <th className='py-3 px-4'>Campus</th>
@@ -677,15 +677,15 @@ export default function Admin() {
                                         </tr>
                                     )}
                                     {careersDetails && careersDetails.map(({ id, career, university, campus, level, area, period, duration, program, modality }, index) => (
-                                        <tr key={id} onClick={() => !row && handleSelected(id, index + 1)} className={`${selected.find((s) => s.id === id) ? 'bg-hover/70' : 'border-hover'} cursor-pointer hover:bg-hover font-semibold border-b last:border-none`}>
-                                            <td>
+                                        <tr key={id} onClick={() => !row && handleSelected(id, index + 1)} className={`${selected.find((s) => s.id === id) ? 'bg-hover' : 'border-hover bg-white hover:bg-hover'} cursor-pointer font-semibold border-b last:border-none`}>
+                                            <td className='sticky left-0 z-10 bg-inherit'>
                                                 <div className='py-3 px-4 flex items-center justify-center'>
                                                     <input onClick={() => handleSelected(id, index + 1)} type={'checkbox'} className='w-3 h-3 cursor-pointer accent-primary'
                                                         readOnly checked={selected?.some(selectId => selectId.id === id)} name={career.name} disabled={row} />
                                                 </div>
                                             </td>
-                                            <td>
-                                                <h3 className='py-3 px-4'>{index + 1}</h3>
+                                            <td className='sticky left-[57px] z-10 bg-inherit'>
+                                                <h3 className='py-3 px-4 border-r-4 border-[#d9d9d9]'>{index + 1}</h3>
                                             </td>
                                             <td>
                                                 <h3 className='py-3 px-4 text-black text-xs font-bold leading-none whitespace-nowrap'>{career.name}</h3>
