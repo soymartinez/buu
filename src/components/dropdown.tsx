@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Arrow from './icons/arrow'
 
 export default function Dropdown({ title, object, setStatus, defaultValue }: { title: string, object: any, setStatus: any, defaultValue?: string }) {
     const [isOpen, setIsOpen] = useState(false)
@@ -7,7 +8,7 @@ export default function Dropdown({ title, object, setStatus, defaultValue }: { t
         <div className='relative'>
             <button onClick={() => setIsOpen(!isOpen)} className={`inline-flex whitespace-nowrap items-center transition font-bold bg-hover px-4 py-3 w-full text-center text-xs`} type='button'>
                 {selected ? selected : `Seleccionar ${title}`}
-                <svg className={`ml-auto w-4 h-4 text-black transition-all -rotate-90 ${isOpen && 'rotate-0'}`} fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'><path fillRule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clipRule='evenodd'></path></svg>
+                <Arrow className={`ml-auto text-black transition-all ${isOpen && 'rotate-0'}`} />
             </button>
 
             <div className={`${!isOpen ? 'hidden' : 'focus:border-black'} absolute bg-white z-20 rounded-b-md border border-hover shadow-lg`}>
