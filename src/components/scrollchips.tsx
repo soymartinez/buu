@@ -33,11 +33,11 @@ export default function ScrollChips({
     return (
         <div className={`flex items-center relative overflow-hidden min-h-[42px] h-full`}>
             <button onClick={() => div.current?.scroll({ ...div.current, left: scrollAmount || scroll.scrollLeft - scroll.clientWidth * .70, behavior: 'smooth' })}
-                className={`transition-all duration-300 absolute p-[7px] rounded-full bg-white hover:bg-[#efefef] border-2 shadow-[0_0_15px_25px_white] -left-4 md:left-0 z-20
+                className={`transition-all duration-300 absolute p-[2px] rounded-full bg-white hover:bg-[#efefef] border-2 shadow-[0_0_15px_25px_white] -left-4 md:left-0 z-20
                         ${classNameButtons}            
                         ${scroll.scrollLeft === 0 ? 'opacity-0 -left-4 md:-left-8' : 'opacity-100'}
                 `}>
-                <Arrow className={`${classNameArrows} hidden md:flex`} />
+                <Arrow className={`${classNameArrows} hidden md:flex rotate-90`} />
             </button>
             <div className={'overflow-auto scrollbar-hide'} ref={div} onScroll={handleScroll}>
                 <div className={`${className} flex gap-2 items-center transition duration-300`}>
@@ -45,11 +45,11 @@ export default function ScrollChips({
                 </div>
             </div>
             <button onClick={() => div.current?.scroll({ ...div.current, left: scrollAmount || scroll.scrollLeft + scroll.clientWidth * .70, behavior: 'smooth' })}
-                className={`transition-all duration-300 absolute p-[7px] rounded-full bg-white hover:bg-[#efefef] border-2 shadow-[0_0_15px_25px_white] -right-4 md:right-0 -scale-x-100
+                className={`transition-all duration-300 absolute p-[2px] rounded-full bg-white hover:bg-[#efefef] border-2 shadow-[0_0_15px_25px_white] -right-4 md:right-0 -scale-x-100
                         ${classNameButtons}            
                         ${scroll.scrollRight === 0 ? 'opacity-0 -right-4 md:-right-8' : 'opacity-100'}
                 `}>
-                <Arrow className={`${classNameArrows} hidden md:flex`} />
+                <Arrow className={`${classNameArrows} hidden md:flex rotate-90`} />
             </button>
         </div>
     )
