@@ -45,6 +45,7 @@ export const careerRouter = createRouter()
     })
     .mutation('create', {
         input: z.object({
+            id: z.number().optional(),
             career: z.number(),
             university: z.number(),
             campus: z.number(),
@@ -56,8 +57,34 @@ export const careerRouter = createRouter()
             modality: z.string(),
         }),
         async resolve({ ctx, input }) {
-            return await ctx.prisma.career.create({
-                data: {
+            return await ctx.prisma.career.upsert({
+                where: {
+                    id: input.id === undefined ? -1 : input.id,
+                },
+                update: {
+                    career: {
+                        connect: {
+                            id: input.career,
+                        }
+                    },
+                    university: {
+                        connect: {
+                            id: input.university,
+                        }
+                    },
+                    campus: {
+                        connect: {
+                            id: input.campus
+                        }
+                    },
+                    level: input.level as Level,
+                    area: input.area,
+                    period: input.period as Period,
+                    duration: input.duration,
+                    program: input.program,
+                    modality: input.modality as Modality,
+                },
+                create: {
                     career: {
                         connect: {
                             id: input.career,
