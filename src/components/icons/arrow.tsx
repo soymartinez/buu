@@ -1,13 +1,12 @@
 export default function Arrow({ className }: { className?: string }) {
     return (
         <svg
-            viewBox='0 0 24 24'
+            className={`${className} cursor-pointer w-4 h-4 -rotate-90`}
             fill='currentColor'
-            className={`${className} cursor-pointer w-2 h-2`}
+            viewBox='0 0 20 20'
+            xmlns='http://www.w3.org/2000/svg'
         >
-            <path
-                d="m16.23 23.58 2.24-2a.5.5 0 0 0 0-.71L10.57 12l7.93-8.87a.5.5 0 0 0 0-.71l-2.24-2a.5.5 0 0 0-.71 0L5.2 12l10.32 11.54a.5.5 0 0 0 .71.04Z"
-            />
+            <path fillRule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clipRule='evenodd' />
         </svg>
     )
 }
