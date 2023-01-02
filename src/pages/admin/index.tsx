@@ -1,4 +1,4 @@
-import { Level, Modality, Period, Type } from '@prisma/client'
+import { Campus, Career, Careers, Level, Modality, Period, Region, Type, University } from '@prisma/client'
 import Dropdown from 'components/dropdown'
 import Layout from 'components/layout'
 import Modal from 'components/modal'
@@ -31,21 +31,6 @@ export async function getServerSideProps({ req, res }: { req: NextApiRequest; re
 }
 
 export default function Admin() {
-    const { data: universities } = trpc.useQuery(['university.getAll'])
-    const { data: regions } = trpc.useQuery(['region.getAll'])
-    const { data: campus } = trpc.useQuery(['campus.getAll'])
-    const { data: careersList } = trpc.useQuery(['career.getAllCareers'])
-    const { data: careersDetails } = trpc.useQuery(['career.getAllCareersDetails'])
-
-    const { mutate: universityCreate } = trpc.useMutation(['university.create'])
-    const { mutate: regionCreate } = trpc.useMutation(['region.create'])
-    const { mutate: campusCreate } = trpc.useMutation(['campus.create'])
-    const { mutate: careerCreate } = trpc.useMutation(['career.create'])
-
-    const { mutate: deleteCareer } = trpc.useMutation(['career.delete'])
-
-    const { invalidateQueries } = trpc.useContext()
-
     const [success, setSuccess] = useState(0)
     const [status, setStatus] = useState('universidad')
     const [modal, setModal] = useState({
@@ -58,13 +43,40 @@ export default function Admin() {
         open: false,
     })
     const [row, setRow] = useState(false)
+    const [prevData, setPrevData] = useState({} as any)
     const [preview, setPreview] = useState('')
-    const [selected, setSelected] = useState<number[]>([])
+    const [selected, setSelected] = useState<{ id: number, index: number }[]>([])
 
-    const handleSelected = (id: number) => {
-        selected.some((selectId) => selectId === id)
-            ? setSelected(selected.filter((selectId) => selectId !== id))
-            : setSelected([...selected, id])
+    // GET
+    const { data: universities } = trpc.useQuery(['university.getAll'])
+    const { data: regions } = trpc.useQuery(['region.getAll'])
+    const { data: campus } = trpc.useQuery(['campus.getAll'])
+    const { data: careersList } = trpc.useQuery(['career.getAllCareers'])
+    const { data: careersDetails } = trpc.useQuery(['career.getAllCareersDetails'])
+
+    // CREATE OR UPDATE
+    const { mutate: universityCreate } = trpc.useMutation(['university.create'])
+    const { mutate: regionCreate } = trpc.useMutation(['region.create'])
+    const { mutate: campusCreate } = trpc.useMutation(['campus.create'])
+    const { mutate: careerCreate } = trpc.useMutation(['career.create'])
+
+    // DELETE
+    const { mutate: deleteCareer } = trpc.useMutation(['career.delete'])
+
+    // INVALIDATE
+    const { invalidateQueries } = trpc.useContext()
+
+    const handleSelected = (id: number, index: number) => {
+        selected.some((selectId) => selectId.id === id)
+            ? setSelected(selected.filter((selectId) => selectId.id !== id))
+            : setSelected([...selected, { id, index }])
+    }
+
+    const handleCancel = () => {
+        setRow(false)
+        setPreview('')
+        setPrevData({})
+        setSelected([])
     }
 
     const handleSaveUniversity = (e: FormEvent<HTMLFormElement>) => {
@@ -129,43 +141,64 @@ export default function Admin() {
         })
     }
 
-    const handleSaveCareer = (e: FormEvent<HTMLFormElement>) => {
+    const handleSave = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const formData = new FormData(e.target as HTMLFormElement)
         const data = Object.fromEntries(formData.entries())
 
-        careerCreate({
-            career: Number(data.carrera),
-            university: Number(data.universidad),
-            campus: Number(data.campus),
-            level: data.level as Level,
-            area: data.area as string,
-            period: data.period as Period,
-            duration: Number(data.duration),
-            program: data.program as string,
-            modality: data.modality as string,
-        }, {
-            onSuccess() {
-                invalidateQueries(['career.getAllCareersDetails'])
-                setRow(false)
-            },
-        })
+        switch (status) {
+            case 'universidad':
+                handleSaveUniversity(e)
+                break
+            case 'región':
+                handleSaveRegion(e)
+                break
+            case 'campus':
+                handleSaveCampus(e)
+                break
+            case 'carrera':
+                return careerCreate({
+                    id: selected[0]?.id,
+                    career: Number(data.carrera),
+                    university: Number(data.universidad),
+                    campus: Number(data.campus),
+                    level: data.level as Level,
+                    area: data.area as string,
+                    period: data.period as Period,
+                    duration: Number(data.duration),
+                    program: data.program as string,
+                    modality: data.modality as string,
+                }, {
+                    onSuccess() {
+                        invalidateQueries(['career.getAllCareersDetails'])
+                        handleCancel()
+                    },
+                })
+        }
     }
 
     const handleDelete = () => {
         setModal({ ...modal, open: false })
         switch (status) {
             case 'carrera':
-                selected.map((id) => {
+                return selected.map(({ id }) => {
                     deleteCareer({ id }, {
                         onSuccess() {
                             invalidateQueries(['career.getAllCareersDetails'])
                         },
                     })
                 })
-                break
         }
         setSelected([])
+    }
+
+    const handleUpdate = () => {
+        switch (status) {
+            case 'carrera':
+                setPrevData(careersDetails?.find((career) => career.id === selected[0]?.id))
+                setRow(true)
+                break
+        }
     }
 
     const handleFile = (e: any) => {
@@ -198,7 +231,7 @@ export default function Admin() {
                 <section className='grid gap-4'>
                     <div className='flex items-center gap-1 sm:gap-6 bg-[#ececec] rounded-xl px-2 overflow-x-auto'>
                         {menu.map(({ name, active, count }) => (
-                            <div key={name} onClick={() => { setStatus(active); setRow(false); setSelected([]) }}>
+                            <div key={name} onClick={() => { setStatus(active); handleCancel() }}>
                                 <div className={`flex md:flex-row items-center justify-between font-bold gap-2 py-2 px-1 md:px-3 transition-colors cursor-pointer 
                                     ${status === active ? 'text-primary' : 'text-font hover:text-font/70'}`}>
                                     <h2 className='text-xs capitalize'>{name}</h2>
@@ -223,7 +256,7 @@ export default function Admin() {
                                         <h2 className='select-none whitespace-nowrap'>Guardar {status}</h2>
                                     </button>
 
-                                    <button onClick={() => { setRow(false); setPreview('') }} className='flex gap-2 py-2 hover:opacity-90'>
+                                    <button onClick={() => handleCancel()} className='flex gap-2 py-2 hover:opacity-90'>
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                             <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                                         </svg>
@@ -254,6 +287,13 @@ export default function Admin() {
                                                 Eliminar {selected.length} registros
                                             </h2>
                                         </button>}
+                                    {selected.length === 1 &&
+                                        <button onClick={() => handleUpdate()} className='flex justify-center items-center gap-2 py-2 hover:opacity-90'>
+                                            <h2 className='select-none whitespace-nowrap'>
+                                                Modificar
+                                            </h2>
+                                        </button>
+                                    }
                                 </>
                             }
                         </div>
@@ -566,7 +606,7 @@ export default function Admin() {
 
                 {status === 'carrera' && (
                     <section className='rounded-xl overflow-x-auto h-full w-full'>
-                        <form id={`form-${status}`} onSubmit={handleSaveCareer}>
+                        <form id={`form-${status}`} onSubmit={handleSave}>
                             <table className='table-auto text-font text-xs w-full'>
                                 <thead className='bg-primary text-white sticky top-0 z-30'>
                                     <tr className='text-left'>
@@ -590,13 +630,14 @@ export default function Admin() {
                                                 <input className='w-full bg-hover py-3 px-4' disabled />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4' disabled />
+                                                <input className='w-full bg-hover py-3 px-4 text-font' defaultValue={selected[0]?.index} disabled />
                                             </td>
                                             <td>
                                                 <Dropdown
                                                     title='carrera'
                                                     object={careersList}
                                                     setStatus={setStatus}
+                                                    defaultValue={prevData?.name}
                                                 />
                                             </td>
                                             <td>
@@ -604,6 +645,7 @@ export default function Admin() {
                                                     title='universidad'
                                                     object={universities}
                                                     setStatus={setStatus}
+                                                    defaultValue={prevData?.universityName}
                                                 />
                                             </td>
                                             <td>
@@ -611,34 +653,35 @@ export default function Admin() {
                                                     title='campus'
                                                     object={campus}
                                                     setStatus={setStatus}
+                                                    defaultValue={prevData?.campus?.name}
                                                 />
                                             </td>
                                             <td>
-                                                <Select object={Level} name={'level'} />
+                                                <Select object={Level} name={'level'} defaultValue={prevData.level} />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4' name={'area'} />
+                                                <input className='w-full bg-hover py-3 px-4' name={'area'} defaultValue={prevData.area} />
                                             </td>
                                             <td>
-                                                <Select object={Period} name={'period'} />
+                                                <Select object={Period} name={'period'} defaultValue={prevData.period} />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4' name={'duration'} type={'number'} defaultValue={8} min={0} max={18} />
+                                                <input className='w-full bg-hover py-3 px-4' name={'duration'} type={'number'} defaultValue={prevData.duration || 8} min={0} max={18} />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4' name={'program'} />
+                                                <input className='w-full bg-hover py-3 px-4' name={'program'} defaultValue={prevData.program} />
                                             </td>
                                             <td>
-                                                <Select object={Modality} name={'modality'} />
+                                                <Select object={Modality} name={'modality'} defaultValue={prevData.modality} />
                                             </td>
                                         </tr>
                                     )}
                                     {careersDetails && careersDetails.map(({ id, career, university, campus, level, area, period, duration, program, modality }, index) => (
-                                        <tr key={id} onClick={() => handleSelected(id)} className='cursor-pointer hover:bg-hover font-semibold border-b-2 border-hover last:border-none'>
+                                        <tr key={id} onClick={() => !row && handleSelected(id, index + 1)} className={`${selected.find((s) => s.id === id) ? 'bg-hover/70' : 'border-hover'} cursor-pointer hover:bg-hover font-semibold border-b last:border-none`}>
                                             <td>
                                                 <div className='py-3 px-4 flex items-center justify-center'>
-                                                    <input onClick={() => handleSelected(id)} type={'checkbox'} className='w-3 h-3 cursor-pointer accent-primary'
-                                                        readOnly checked={selected?.some(selectId => selectId === id)} name={career.name} disabled={row} />
+                                                    <input onClick={() => handleSelected(id, index + 1)} type={'checkbox'} className='w-3 h-3 cursor-pointer accent-primary'
+                                                        readOnly checked={selected?.some(selectId => selectId.id === id)} name={career.name} disabled={row} />
                                                 </div>
                                             </td>
                                             <td>
