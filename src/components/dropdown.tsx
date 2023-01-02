@@ -1,8 +1,8 @@
 import { useState } from 'react'
 
-export default function Dropdown({ title, object, setStatus }: { title: string, object: any, setStatus: any }) {
+export default function Dropdown({ title, object, setStatus, defaultValue }: { title: string, object: any, setStatus: any, defaultValue?: string }) {
     const [isOpen, setIsOpen] = useState(false)
-    const [selected, setSelected] = useState('')
+    const [selected, setSelected] = useState(defaultValue || '')
     return (
         <div className='relative'>
             <button onClick={() => setIsOpen(!isOpen)} className={`inline-flex whitespace-nowrap items-center transition font-bold bg-hover px-4 py-3 w-full text-center text-xs`} type='button'>
@@ -25,7 +25,16 @@ export default function Dropdown({ title, object, setStatus }: { title: string, 
                     {object && object.map(({ id, name }: { id: string, name: string }) => (
                         <li key={id} className='flex items-center justify-between text-black hover:bg-hover rounded-lg'>
                             <div className='flex items-center w-full'>
-                                <input onChange={() => { setSelected(name); setIsOpen(false) }} onInvalid={() => setIsOpen(true)} type='radio' required value={id} id={id + name} name={title} className='w-3 h-3 m-2 cursor-pointer accent-primary' />
+                                <input
+                                    onChange={() => { setSelected(name); setIsOpen(false) }}
+                                    onInvalid={() => setIsOpen(true)}
+                                    type='radio'
+                                    required
+                                    value={id}
+                                    defaultChecked={defaultValue === name}
+                                    id={id + name}
+                                    name={title}
+                                    className='w-3 h-3 m-2 cursor-pointer accent-primary' />
                                 <label htmlFor={id + name} className='pl-0 p-2 text-xs cursor-pointer w-full'>{name}</label>
                             </div>
                         </li>
