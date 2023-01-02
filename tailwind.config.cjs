@@ -15,6 +15,7 @@ module.exports = {
       },
       error: '#ff5555',
       trasparent: 'transparent',
+      inherit: 'inherit',
     },
     extend: {
       keyframes: {
