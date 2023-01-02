@@ -229,7 +229,7 @@ export default function Admin() {
             <div className='flex flex-col gap-4 pt-[70px] md:pt-[80px] px-4 md:px-8 w-full h-screen max-w-[1280px] mx-auto'>
                 <h1 className='font-bold text-xl md:text-2xl mt-4'>Administrador</h1>
                 <section className='grid gap-4'>
-                    <div className='flex items-center gap-1 sm:gap-6 bg-[#ececec] rounded-xl px-2 overflow-x-auto'>
+                    <div className='flex items-center gap-1 sm:gap-6 bg-[#ececec] rounded-xl px-2 overflow-x-auto scrollbar-hide'>
                         {menu.map(({ name, active, count }) => (
                             <div key={name} onClick={() => { setStatus(active); handleCancel() }}>
                                 <div className={`flex md:flex-row items-center justify-between font-bold gap-2 py-2 px-1 md:px-3 transition-colors cursor-pointer 
