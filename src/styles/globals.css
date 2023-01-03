@@ -9,7 +9,20 @@
         font-family: Space Grotesk, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
             Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
     }
+
     .skeleton-container {
         display: contents;
+    }
+
+    th {
+        border-right-width: 1px;
+        border-color: #3d3fe9;
+    }
+
+    td {
+        padding: 0;
+        border-right-width: 1px;
+        border-bottom-width: 1px;
+        border-color: #d9d9d9;
     }
 }
