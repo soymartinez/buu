@@ -607,30 +607,30 @@ export default function Admin() {
                 {status === 'carrera' && (
                     <section className='rounded-xl overflow-x-auto h-full w-full'>
                         <form id={`form-${status}`} onSubmit={handleSave}>
-                            <table className='table-auto text-font text-xs w-full'>
+                            <table className='table-auto text-font text-xs w-full border-separate border-spacing-0'>
                                 <thead className='bg-primary text-white sticky top-0 z-30'>
                                     <tr className='text-left'>
-                                        <th className='py-3 px-4 sticky left-0 bg-primary'></th>
-                                        <th className='py-3 px-4 sticky left-[57px] bg-primary flex border-r-4 border-[#3d3fe9]'>Id</th>
-                                        <th className='py-3 px-4'>Nombre</th>
-                                        <th className='py-3 px-4'>Universidad</th>
-                                        <th className='py-3 px-4'>Campus</th>
-                                        <th className='py-3 px-4'>Nivel</th>
-                                        <th className='py-3 px-4'>Área<span className='text-gray-200 ml-1'>?</span></th>
-                                        <th className='py-3 px-4'>Periodo</th>
-                                        <th className='py-3 px-4'>Duración</th>
-                                        <th className='py-3 px-4'>Programa<span className='text-gray-200 ml-1'>?</span></th>
-                                        <th className='py-3 px-4'>Modalidad</th>
+                                        <th className='py-3 px-2 sticky left-0 bg-primary'></th>
+                                        <th className='py-3 px-2 sticky left-[36px] bg-primary border-r-4'>Id</th>
+                                        <th className='py-3 px-2'>Nombre</th>
+                                        <th className='py-3 px-2'>Universidad</th>
+                                        <th className='py-3 px-2'>Campus</th>
+                                        <th className='py-3 px-2'>Nivel</th>
+                                        <th className='py-3 px-2'>Área<span className='text-gray-200 ml-1'>?</span></th>
+                                        <th className='py-3 px-2'>Periodo</th>
+                                        <th className='py-3 px-2'>Duración</th>
+                                        <th className='py-3 px-2'>Programa<span className='text-gray-200 ml-1'>?</span></th>
+                                        <th className='py-3 px-2'>Modalidad</th>
                                     </tr>
                                 </thead>
-                                <tbody className='rounded-b-xl overflow-hidden'>
+                                <tbody className='rounded-b-xl overflow-hidden sticky'>
                                     {row && (
-                                        <tr className='font-semibold text-black w-full sticky top-10 z-20'>
-                                            <td>
-                                                <input className='w-full bg-hover py-3 px-4' disabled />
+                                        <tr className='h-7 font-semibold bg-white text-black w-full sticky top-10 z-30'>
+                                            <td className='sticky left-0 z-10 bg-inherit'>
+                                                <input className='w-full px-2' disabled />
                                             </td>
-                                            <td>
-                                                <input className='w-full bg-hover py-3 px-4 text-font' defaultValue={selected[0]?.index} disabled />
+                                            <td className='sticky left-[36px] z-10 bg-inherit border-r-4'>
+                                                <input className='w-full px-2 text-font' defaultValue={selected[0]?.index} disabled />
                                             </td>
                                             <td>
                                                 <Dropdown
@@ -660,16 +660,16 @@ export default function Admin() {
                                                 <Select object={Level} name={'level'} defaultValue={prevData.level} />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4' name={'area'} defaultValue={prevData.area} />
+                                                <input className='w-full bg-hover p-2' name={'area'} defaultValue={prevData.area} />
                                             </td>
                                             <td>
                                                 <Select object={Period} name={'period'} defaultValue={prevData.period} />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4' name={'duration'} type={'number'} defaultValue={prevData.duration || 8} min={0} max={18} />
+                                                <input className='w-full bg-hover p-2' name={'duration'} type={'number'} defaultValue={prevData.duration || 8} min={0} max={18} />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4' name={'program'} defaultValue={prevData.program} />
+                                                <input className='w-full bg-hover p-2' name={'program'} defaultValue={prevData.program} />
                                             </td>
                                             <td>
                                                 <Select object={Modality} name={'modality'} defaultValue={prevData.modality} />
@@ -677,47 +677,48 @@ export default function Admin() {
                                         </tr>
                                     )}
                                     {careersDetails && careersDetails.map(({ id, career, university, campus, level, area, period, duration, program, modality }, index) => (
-                                        <tr key={id} onClick={() => !row && handleSelected(id, index + 1)} className={`${selected.find((s) => s.id === id) ? 'bg-hover' : 'border-hover bg-white hover:bg-hover'} cursor-pointer font-semibold border-b last:border-none`}>
+                                        <tr key={id} onClick={() => !row && handleSelected(id, index + 1)}
+                                            className={`h-7 cursor-pointer font-semibold ${selected.find((s) => s.id === id) ? 'bg-hover' : 'bg-white hover:bg-hover'}`}>
                                             <td className='sticky left-0 z-10 bg-inherit'>
-                                                <div className='py-3 px-4 flex items-center justify-center'>
+                                                <div className='px-2 flex items-center justify-center'>
                                                     <input onClick={() => handleSelected(id, index + 1)} type={'checkbox'} className='w-3 h-3 cursor-pointer accent-primary'
                                                         readOnly checked={selected?.some(selectId => selectId.id === id)} name={career.name} disabled={row} />
                                                 </div>
                                             </td>
-                                            <td className='sticky left-[57px] z-10 bg-inherit'>
-                                                <h3 className='py-3 px-4 border-r-4 border-[#d9d9d9]'>{index + 1}</h3>
+                                            <td className='sticky left-[36px] z-10 bg-inherit border-r-4'>
+                                                <h3 className='px-2'>{index + 1}</h3>
                                             </td>
                                             <td>
-                                                <h3 className='py-3 px-4 text-black text-xs font-bold leading-none whitespace-nowrap'>{career.name}</h3>
+                                                <h3 className='px-2 text-black font-bold leading-none whitespace-nowrap'>{career.name}</h3>
                                             </td>
                                             <td>
-                                                <div className='py-3 px-4 flex items-center gap-2'>
+                                                <div className='px-2 flex items-center gap-2'>
                                                     <div className='grid place-content-center w-6 h-6 relative'>
                                                         <Image src={university.logo} alt={university.name} layout={'fill'} objectFit={'contain'} />
                                                     </div>
                                                     <h2 className='font-bold leading-none whitespace-nowrap'>{university.name}</h2>
                                                 </div>
                                             </td>
-                                            <td>
-                                                <h3 className='py-3 px-4 w-48'>{campus.name}</h3>
+                                            <td className='overflow-hidden'>
+                                                <h3 className='px-2 w-48 whitespace-nowrap truncate'>{campus.name}</h3>
                                             </td>
                                             <td>
-                                                <h3 className='py-3 px-4'>{level}</h3>
+                                                <h3 className='px-2 w-[6.5rem]'>{level}</h3>
                                             </td>
                                             <td>
-                                                <h3 className='py-3 px-4 whitespace-nowrap'>{area}</h3>
+                                                <h3 className='px-2 whitespace-nowrap'>{area}</h3>
                                             </td>
                                             <td>
-                                                <h3 className='py-3 px-4 w-28'>{period}</h3>
+                                                <h3 className='px-2 w-28'>{period}</h3>
                                             </td>
                                             <td>
-                                                <h3 className='py-3 px-4'>{duration}</h3>
+                                                <h3 className='px-2'>{duration}</h3>
                                             </td>
                                             <td>
-                                                <h3 className='py-3 px-4'>{program}</h3>
+                                                <h3 className='px-2'>{program}</h3>
                                             </td>
                                             <td>
-                                                <h3 className='py-3 px-4'>{modality}</h3>
+                                                <h3 className='px-2 w-24'>{modality}</h3>
                                             </td>
                                         </tr>
                                     ))}
