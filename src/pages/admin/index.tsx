@@ -61,6 +61,7 @@ export default function Admin() {
     const { mutate: careerCreate } = trpc.useMutation(['career.create'])
 
     // DELETE
+    const { mutate: deleteCampus } = trpc.useMutation(['campus.delete'])
     const { mutate: deleteCareer } = trpc.useMutation(['career.delete'])
 
     // INVALIDATE
@@ -118,29 +119,6 @@ export default function Admin() {
         })
     }
 
-    const handleSaveCampus = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        const formData = new FormData(e.target as HTMLFormElement)
-        const data = Object.fromEntries(formData.entries())
-
-        campusCreate({
-            name: data.name as string,
-            subname: data.subname as string,
-            direction: data.direction as string,
-            contact: data.contact as string,
-            url: data.url as string,
-            location: data.location as string,
-            university: Number(data.universidad),
-            region: Number(data.región),
-        }, {
-            onSuccess({ id }) {
-                setSuccess(id)
-                invalidateQueries(['campus.getAll'])
-                setRow(false)
-            }
-        })
-    }
-
     const handleSave = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const formData = new FormData(e.target as HTMLFormElement)
@@ -154,8 +132,23 @@ export default function Admin() {
                 handleSaveRegion(e)
                 break
             case 'campus':
-                handleSaveCampus(e)
-                break
+                return campusCreate({
+                    id: selected[0]?.id,
+                    name: data.name as string,
+                    subname: data.subname as string,
+                    direction: data.direction as string,
+                    contact: data.contact as string,
+                    url: data.url as string,
+                    location: data.location as string,
+                    university: Number(data.universidad),
+                    region: Number(data.región),
+                }, {
+                    onSuccess({ id }) {
+                        setSuccess(id)
+                        invalidateQueries(['campus.getAll'])
+                        handleCancel()
+                    }
+                })
             case 'carrera':
                 return careerCreate({
                     id: selected[0]?.id,
@@ -180,11 +173,21 @@ export default function Admin() {
     const handleDelete = () => {
         setModal({ ...modal, open: false })
         switch (status) {
+            case 'campus':
+                return selected.map(({ id }) => {
+                    deleteCampus({ id }, {
+                        onSuccess() {
+                            invalidateQueries(['campus.getAll'])
+                            handleCancel()
+                        },
+                    })
+                })
             case 'carrera':
                 return selected.map(({ id }) => {
                     deleteCareer({ id }, {
                         onSuccess() {
                             invalidateQueries(['career.getAllCareersDetails'])
+                            handleCancel()
                         },
                     })
                 })
@@ -194,6 +197,10 @@ export default function Admin() {
 
     const handleUpdate = () => {
         switch (status) {
+            case 'campus':
+                setPrevData(campus?.find((campus) => campus.id === selected[0]?.id))
+                setRow(true)
+                break
             case 'carrera':
                 setPrevData(careersDetails?.find((career) => career.id === selected[0]?.id))
                 setRow(true)
@@ -502,51 +509,56 @@ export default function Admin() {
 
                 {status === 'campus' && (
                     <section className='rounded-xl overflow-x-auto h-full w-full mb-4'>
-                        <form id={`form-${status}`} onSubmit={handleSaveCampus}>
-                            <table className='table-auto text-font text-xs w-full'>
+                        <form id={`form-${status}`} onSubmit={handleSave}>
+                            <table className='table-auto text-font text-xs w-full border-separate border-spacing-0'>
                                 <thead className='bg-primary text-white sticky top-0 z-30'>
                                     <tr className='text-left'>
-                                        <th className='py-3 px-4'>Id</th>
-                                        <th className='py-3 px-4'>Nombre</th>
-                                        <th className='py-3 px-4'>Subnombre<span className='text-gray-200 ml-1'>?</span></th>
-                                        <th className='py-3 px-4'>Dirección</th>
-                                        <th className='py-3 px-4'>Contacto<span className='text-gray-200 ml-1'>?</span></th>
-                                        <th className='py-3 px-4'>URL<span className='text-gray-200 ml-1'>?</span></th>
-                                        <th className='py-3 px-4'>Locación</th>
-                                        <th className='py-3 px-4'>Universidad</th>
-                                        <th className='py-3 px-4'>Región</th>
-                                        <th className='py-3 px-4'>Carreras<span className='text-gray-200 ml-1'>[ ]</span></th>
+                                        <th className='py-3 px-2 sticky left-0 bg-primary'></th>
+                                        <th className='py-3 px-2 sticky left-[36px] bg-primary border-r-4'>Id</th>
+                                        <th className='py-3 px-2'>Nombre</th>
+                                        <th className='py-3 px-2'>Subnombre<span className='text-gray-200 ml-1'>?</span></th>
+                                        <th className='py-3 px-2'>Dirección</th>
+                                        <th className='py-3 px-2'>Contacto<span className='text-gray-200 ml-1'>?</span></th>
+                                        <th className='py-3 px-2'>URL<span className='text-gray-200 ml-1'>?</span></th>
+                                        <th className='py-3 px-2'>Locación</th>
+                                        <th className='py-3 px-2'>Universidad</th>
+                                        <th className='py-3 px-2'>Región</th>
+                                        <th className='py-3 px-2'>Carreras<span className='text-gray-200 ml-1'>[ ]</span></th>
                                     </tr>
                                 </thead>
                                 <tbody className='rounded-b-xl overflow-hidden'>
                                     {row && (
-                                        <tr className='font-semibold text-black w-full sticky top-10 z-20'>
-                                            <td>
-                                                <input className='w-full bg-hover py-3 px-4' disabled />
+                                        <tr className='h-7 font-semibold bg-white text-black w-full sticky top-10 z-10'>
+                                            <td className='sticky left-0 z-10 bg-inherit'>
+                                                <input className='w-full p-2' disabled />
+                                            </td>
+                                            <td className='sticky left-[36px] z-10 bg-inherit border-r-4'>
+                                                <input className='w-full p-2 text-font' defaultValue={selected[0]?.index} disabled />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4 font-bold' name={'name'} required />
+                                                <input className='w-full bg-hover p-2 font-bold' defaultValue={prevData?.name} name={'name'} required />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4' name={'subname'} />
+                                                <input className='w-full bg-hover p-2' defaultValue={prevData?.subname} name={'subname'} />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4' name={'direction'} required />
+                                                <input className='w-full bg-hover p-2' defaultValue={prevData?.direction} name={'direction'} required />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4' name={'contact'} />
+                                                <input className='w-full bg-hover p-2' defaultValue={prevData?.contact} name={'contact'} />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4' name={'url'} type={'url'} />
+                                                <input className='w-full bg-hover p-2' defaultValue={prevData?.url} name={'url'} type={'url'} />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4' name={'location'} required />
+                                                <input className='w-full bg-hover p-2' defaultValue={prevData?.location} name={'location'} required />
                                             </td>
                                             <td>
                                                 <Dropdown
                                                     title='universidad'
                                                     object={universities}
                                                     setStatus={setStatus}
+                                                    defaultValue={prevData?.university?.name}
                                                 />
                                             </td>
                                             <td>
@@ -554,44 +566,57 @@ export default function Admin() {
                                                     title='región'
                                                     object={regions}
                                                     setStatus={setStatus}
+                                                    defaultValue={prevData?.region?.name}
                                                 />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4 cursor-not-allowed text-center' placeholder='--' disabled />
+                                                <input className='w-full bg-hover p-2 cursor-not-allowed text-center' placeholder='--' disabled />
                                             </td>
                                         </tr>
                                     )}
                                     {campus && campus.map(({ id, name, subname, url, direction, contact, location, region, careers, university }, index) => (
-                                        <tr key={id} className={`hover:bg-hover font-semibold border-b-2 border-hover last:border-none ${id === success && 'animate-[highlight_1s_ease-in-out_1]'}`}>
-                                            <td>
-                                                <h3 className='py-3 px-4'>{index + 1}</h3>
+                                        <tr key={id} onClick={() => !row && handleSelected(id, index + 1)}
+                                            className={`h-7 cursor-pointer font-semibold ${selected.find((s) => s.id === id) ? 'bg-hover' : 'bg-white hover:bg-hover'}`}>
+                                            <td className='sticky left-0 z-10 bg-inherit'>
+                                                <div className='px-2 flex items-center justify-center'>
+                                                    <input onClick={() => handleSelected(id, index + 1)} type={'checkbox'} className='w-3 h-3 cursor-pointer accent-primary'
+                                                        readOnly checked={selected?.some(selectId => selectId.id === id)} name={name} disabled={row} />
+                                                </div>
+                                            </td>
+                                            <td className='sticky left-[36px] z-10 bg-inherit border-r-4'>
+                                                <h3 className='px-2'>{index + 1}</h3>
                                             </td>
                                             <td>
-                                                <h3 className='py-3 px-4 text-black text-xs font-bold leading-none whitespace-nowrap'>{name}</h3>
+                                                <h3 className='px-2 text-black text-xs font-bold leading-none whitespace-nowrap'>{name}</h3>
                                             </td>
                                             <td>
-                                                <h3 className='py-3 px-4'>{subname}</h3>
+                                                <h3 className='px-2'>{subname}</h3>
                                             </td>
                                             <td>
-                                                <h3 className='py-3 px-4 w-56'>{direction}</h3>
+                                                <h3 className='px-2 w-56'>{direction}</h3>
                                             </td>
                                             <td>
-                                                <h3 className='py-3 px-4 w-32'>{contact}</h3>
+                                                <h3 className='px-2 w-28'>{contact}</h3>
                                             </td>
                                             <td>
-                                                <h3 className='py-3 px-4 w-40 truncate'>{url}</h3>
+                                                <h3 className='px-2 w-40 truncate'>{url}</h3>
                                             </td>
                                             <td>
-                                                <h3 className='py-3 px-4 min-w-[150px] whitespace-nowrap w-full'>{location}</h3>
+                                                <h3 className='px-2 min-w-[150px] whitespace-nowrap w-full'>{location}</h3>
                                             </td>
                                             <td>
-                                                <h3 className='py-3 px-4 min-w-[250px] whitespace-nowrap w-full'>{university.name}</h3>
+                                                <div className='px-2 flex items-center gap-2'>
+                                                    <div className='grid place-content-center w-6 h-6 relative'>
+                                                        <Image src={university.logo} alt={university.name} layout={'fill'} objectFit={'contain'} />
+                                                    </div>
+                                                    <h2 className='font-bold leading-none whitespace-nowrap'>{university.name}</h2>
+                                                </div>
                                             </td>
                                             <td>
-                                                <h3 className='py-3 px-4 min-w-[250px] whitespace-nowrap w-full'>{region.name}</h3>
+                                                <h3 className='px-2 min-w-[250px] whitespace-nowrap w-full'>{region.name}</h3>
                                             </td>
                                             <td>
-                                                <div className='py-3 px-4 flex items-center'>
+                                                <div className='px-2 flex items-center'>
                                                     <h3 className='px-2 py-1 bg-gray-200 rounded-md rounded-r-none'>{careers.length}</h3>
                                                     <span className='px-2 py-1 bg-hover rounded-md rounded-l-none'>carreras</span>
                                                 </div>
@@ -623,7 +648,7 @@ export default function Admin() {
                                         <th className='py-3 px-2'>Modalidad</th>
                                     </tr>
                                 </thead>
-                                <tbody className='rounded-b-xl overflow-hidden sticky'>
+                                <tbody className='rounded-b-xl overflow-hidden'>
                                     {row && (
                                         <tr className='h-7 font-semibold bg-white text-black w-full sticky top-10 z-10'>
                                             <td className='sticky left-0 z-10 bg-inherit'>
