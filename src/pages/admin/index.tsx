@@ -625,7 +625,7 @@ export default function Admin() {
                                 </thead>
                                 <tbody className='rounded-b-xl overflow-hidden sticky'>
                                     {row && (
-                                        <tr className='h-7 font-semibold bg-white text-black w-full sticky top-10 z-30'>
+                                        <tr className='h-7 font-semibold bg-white text-black w-full sticky top-10 z-10'>
                                             <td className='sticky left-0 z-10 bg-inherit'>
                                                 <input className='w-full px-2' disabled />
                                             </td>
