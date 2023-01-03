@@ -15,6 +15,7 @@ export const campusRouter = createRouter()
     })
     .mutation('create', {
         input: z.object({
+            id: z.number().optional(),
             name: z.string(),
             subname: z.string(),
             direction: z.string(),
@@ -25,8 +26,29 @@ export const campusRouter = createRouter()
             region: z.number(),
         }),
         async resolve({ ctx, input }) {
-            return await ctx.prisma.campus.create({
-                data: {
+            return await ctx.prisma.campus.upsert({
+                where: {
+                    id: input.id === undefined ? -1 : input.id,
+                },
+                update: {
+                    name: input.name,
+                    subname: input.subname,
+                    direction: input.direction,
+                    contact: input.contact,
+                    url: input.url,
+                    location: input.location,
+                    university: {
+                        connect: {
+                            id: input.university,
+                        },
+                    },
+                    region: {
+                        connect: {
+                            id: input.region
+                        }
+                    },
+                },
+                create: {
                     name: input.name,
                     subname: input.subname,
                     direction: input.direction,
