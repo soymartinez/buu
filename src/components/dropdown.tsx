@@ -1,14 +1,33 @@
 import { useState } from 'react'
 import Arrow from './icons/arrow'
 
-export default function Dropdown({ title, object, setStatus, defaultValue }: { title: string, object: any, setStatus: any, defaultValue?: string }) {
+export default function Dropdown({ title, object, setStatus, defaultValue, currentValue, disabled }: {
+    title: string,
+    object: any,
+    setStatus: any,
+    defaultValue?: string,
+    currentValue?: (value: string) => void,
+    disabled?: boolean,
+}) {
     const [isOpen, setIsOpen] = useState(false)
     const [selected, setSelected] = useState(defaultValue || '')
+
+    const handleClick = (name: string) => {
+        setSelected(name)
+        setIsOpen(false)
+        currentValue && currentValue(name)
+    }
+
     return (
         <div className='relative'>
-            <button onClick={() => setIsOpen(!isOpen)} className={`inline-flex whitespace-nowrap items-center transition font-bold bg-hover p-2 w-full text-center`} type='button'>
+            <button
+                disabled={disabled}
+                onClick={() => setIsOpen(!isOpen)}
+                className={`inline-flex whitespace-nowrap items-center transition font-bold bg-hover p-2 w-full text-center ${disabled ? 'text-font cursor-not-allowed' : ''}`}
+                type='button'
+            >
                 {selected ? selected : `Seleccionar ${title}`}
-                <Arrow className={`ml-auto text-black transition-all ${isOpen && '-rotate-0'}`} />
+                <Arrow className={`ml-auto transition ${isOpen && 'rotate-0'}`} />
             </button>
 
             <div className={`${!isOpen ? 'hidden' : 'focus:border-black'} absolute bg-white z-20 rounded-b-md border border-hover shadow-lg`}>
@@ -27,7 +46,7 @@ export default function Dropdown({ title, object, setStatus, defaultValue }: { t
                         <li key={id} className={`flex items-center justify-between text-black rounded-lg ${selected === name ? 'bg-hover' : 'hover:bg-hover'}`}>
                             <div className='flex items-center w-full'>
                                 <input
-                                    onChange={() => { setSelected(name); setIsOpen(false) }}
+                                    onChange={() => handleClick(name)}
                                     onInvalid={() => setIsOpen(true)}
                                     type='radio'
                                     required
