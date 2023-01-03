@@ -646,14 +646,16 @@ export default function Admin() {
                                                     object={universities}
                                                     setStatus={setStatus}
                                                     defaultValue={prevData?.universityName}
+                                                    currentValue={(value) => setPrevData({ ...prevData, universityName: value })}
                                                 />
                                             </td>
                                             <td>
                                                 <Dropdown
                                                     title='campus'
-                                                    object={campus}
+                                                    object={campus?.filter((campus) => campus.university.name === prevData?.universityName)}
                                                     setStatus={setStatus}
                                                     defaultValue={prevData?.campus?.name}
+                                                    disabled={!prevData?.universityName}
                                                 />
                                             </td>
                                             <td>
