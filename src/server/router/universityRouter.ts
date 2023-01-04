@@ -87,8 +87,33 @@ export const universityRouter = createRouter()
     }
   })
   .query("getAll", {
-    async resolve({ ctx }) {
+    input: z.object({
+      name: z.string().optional(),
+    }).nullish(),
+    async resolve({ ctx, input }) {
       return await ctx.prisma.university.findMany({
+        where: {
+          OR: [
+            {
+              name: {
+                contains: input?.name,
+                mode: 'insensitive',
+              }
+            },
+            {
+              subname: {
+                contains: input?.name,
+                mode: 'insensitive',
+              }
+            },
+            {
+              location: {
+                contains: input?.name,
+                mode: 'insensitive',
+              }
+            },
+          ]
+        },
         include: {
           regions: true,
           campus: true,
