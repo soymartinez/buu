@@ -36,7 +36,7 @@ export async function getServerSideProps({ req, res }: { req: NextApiRequest; re
 }
 
 export default function Admin() {
-    const [success, setSuccess] = useState(0)
+    const [search, setSearch] = useState('')
     const [status, setStatus] = useState('universidad')
     const [modal, setModal] = useState({
         title: '',
@@ -53,11 +53,10 @@ export default function Admin() {
     const [selected, setSelected] = useState<{ id: number, index: number }[]>([])
 
     // GET
-    const { data: universities } = trpc.useQuery(['university.getAll'])
-    const { data: regions } = trpc.useQuery(['region.getAll'])
-    const { data: campus } = trpc.useQuery(['campus.getAll'])
-    const { data: careersList } = trpc.useQuery(['career.getAllCareers'])
-    const { data: careersDetails } = trpc.useQuery(['career.getAllCareersDetails'])
+    const { data: universities } = trpc.useQuery(['university.getAll', { name: status === 'universidad' ? search : '' }])
+    const { data: regions } = trpc.useQuery(['region.getAll', { name: status === 'región' ? search : '' }])
+    const { data: campus } = trpc.useQuery(['campus.getAll', { name: status === 'campus' ? search : '' }])
+    const { data: careers } = trpc.useQuery(['career.getAllCareersDetails', { name: status === 'carrera' ? search : '' }])
 
     // CREATE OR UPDATE
     const { mutate: universityCreate } = trpc.useMutation(['university.create'])
@@ -214,7 +213,7 @@ export default function Admin() {
                 setRow(true)
                 break
             case 'carrera':
-                setPrevData(careersDetails?.find((career) => career.id === selected[0]?.id))
+                setPrevData(careers?.find((career) => career.id === selected[0]?.id))
                 setRow(true)
                 break
         }
@@ -231,7 +230,7 @@ export default function Admin() {
         { name: 'universidades', active: 'universidad', count: universities?.length },
         { name: 'regiones', active: 'región', count: regions?.length },
         { name: 'campus', active: 'campus', count: campus?.length },
-        { name: 'carreras', active: 'carrera', count: careersDetails?.length },
+        { name: 'carreras', active: 'carrera', count: careers?.length },
     ]
 
     return (
@@ -315,7 +314,11 @@ export default function Admin() {
                                     <div className='flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none'>
                                         <svg className='w-5 h-5 text-font' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'><path fillRule='evenodd' d='M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z' clipRule='evenodd'></path></svg>
                                     </div>
-                                    <input type='text' id='table-search' className='placeholder:text-font block p-2 pl-10 w-full lg:w-80 text-xs rounded-lg border' placeholder='Buscar por nombre' />
+                                    <input onChange={(e) => setSearch(e.target.value)}
+                                        type='text'
+                                        id='table-search'
+                                        className='placeholder:text-font block p-2 pl-10 w-full lg:w-80 text-xs rounded-lg border'
+                                        placeholder='Buscar por nombre' />
                                 </div>
                             </div>
                             <div className='flex items-center gap-2'>
@@ -691,7 +694,7 @@ export default function Admin() {
                                             <td>
                                                 <Dropdown
                                                     title='carrera'
-                                                    object={careersList}
+                                                    object={careersAvailable}
                                                     setStatus={setStatus}
                                                     defaultValue={prevData?.name}
                                                 />
@@ -734,7 +737,7 @@ export default function Admin() {
                                             </td>
                                         </tr>
                                     )}
-                                    {careersDetails && careersDetails.map(({ id, career, university, campus, level, area, period, duration, program, modality }, index) => (
+                                    {careers && careers.map(({ id, career, university, campus, level, area, period, duration, program, modality }, index) => (
                                         <tr key={id} onClick={() => !row && handleSelected(id, index + 1)}
                                             className={`h-7 cursor-pointer font-semibold ${selected.find((s) => s.id === id) ? 'bg-hover' : 'bg-white hover:bg-hover'}`}>
                                             <td className='sticky left-0 z-10 bg-inherit'>
