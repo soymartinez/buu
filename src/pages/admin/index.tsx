@@ -58,6 +58,8 @@ export default function Admin() {
     const { data: campus } = trpc.useQuery(['campus.getAll', { name: status === 'campus' ? search : '' }])
     const { data: careers } = trpc.useQuery(['career.getAllCareersDetails', { name: status === 'carrera' ? search : '' }])
 
+    const { data: careersAvailable } = trpc.useQuery(['career.getAllCareers'])
+
     // CREATE OR UPDATE
     const { mutate: universityCreate } = trpc.useMutation(['university.create'])
     const { mutate: regionCreate } = trpc.useMutation(['region.create'])
