@@ -1,5 +1,10 @@
 import { Campus, Career, Careers, Level, Modality, Period, Region, Type, University } from '@prisma/client'
 import Dropdown from 'components/dropdown'
+import Close from 'components/icons/close'
+import Minus from 'components/icons/minus'
+import Modify from 'components/icons/modify'
+import Ok from 'components/icons/ok'
+import Plus from 'components/icons/plus'
 import Layout from 'components/layout'
 import Modal from 'components/modal'
 import Select from 'components/select'
@@ -259,31 +264,24 @@ export default function Admin() {
                             </div>
                         ))}
                     </div>
-                    <div className='flex flex-col gap-4 lg:flex-row lg:items-center justify-between'>
-                        <div className={`flex gap-5 px-3 md:px-5 text-xs w-min font-semibold text-font ml-auto lg:m-0`}>
+                    <div className='flex flex-col gap-4 lg:flex-row lg:items-center justify-between overflow-hidden'>
+                        <div className={`flex sm:justify-end lg:justify-start gap-5 sm:px-3 md:px-5 text-xs w-full font-semibold text-font overflow-auto scrollbar-hide`}>
                             {row
                                 ? <div className='flex gap-5'>
-                                    <button type={'submit'} form={`form-${status}`} className='flex gap-2 py-2 text-primary hover:opacity-90'>
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fillRule="evenodd" d="M5 3a1 1 0 011-1h8a1 1 0 011 1v12a1 1 0 01-1 1H6a1 1 0 01-1-1V3zm1 2v10h8V5H6z" clipRule="evenodd" />
-                                        </svg>
-                                        <h2 className='select-none whitespace-nowrap'>Guardar {status}</h2>
+                                    <button type={'submit'} form={`form-${status}`} className='flex items-center gap-2 py-2 text-primary hover:opacity-80'>
+                                        <Ok />
+                                        <h2 className='select-none whitespace-nowrap'>Guardar <span className='hidden md:inline lowercase'>{status}</span></h2>
                                     </button>
 
-                                    <button onClick={() => handleCancel()} className='flex gap-2 py-2 hover:opacity-90'>
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                                        </svg>
+                                    <button onClick={() => handleCancel()} className='flex items-center gap-2 py-2 hover:opacity-80'>
+                                        <Close />
                                         <h2 className='select-none whitespace-nowrap'>Cancelar</h2>
                                     </button>
                                 </div>
                                 : <>
-                                    <button onClick={() => setRow(true)} className='flex justify-center items-center gap-2 py-2 hover:opacity-90'>
-                                        <div className='flex justify-center w-4 h-4 items-center relative'>
-                                            <div className='w-[12px] h-[2px] rounded-full bg-font' />
-                                            <div className='absolute w-[12px] h-[2px] rounded-full bg-font rotate-90' />
-                                        </div>
-                                        <h2 className='select-none whitespace-nowrap'>Agregar <span className='lowercase'>{status}</span></h2>
+                                    <button onClick={() => setRow(true)} className='flex items-center gap-2 py-2 hover:opacity-80'>
+                                        <Plus />
+                                        <h2 className='select-none whitespace-nowrap'>Agregar <span className='hidden xl:inline lowercase'>{status}</span></h2>
                                     </button>
                                     {selected.length > 0 &&
                                         <button onClick={() => setModal({
@@ -293,16 +291,15 @@ export default function Admin() {
                                             background: 'warning',
                                             handler: () => handleDelete(),
                                             open: true,
-                                        })} className='flex justify-center items-center gap-2 py-2 hover:opacity-90'>
-                                            <div className='flex justify-center w-4 h-4 items-center relative'>
-                                                <div className='w-[12px] h-[2px] rounded-full bg-error' />
-                                            </div>
-                                            <h2 className='select-none whitespace-nowrap text-error'>
-                                                Eliminar {selected.length} registros
+                                        })} className='flex justify-center items-center gap-2 py-2 hover:opacity-80 text-error'>
+                                            <Minus />
+                                            <h2 className='select-none whitespace-nowrap'>
+                                                Eliminar <span className='hidden xl:inline lowercase'>{selected.length} filas</span>
                                             </h2>
                                         </button>}
                                     {selected.length === 1 &&
-                                        <button onClick={() => handleUpdate()} className='flex justify-center items-center gap-2 py-2 hover:opacity-90'>
+                                        <button onClick={() => handleUpdate()} className='flex items-center gap-2 py-2 hover:opacity-80 text-[#f9a825]'>
+                                            <Modify />
                                             <h2 className='select-none whitespace-nowrap'>
                                                 Modificar
                                             </h2>
