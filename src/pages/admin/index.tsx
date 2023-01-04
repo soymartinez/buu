@@ -61,6 +61,7 @@ export default function Admin() {
     const { mutate: careerCreate } = trpc.useMutation(['career.create'])
 
     // DELETE
+    const { mutate: deleteRegion } = trpc.useMutation(['region.delete'])
     const { mutate: deleteCampus } = trpc.useMutation(['campus.delete'])
     const { mutate: deleteCareer } = trpc.useMutation(['career.delete'])
 
@@ -104,21 +105,6 @@ export default function Admin() {
         })
     }
 
-    const handleSaveRegion = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        const formData = new FormData(e.target as HTMLFormElement)
-        const data = Object.fromEntries(formData.entries())
-
-        regionCreate({
-            name: data.name as string,
-        }, {
-            onSuccess() {
-                invalidateQueries(['region.getAll'])
-                setRow(false)
-            },
-        })
-    }
-
     const handleSave = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const formData = new FormData(e.target as HTMLFormElement)
@@ -129,8 +115,15 @@ export default function Admin() {
                 handleSaveUniversity(e)
                 break
             case 'región':
-                handleSaveRegion(e)
-                break
+                return regionCreate({
+                    id: selected[0]?.id,
+                    name: data.name as string,
+                }, {
+                    onSuccess() {
+                        invalidateQueries(['region.getAll'])
+                        handleCancel()
+                    },
+                })
             case 'campus':
                 return campusCreate({
                     id: selected[0]?.id,
@@ -173,6 +166,15 @@ export default function Admin() {
     const handleDelete = () => {
         setModal({ ...modal, open: false })
         switch (status) {
+            case 'región':
+                return selected.map(({ id }) => {
+                    deleteRegion({ id }, {
+                        onSuccess() {
+                            invalidateQueries(['region.getAll'])
+                            handleCancel()
+                        },
+                    })
+                })
             case 'campus':
                 return selected.map(({ id }) => {
                     deleteCampus({ id }, {
@@ -197,6 +199,10 @@ export default function Admin() {
 
     const handleUpdate = () => {
         switch (status) {
+            case 'región':
+                setPrevData(regions?.find((region) => region.id === selected[0]?.id))
+                setRow(true)
+                break
             case 'campus':
                 setPrevData(campus?.find((campus) => campus.id === selected[0]?.id))
                 setRow(true)
@@ -451,50 +457,63 @@ export default function Admin() {
 
                 {status === 'región' && (
                     <section className='rounded-xl overflow-x-auto h-full w-full mb-4'>
-                        <form id={`form-${status}`} onSubmit={handleSaveRegion}>
-                            <table className='table-auto text-font text-xs w-full'>
+                        <form id={`form-${status}`} onSubmit={handleSave}>
+                            <table className='table-auto text-font text-xs w-full border-separate border-spacing-0'>
                                 <thead className='bg-primary text-white sticky top-0 z-30'>
                                     <tr className='text-left'>
-                                        <th className='py-3 px-4'>Id</th>
-                                        <th className='py-3 px-4'>Nombre</th>
-                                        <th className='py-3 px-4'>Universidades<span className='text-gray-200 ml-1'>[ ]</span></th>
-                                        <th className='py-3 px-4 whitespace-nowrap'>Campus<span className='text-gray-200 ml-1'>[ ]</span></th>
+                                        <th className='py-3 px-2 sticky left-0 bg-primary'></th>
+                                        <th className='py-3 px-2 sticky left-[36px] bg-primary border-r-4'>Id</th>
+                                        <th className='py-3 px-2'>Nombre</th>
+                                        <th className='py-3 px-2'>Universidades<span className='text-gray-200 ml-1'>[ ]</span></th>
+                                        <th className='py-3 px-2 whitespace-nowrap'>Campus<span className='text-gray-200 ml-1'>[ ]</span></th>
                                     </tr>
                                 </thead>
                                 <tbody className='rounded-b-xl overflow-hidden'>
                                     {row && (
-                                        <tr className='font-semibold text-black w-full sticky top-10 z-20'>
-                                            <td>
-                                                <input className='w-full bg-hover py-3 px-4' disabled />
+                                        <tr className='h-7 font-semibold bg-white text-black w-full sticky top-10 z-10'>
+                                            <td className='sticky left-0 z-10 bg-inherit'>
+                                                <input className='w-full p-2' disabled />
+                                            </td>
+                                            <td className='sticky left-[36px] z-10 bg-inherit border-r-4'>
+                                                <input className='w-full p-2 text-font' defaultValue={selected[0]?.index} disabled />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4 font-bold' name={'name'} required />
+                                                <input className='w-full bg-hover p-2 font-bold' defaultValue={prevData?.name} autoFocus name={'name'} required />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4 cursor-not-allowed text-center' placeholder='--' disabled />
+                                                <input className='w-full bg-hover p-2 cursor-not-allowed text-center' placeholder='--' disabled />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4 cursor-not-allowed text-center' placeholder='--' disabled />
+                                                <input className='w-full bg-hover p-2 cursor-not-allowed text-center' placeholder='--' disabled />
                                             </td>
                                         </tr>
                                     )}
                                     {regions && regions.map(({ id, name, university, campus }, index) => (
-                                        <tr key={id} className='hover:bg-hover font-semibold border-b-2 border-hover last:border-none'>
-                                            <td>
-                                                <h3 className='py-3 px-4'>{index + 1}</h3>
+                                        <tr
+                                            key={id}
+                                            onClick={() => !row && handleSelected(id, index + 1)}
+                                            className={`h-7 cursor-pointer font-semibold ${selected.find((s) => s.id === id) ? 'bg-hover' : 'bg-white hover:bg-hover'}`}
+                                        >
+                                            <td className='sticky left-0 z-10 bg-inherit'>
+                                                <div className='px-2 flex items-center justify-center'>
+                                                    <input onClick={() => handleSelected(id, index + 1)} type={'checkbox'} className='w-3 h-3 cursor-pointer accent-primary'
+                                                        readOnly checked={selected?.some(selectId => selectId.id === id)} name={name} disabled={row} />
+                                                </div>
+                                            </td>
+                                            <td className='sticky left-[36px] z-10 bg-inherit border-r-4'>
+                                                <h3 className='px-2'>{index + 1}</h3>
                                             </td>
                                             <td className='w-full'>
-                                                <h3 className='py-3 px-4 text-black text-xs font-bold leading-none whitespace-nowrap'>{name}</h3>
+                                                <h3 className='px-2 text-black text-xs font-bold leading-none whitespace-nowrap'>{name}</h3>
                                             </td>
-
                                             <td>
-                                                <div className='py-3 px-4 flex items-center'>
+                                                <div className='px-2 py-1 flex items-center'>
                                                     <h3 className='px-2 py-1 bg-gray-200 rounded-md rounded-r-none'>{university.length}</h3>
                                                     <span className='px-2 py-1 bg-hover rounded-md rounded-l-none'>universidades</span>
                                                 </div>
                                             </td>
                                             <td>
-                                                <div className='py-3 px-4 flex items-center'>
+                                                <div className='px-2 py-1 flex items-center'>
                                                     <h3 className='px-2 py-1 bg-gray-200 rounded-md rounded-r-none'>{campus.length}</h3>
                                                     <span className='px-2 py-1 bg-hover rounded-md rounded-l-none'>campus</span>
                                                 </div>
