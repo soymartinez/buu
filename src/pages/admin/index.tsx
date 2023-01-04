@@ -61,6 +61,7 @@ export default function Admin() {
     const { mutate: careerCreate } = trpc.useMutation(['career.create'])
 
     // DELETE
+    const { mutate: deleteUniversity } = trpc.useMutation(['university.delete'])
     const { mutate: deleteRegion } = trpc.useMutation(['region.delete'])
     const { mutate: deleteCampus } = trpc.useMutation(['campus.delete'])
     const { mutate: deleteCareer } = trpc.useMutation(['career.delete'])
@@ -81,30 +82,6 @@ export default function Admin() {
         setSelected([])
     }
 
-    const handleSaveUniversity = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        const formData = new FormData(e.target as HTMLFormElement)
-        const form = Object.fromEntries(formData.entries())
-
-        universityCreate({
-            name: form.name as string,
-            subname: form.subname as string,
-            logo: form.logo as File,
-            url: form.url as string,
-            description: form.description as string,
-            location: form.location as string,
-            ranking: Number(form.ranking),
-            type: form.type as Type,
-        }, {
-            onSuccess({ id }) {
-                setSuccess(id)
-                invalidateQueries(['university.getAll'])
-                setRow(false)
-                setPreview('')
-            },
-        })
-    }
-
     const handleSave = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const formData = new FormData(e.target as HTMLFormElement)
@@ -112,8 +89,21 @@ export default function Admin() {
 
         switch (status) {
             case 'universidad':
-                handleSaveUniversity(e)
-                break
+                return universityCreate({
+                    name: data.name as string,
+                    subname: data.subname as string,
+                    logo: data.logo as File,
+                    url: data.url as string,
+                    description: data.description as string,
+                    location: data.location as string,
+                    ranking: Number(data.ranking),
+                    type: data.type as Type,
+                }, {
+                    onSuccess({ id }) {
+                        invalidateQueries(['university.getAll'])
+                        handleCancel()
+                    },
+                })
             case 'región':
                 return regionCreate({
                     id: selected[0]?.id,
@@ -137,7 +127,6 @@ export default function Admin() {
                     region: Number(data.región),
                 }, {
                     onSuccess({ id }) {
-                        setSuccess(id)
                         invalidateQueries(['campus.getAll'])
                         handleCancel()
                     }
@@ -166,6 +155,15 @@ export default function Admin() {
     const handleDelete = () => {
         setModal({ ...modal, open: false })
         switch (status) {
+            case 'universidad':
+                return selected.map(({ id }) => {
+                    deleteUniversity({ id }, {
+                        onSuccess() {
+                            invalidateQueries(['university.getAll'])
+                            handleCancel()
+                        },
+                    })
+                })
             case 'región':
                 return selected.map(({ id }) => {
                     deleteRegion({ id }, {
@@ -194,11 +192,14 @@ export default function Admin() {
                     })
                 })
         }
-        setSelected([])
     }
 
     const handleUpdate = () => {
         switch (status) {
+            case 'universidad':
+                setPrevData(universities?.find((university) => university.id === selected[0]?.id))
+                setRow(true)
+                break
             case 'región':
                 setPrevData(regions?.find((region) => region.id === selected[0]?.id))
                 setRow(true)
@@ -332,80 +333,94 @@ export default function Admin() {
 
                 {status === 'universidad' && (
                     <section className='rounded-xl overflow-x-auto h-full w-full mb-4'>
-                        <form id={`form-${status}`} onSubmit={handleSaveUniversity}>
-                            <table className='table-auto text-font text-xs w-full'>
+                        <form id={`form-${status}`} onSubmit={handleSave}>
+                            <table className='table-auto text-font text-xs w-full border-separate border-spacing-0'>
                                 <thead className='bg-primary text-white sticky top-0 z-30'>
                                     <tr className='text-left'>
-                                        <th className='py-3 px-4'>Id</th>
-                                        <th className='py-3 px-4'>Nombre</th>
-                                        <th className='py-3 px-4'>Localidad</th>
-                                        <th className='py-3 px-4'>Ranking<span className='text-gray-200 ml-1'>?</span></th>
-                                        <th className='py-3 px-4'>Tipo</th>
-                                        <th className='py-3 px-4'>URL<span className='text-gray-200 ml-1'>?</span></th>
-                                        <th className='py-3 px-4'>Descripción<span className='text-gray-200 ml-1'>?</span></th>
-                                        <th className='py-3 px-4 whitespace-nowrap'>Regiones<span className='text-gray-200 ml-1'>[ ]</span></th>
-                                        <th className='py-3 px-4 whitespace-nowrap'>Campus<span className='text-gray-200 ml-1'>[ ]</span></th>
-                                        <th className='py-3 px-4 whitespace-nowrap'>Carreras<span className='text-gray-200 ml-1'>[ ]</span></th>
+                                        <th className='py-3 px-2 sticky left-0 bg-primary'></th>
+                                        <th className='py-3 px-2 sticky left-[36px] bg-primary border-r-4'>Id</th>
+                                        <th className='py-3 px-2'>Nombre</th>
+                                        <th className='py-3 px-2'>Localidad</th>
+                                        <th className='py-3 px-2'>Ranking<span className='text-gray-200 ml-1'>?</span></th>
+                                        <th className='py-3 px-2'>Tipo</th>
+                                        <th className='py-3 px-2'>URL<span className='text-gray-200 ml-1'>?</span></th>
+                                        <th className='py-3 px-2'>Descripción<span className='text-gray-200 ml-1'>?</span></th>
+                                        <th className='py-3 px-2 whitespace-nowrap'>Regiones<span className='text-gray-200 ml-1'>[ ]</span></th>
+                                        <th className='py-3 px-2 whitespace-nowrap'>Campus<span className='text-gray-200 ml-1'>[ ]</span></th>
+                                        <th className='py-3 px-2 whitespace-nowrap'>Carreras<span className='text-gray-200 ml-1'>[ ]</span></th>
                                     </tr>
                                 </thead>
                                 <tbody className='rounded-b-xl overflow-hidden'>
                                     {row && (
-                                        <tr className='font-semibold text-black w-full sticky top-10 z-20'>
-                                            <td>
-                                                <input className='w-full bg-hover py-3 px-4' disabled />
+                                        <tr className='h-7 font-semibold bg-white text-black w-full sticky top-10 z-10'>
+                                            <td className='sticky left-0 z-10 bg-inherit'>
+                                                <input className='w-full p-2' disabled />
+                                            </td>
+                                            <td className='sticky left-[36px] z-10 bg-inherit border-r-4'>
+                                                <input className='w-full p-2 text-font' defaultValue={selected[0]?.index} disabled />
                                             </td>
                                             <td>
-                                                <div className='w-full bg-hover py-1 px-4 flex gap-4'>
-                                                    <div className='grid place-content-center w-8 h-8 relative'>
-                                                        <label htmlFor='logo' className='bg-secondary rounded-full w-8 cursor-pointer'>
-                                                            {!preview
-                                                                && <svg xmlns="http://www.w3.org/2000/svg" className='w-8 h-8 text-gray-100' fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <div className='w-full px-2 bg-hover flex items-center gap-2'>
+                                                    <div className='grid place-content-center w-6 h-6 relative'>
+                                                        <label htmlFor='logo' className='bg-secondary rounded-full w-6 cursor-pointer'>
+                                                            {preview || prevData?.logo
+                                                                ? < Image src={preview || prevData?.logo} alt={'upload'} objectFit={'contain'} layout={'fill'} />
+                                                                : <svg xmlns="http://www.w3.org/2000/svg" className='w-6 h-6 text-gray-100' fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                                                 </svg>}
-                                                            {preview && <Image src={preview} alt={'upload'} objectFit={'contain'} layout={'fill'} />}
                                                         </label>
-                                                        <input type={'file'} id={'logo'} className={'sr-only right-4 bottom-0'} accept={'image/png, image/jpeg'} onChange={handleFile} name={'logo'} required />
+                                                        <input type={'file'} id={'logo'} className={'sr-only right-4 bottom-0'} accept={'image/png, image/jpeg'} onChange={handleFile} name={'logo'} required={!prevData?.logo} />
                                                     </div>
                                                     <div className='w-full flex flex-col justify-center gap-0'>
-                                                        <input className='bg-trasparent text-black text-xs font-bold outline-none leading-none whitespace-nowrap' placeholder={'Nombre'} name={'name'} required />
-                                                        <input className='bg-trasparent text-[14px] outline-none text-font font-medium' placeholder={'Acrónimo'} name={'subname'} />
+                                                        <input className='bg-trasparent text-black text-xs font-bold outline-none leading-none whitespace-nowrap' placeholder={'Nombre'} defaultValue={prevData?.name} name={'name'} required />
+                                                        <input className='bg-trasparent text-[14px] outline-none text-font font-medium' placeholder={'Acrónimo'} defaultValue={prevData?.subname} name={'subname'} />
                                                     </div>
                                                 </div>
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4' name={'location'} />
+                                                <input className='w-full bg-hover p-2' defaultValue={prevData?.location} name={'location'} />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4' name={'ranking'} type={'number'} />
+                                                <input className='w-full bg-hover p-2' defaultValue={prevData?.ranking} name={'ranking'} type={'number'} />
                                             </td>
                                             <td>
-                                                <Select object={Type} name={'type'} />
+                                                <Select object={Type} name={'type'} defaultValue={prevData?.type} />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4' name={'url'} type={'url'} />
+                                                <input className='w-full bg-hover p-2' defaultValue={prevData?.url} name={'url'} type={'url'} />
                                             </td>
                                             <td className='flex items-center'>
-                                                <textarea className='w-full bg-hover py-3 px-4 max-w-full resize-none' rows={1} name={'description'} />
+                                                <textarea className='w-full bg-hover p-2 max-w-full resize-none' defaultValue={prevData?.description} rows={1} name={'description'} />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4 cursor-not-allowed text-center' placeholder='--' disabled />
+                                                <input className='w-full bg-hover p-2 cursor-not-allowed text-center' placeholder='--' disabled />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4 cursor-not-allowed text-center' placeholder='--' disabled />
+                                                <input className='w-full bg-hover p-2 cursor-not-allowed text-center' placeholder='--' disabled />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover py-3 px-4 cursor-not-allowed text-center' placeholder='--' disabled />
+                                                <input className='w-full bg-hover p-2 cursor-not-allowed text-center' placeholder='--' disabled />
                                             </td>
                                         </tr>
                                     )}
                                     {universities && universities.map(({ id, name, subname, logo, url, description, location, ranking, type, regions, campus, careers }, index) => (
-                                        <tr key={id} className={`hover:bg-hover font-semibold border-b-2 border-hover last:border-none ${id === success && 'animate-[highlight_1s_ease-in-out_1]'}`}>
-                                            <td>
-                                                <h3 className='py-3 px-4'>{index + 1}</h3>
+                                        <tr
+                                            key={id}
+                                            onClick={() => !row && handleSelected(id, index + 1)}
+                                            className={`h-7 cursor-pointer font-semibold ${selected.find((s) => s.id === id) ? 'bg-hover' : 'bg-white hover:bg-hover'}`}
+                                        >
+                                            <td className='sticky left-0 z-10 bg-inherit'>
+                                                <div className='px-2 flex items-center justify-center'>
+                                                    <input onClick={() => handleSelected(id, index + 1)} type={'checkbox'} className='w-3 h-3 cursor-pointer accent-primary'
+                                                        readOnly checked={selected?.some(selectId => selectId.id === id)} name={name} disabled={row} />
+                                                </div>
                                             </td>
-                                            <td className='w-full'>
-                                                <div className='py-3 px-4 flex gap-4'>
-                                                    <div className='grid place-content-center w-8 h-8 relative'>
+                                            <td className='sticky left-[36px] z-10 bg-inherit border-r-4'>
+                                                <h3 className='px-2'>{index + 1}</h3>
+                                            </td>
+                                            <td>
+                                                <div className='px-2 py-1 flex items-center gap-2'>
+                                                    <div className='grid place-content-center w-6 h-6 relative'>
                                                         <Image src={logo} alt={name} layout={'fill'} objectFit={'contain'} />
                                                     </div>
                                                     <div className='flex flex-col justify-center gap-0'>
@@ -414,37 +429,37 @@ export default function Admin() {
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>
-                                                <h3 className='py-3 px-4'>{location}</h3>
+                                            <td className='w-full'>
+                                                <h3 className='px-2 truncate'>{location}</h3>
                                             </td>
                                             <td>
-                                                <h3 className='py-3 px-4'>{ranking}</h3>
+                                                <h3 className='px-2'>{ranking}</h3>
                                             </td>
                                             <td>
-                                                <h3 className='py-3 px-4'>{type}</h3>
+                                                <h3 className='px-2 w-20'>{type}</h3>
                                             </td>
                                             <td>
-                                                <h3 className='py-3 px-4 w-40 whitespace-nowrap truncate'>{url}</h3>
+                                                <h3 className='px-2 w-40 truncate'>{url}</h3>
                                             </td>
                                             <td>
-                                                <h3 className='py-3 px-4 w-40 whitespace-nowrap truncate'>{description}</h3>
+                                                <h3 className='px-2 w-40 truncate'>{description}</h3>
                                             </td>
                                             <td>
-                                                <div className='py-3 px-4 flex items-center'>
-                                                    <h3 className='px-2 py-1 bg-gray-200 rounded-md rounded-r-none'>{regions.length}</h3>
-                                                    <span className='px-2 py-1 bg-hover rounded-md rounded-l-none'>regiones</span>
+                                                <div className='px-2 flex items-center'>
+                                                    <h3 className='px-2 py-1 w-full bg-gray-200 rounded-md rounded-r-none'>{regions.length}</h3>
+                                                    <span className='px-2 py-1 w-full bg-hover rounded-md rounded-l-none'>regiones</span>
                                                 </div>
                                             </td>
                                             <td>
-                                                <div className='py-3 px-4 flex items-center'>
-                                                    <h3 className='px-2 py-1 bg-gray-200 rounded-md rounded-r-none'>{campus.length}</h3>
-                                                    <span className='px-2 py-1 bg-hover rounded-md rounded-l-none'>campus</span>
+                                                <div className='px-2 flex items-center w-full'>
+                                                    <h3 className='px-2 py-1 w-full bg-gray-200 rounded-md rounded-r-none'>{campus.length}</h3>
+                                                    <span className='px-2 py-1 w-full bg-hover rounded-md rounded-l-none'>campus</span>
                                                 </div>
                                             </td>
                                             <td>
-                                                <div className='py-3 px-4 flex items-center'>
-                                                    <h3 className='px-2 py-1 bg-gray-200 rounded-md rounded-r-none'>{careers.length}</h3>
-                                                    <span className='px-2 py-1 bg-hover rounded-md rounded-l-none'>carreras</span>
+                                                <div className='px-2 flex items-center'>
+                                                    <h3 className='px-2 py-1 w-full bg-gray-200 rounded-md rounded-r-none'>{careers.length}</h3>
+                                                    <span className='px-2 py-1 w-full bg-hover rounded-md rounded-l-none'>carreras</span>
                                                 </div>
                                             </td>
                                         </tr>
@@ -508,14 +523,14 @@ export default function Admin() {
                                             </td>
                                             <td>
                                                 <div className='px-2 py-1 flex items-center'>
-                                                    <h3 className='px-2 py-1 bg-gray-200 rounded-md rounded-r-none'>{university.length}</h3>
-                                                    <span className='px-2 py-1 bg-hover rounded-md rounded-l-none'>universidades</span>
+                                                    <h3 className='px-2 py-1 w-full bg-gray-200 rounded-md rounded-r-none'>{university.length}</h3>
+                                                    <span className='px-2 py-1 w-full bg-hover rounded-md rounded-l-none'>universidades</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div className='px-2 py-1 flex items-center'>
-                                                    <h3 className='px-2 py-1 bg-gray-200 rounded-md rounded-r-none'>{campus.length}</h3>
-                                                    <span className='px-2 py-1 bg-hover rounded-md rounded-l-none'>campus</span>
+                                                    <h3 className='px-2 py-1 w-full bg-gray-200 rounded-md rounded-r-none'>{campus.length}</h3>
+                                                    <span className='px-2 py-1 w-full bg-hover rounded-md rounded-l-none'>campus</span>
                                                 </div>
                                             </td>
                                         </tr>
@@ -636,8 +651,8 @@ export default function Admin() {
                                             </td>
                                             <td>
                                                 <div className='px-2 flex items-center'>
-                                                    <h3 className='px-2 py-1 bg-gray-200 rounded-md rounded-r-none'>{careers.length}</h3>
-                                                    <span className='px-2 py-1 bg-hover rounded-md rounded-l-none'>carreras</span>
+                                                    <h3 className='px-2 py-1 w-full bg-gray-200 rounded-md rounded-r-none'>{careers.length}</h3>
+                                                    <span className='px-2 py-1 w-full bg-hover rounded-md rounded-l-none'>carreras</span>
                                                 </div>
                                             </td>
                                         </tr>
