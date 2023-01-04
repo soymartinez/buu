@@ -99,9 +99,10 @@ export const universityRouter = createRouter()
   })
   .mutation('create', {
     input: z.object({
+      id: z.number().optional(),
       name: z.string(),
       subname: z.string(),
-      logo: z.any(),
+      logo: z.any().optional(),
       url: z.string(),
       description: z.string(),
       type: z.string(),
@@ -123,8 +124,21 @@ export const universityRouter = createRouter()
         return publicUrl
       }
 
-      return await ctx.prisma.university.create({
-        data: {
+      return await ctx.prisma.university.upsert({
+        where: {
+          id: input.id === undefined ? -1 : input.id,
+        },
+        update: {
+          name: input.name,
+          subname: input.subname,
+          logo: await uploadFile(),
+          url: input.url,
+          description: input.description,
+          type: input.type as Type,
+          ranking: input.ranking,
+          location: input.location,
+        },
+        create: {
           name: input.name,
           subname: input.subname,
           logo: await uploadFile(),
