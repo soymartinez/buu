@@ -3,8 +3,17 @@ import { z } from 'zod'
 
 export const regionRouter = createRouter()
     .query('getAll', {
-        async resolve({ ctx }) {
+        input: z.object({
+            name: z.string().optional(),
+        }).nullish(),
+        async resolve({ ctx, input }) {
             return await ctx.prisma.region.findMany({
+                where: {
+                    name: {
+                        contains: input?.name,
+                        mode: 'insensitive',
+                    },
+                },
                 include: {
                     campus: true,
                     university: true,
