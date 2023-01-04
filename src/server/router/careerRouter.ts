@@ -4,8 +4,17 @@ import { Level, Modality, Period } from '@prisma/client'
 
 export const careerRouter = createRouter()
     .query('getAllCareers', {
-        async resolve({ ctx }) {
+        input: z.object({
+            name: z.string().optional(),
+        }).nullish(),
+        async resolve({ ctx, input }) {
             return await ctx.prisma.careers.findMany({
+                where: {
+                    name: {
+                        contains: input?.name,
+                        mode: 'insensitive',
+                    },
+                },
                 include: {
                     careers: {
                         include: {
@@ -18,8 +27,47 @@ export const careerRouter = createRouter()
         },
     })
     .query('getAllCareersDetails', {
-        async resolve({ ctx }) {
+        input: z.object({
+            name: z.string().optional(),
+        }).nullish(),
+        async resolve({ ctx, input }) {
             return await ctx.prisma.career.findMany({
+                where: {
+                    OR: [
+                        {
+                            name: {
+                                contains: input?.name,
+                                mode: 'insensitive',
+                            }
+                        },
+                        {
+                            university: {
+                                OR: [
+                                    {
+                                        name: {
+                                            contains: input?.name,
+                                            mode: 'insensitive',
+                                        }
+                                    },
+                                    {
+                                        subname: {
+                                            contains: input?.name,
+                                            mode: 'insensitive',
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            campus: {
+                                name: {
+                                    contains: input?.name,
+                                    mode: 'insensitive',
+                                },
+                            }
+                        },
+                    ]
+                },
                 include: {
                     career: true,
                     university: true,
