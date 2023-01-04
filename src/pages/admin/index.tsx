@@ -1,4 +1,4 @@
-import { Campus, Career, Careers, Level, Modality, Period, Region, Type, University } from '@prisma/client'
+import { Level, Modality, Period, Type } from '@prisma/client'
 import Dropdown from 'components/dropdown'
 import Close from 'components/icons/close'
 import Minus from 'components/icons/minus'
@@ -369,7 +369,7 @@ export default function Admin() {
                                                         <input type={'file'} id={'logo'} className={'sr-only right-4 bottom-0'} accept={'image/png, image/jpeg'} onChange={handleFile} name={'logo'} required={!prevData?.logo} />
                                                     </div>
                                                     <div className='w-full flex flex-col justify-center gap-0'>
-                                                        <input className='bg-trasparent text-black text-xs font-bold outline-none leading-none whitespace-nowrap' placeholder={'Nombre'} defaultValue={prevData?.name} name={'name'} required />
+                                                        <input className='bg-trasparent text-black text-xs font-bold outline-none leading-none whitespace-nowrap' autoFocus placeholder={'Nombre'} defaultValue={prevData?.name} name={'name'} required />
                                                         <input className='bg-trasparent text-[14px] outline-none text-font font-medium' placeholder={'Acrónimo'} defaultValue={prevData?.subname} name={'subname'} />
                                                     </div>
                                                 </div>
@@ -567,7 +567,7 @@ export default function Admin() {
                                                 <input className='w-full p-2 text-font' defaultValue={selected[0]?.index} disabled />
                                             </td>
                                             <td>
-                                                <input className='w-full bg-hover p-2 font-bold' defaultValue={prevData?.name} name={'name'} required />
+                                                <input className='w-full bg-hover p-2 font-bold' defaultValue={prevData?.name} autoFocus name={'name'} required />
                                             </td>
                                             <td>
                                                 <input className='w-full bg-hover p-2' defaultValue={prevData?.subname} name={'subname'} />
