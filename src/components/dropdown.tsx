@@ -30,7 +30,7 @@ export default function Dropdown({ title, object, setStatus, defaultValue, curre
                 <Arrow className={`ml-auto transition ${isOpen && 'rotate-0'}`} />
             </button>
 
-            <div className={`${!isOpen ? 'hidden' : 'focus:border-black'} absolute bg-white z-20 rounded-b-md border border-hover shadow-lg`}>
+            <div className={`${!isOpen ? 'hidden' : 'focus:border-black'} absolute bg-white z-20 rounded-b-md border border-hover shadow-lg w-full`}>
                 <div className='flex items-center w-full p-3'>
                     <label className='sr-only'>Buscar</label>
                     <div className='relative w-full'>
