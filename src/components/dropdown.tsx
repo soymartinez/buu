@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Normalize } from 'utils/normalize'
 import Arrow from './icons/arrow'
 
 export default function Dropdown({ title, object, setStatus, defaultValue, currentValue, disabled }: {
@@ -11,6 +12,19 @@ export default function Dropdown({ title, object, setStatus, defaultValue, curre
 }) {
     const [isOpen, setIsOpen] = useState(false)
     const [selected, setSelected] = useState(defaultValue || '')
+    const [data, setData] = useState<any>(object)
+    const [searchValue, setSearchValue] = useState('')
+
+    useEffect(() => {
+        if (searchValue) {
+            const filteredData = object.filter((item: any) => {
+                return Normalize(item.name).includes(Normalize(searchValue))
+            })
+            setData(filteredData)
+        } else {
+            setData(object)
+        }
+    }, [object, searchValue])
 
     const handleClick = (name: string) => {
         setSelected(name)
@@ -37,12 +51,15 @@ export default function Dropdown({ title, object, setStatus, defaultValue, curre
                         <div className='flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none'>
                             <svg className='w-5 h-5 text-font' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'><path fillRule='evenodd' d='M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z' clipRule='evenodd'></path></svg>
                         </div>
-                        <input type='text' className='placeholder:text-font block p-2 pl-10 w-full rounded-lg border' placeholder='Buscar por nombre' />
+                        <input
+                            onChange={(e) => setSearchValue(e.target.value)}
+                            type='text'
+                            className='placeholder:text-font block p-2 pl-10 w-full rounded-lg border' placeholder='Buscar por nombre' />
                     </div>
                 </div>
 
                 <ul className='overflow-y-auto px-3 pb-3 h-48 space-y-[2px]'>
-                    {object && object.map(({ id, name }: { id: string, name: string }) => (
+                    {data && data.map(({ id, name }: { id: string, name: string }) => (
                         <li key={id} className={`flex items-center justify-between text-black rounded-lg ${selected === name ? 'bg-hover' : 'hover:bg-hover'}`}>
                             <div className='flex items-center w-full'>
                                 <input
