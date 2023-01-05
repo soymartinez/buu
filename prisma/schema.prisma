@@ -116,6 +116,7 @@ model Careers {
     id          Int      @id @default(autoincrement())
     name        String   @unique
     description String?
+    area        String?  @default("No especificado")
     careers     Career[]
 }
 
