@@ -1,6 +1,8 @@
+import CardCareer from 'components/cardCareer'
 import Layout from 'components/layout'
-import Image from 'next/image'
+import Link from 'next/link'
 import Skeleton from 'react-loading-skeleton'
+import { Normalize } from 'utils/normalize'
 import { trpc } from 'utils/trpc'
 
 export default function Carreras() {
@@ -9,39 +11,30 @@ export default function Carreras() {
         <Layout title='Buu – Carreras'>
             <div className='flex flex-col gap-4 pt-[70px] md:pt-[80px] px-4 md:px-8 w-full max-w-[1280px] mx-auto'>
                 <h1 className='font-bold text-xl md:text-2xl mt-4'>Carreras</h1>
-                <div className='flex flex-col gap-2'>
-                    {data ? data?.map(({ id, name, careers }) => (
-                        <div key={id} className='flex md:flex-row md:items-center justify-between gap-4 p-3 
-                            border md:border-none border-secondary hover:bg-hover transition-colors rounded-xl'>
-                            <div>
-                                <h2 className='text-base md:text-sm font-semibold md:font-bold'>{name}</h2>
-                            </div>
-                            <div className='flex items-center gap-4'>
-                                {careers && careers.slice(0, 5).map(({ university: { id, name, logo } }) => (
-                                    <div key={id} className='grid place-content-center w-10 h-10 relative'>
-                                        <Image src={logo} alt={name} layout={'fill'} objectFit={'contain'} />
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
+                <div className='flex flex-col gap-2 font-semibold md:font-bold'>
+                    {data ? data?.map((career) => (
+                        <Link key={career.id} href={`/carreras/${Normalize(`${career.id}`)}`}>
+                            <a>
+                                <CardCareer {...career} />
+                            </a>
+                        </Link>
                     )) : (
-                        <div className='flex md:flex-row md:items-center justify-between gap-4 p-3 
-                            border md:border-none border-secondary transition-colors rounded-xl'>
-                            <div>
-                                <h2 className='text-base md:text-sm font-semibold md:font-bold'><Skeleton width={200} /></h2>
-                                <div className='flex gap-3 md:gap-4'>
-                                    <p className='text-[14px] md:text-xs text-font'>{<Skeleton width={75} />}</p>
-                                    <p className='text-[14px] md:text-xs text-font'>{<Skeleton width={100} />}</p>
+                        [0, 1, 2, 3, 4].map((_, index) => (
+                            <div key={index} className='grid md:grid-cols-6 md:items-center justify-between gap-4 p-3 
+                                            border md:border-none border-secondary bg-white hover:bg-hover transition-colors rounded-xl overflow-hidden'>
+                                <div className='md:col-span-3 flex items-center gap-4'>
+                                    <div className='flex flex-col w-full md:truncate'>
+                                        <h1 className='text-base md:text-sm font-bold leading-none md:truncate'>{<Skeleton />}</h1>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className='flex items-center gap-4'>
-                                <Skeleton width={50} height={50} containerClassName={'skeleton-container'} inline={true} />
-                                <div className='hidden md:flex flex-col'>
-                                    <h1 className='text-[16px] md:text-sm font-semibold md:font-bold leading-none'>{<Skeleton width={300} />}</h1>
-                                    <p className='text-[14px] text-font font-medium'>{<Skeleton width={100} />}</p>
+                                <div className='sm:col-start-2 md:col-span-2 flex sm:items-center sm:row-span-2 md:row-auto'>
+                                    <p className={`text-black px-2 py-[3px] rounded-md text-[14px] font-medium`}><Skeleton width={100} /></p>
+                                    <p className={`text-black px-2 py-[3px] rounded-md text-[14px] font-medium`}><Skeleton width={100} /></p>
                                 </div>
+                                <h2 className='md:col-span-1 text-xs font-normal line-clamp-3 text-font'>{<Skeleton />}</h2>
                             </div>
-                        </div>)}
+                        ))
+                    )}
                 </div>
             </div>
         </Layout>
