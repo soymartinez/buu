@@ -24,6 +24,8 @@ export default function Dropdown({ title, object, setStatus, defaultValue, curre
         } else {
             setData(object)
         }
+
+        setSelected(defaultValue || '')
     }, [object, searchValue])
 
     const handleClick = (name: string) => {
