@@ -78,15 +78,15 @@ export const careerRouter = createRouter()
     })
     .query('getOne', {
         input: z.object({
-            name: z.string(),
+            id: z.number(),
         }),
         async resolve({ ctx, input }) {
             return await ctx.prisma.careers.findUnique({
                 where: {
-                    name: input.name,
+                    id: input.id,
                 },
                 include: {
-                    careers: true
+                    careers: true,
                 }
             })
         },
