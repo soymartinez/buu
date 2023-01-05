@@ -64,6 +64,29 @@ export const campusRouter = createRouter()
             })
         },
     })
+    .query('getByCareerId', {
+        input: z.object({
+            careerId: z.number().optional(),
+        }),
+        async resolve({ ctx, input }) {
+            return await ctx.prisma.campus.findMany({
+                where: {
+                    careers: {
+                        some: {
+                            career: {
+                                id: input?.careerId,
+                            }
+                        }
+                    }
+                },
+                include: {
+                    region: true,
+                    university: true,
+                    careers: true,
+                }
+            })
+        }
+    })
     .mutation('create', {
         input: z.object({
             id: z.number().optional(),
