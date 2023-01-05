@@ -89,6 +89,7 @@ export const universityRouter = createRouter()
   .query("getAll", {
     input: z.object({
       name: z.string().optional(),
+      careerId: z.number().optional(),
     }).nullish(),
     async resolve({ ctx, input }) {
       return await ctx.prisma.university.findMany({
@@ -112,6 +113,15 @@ export const universityRouter = createRouter()
                 mode: 'insensitive',
               }
             },
+            {
+              careers: {
+                some: {
+                  career: {
+                    id: input?.careerId,
+                  }
+                }
+              }
+            }
           ]
         },
         include: {
