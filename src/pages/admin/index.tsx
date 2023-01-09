@@ -38,6 +38,7 @@ export async function getServerSideProps({ req, res }: { req: NextApiRequest; re
 export default function Admin() {
     const [search, setSearch] = useState('')
     const [status, setStatus] = useState('universidad')
+    const [order, setOrder] = useState<'asc' | 'desc'>('asc')
     const [modal, setModal] = useState({
         title: '',
         message: '',
@@ -53,7 +54,7 @@ export default function Admin() {
     const [selected, setSelected] = useState<{ id: number, index: number }[]>([])
 
     // GET
-    const { data: universities } = trpc.useQuery(['university.getAll', { name: status === 'universidad' ? search : '' }])
+    const { data: universities } = trpc.useQuery(['university.getAll', { name: status === 'universidad' ? search : '', order }])
     const { data: regions } = trpc.useQuery(['region.getAll', { name: status === 'región' ? search : '' }])
     const { data: campus } = trpc.useQuery(['campus.getAll', { name: status === 'campus' ? search : '' }])
     const { data: careers } = trpc.useQuery(['career.getAllCareersDetails', { name: status === 'carrera' ? search : '' }])
@@ -324,9 +325,9 @@ export default function Admin() {
                                 </div>
                             </div>
                             <div className='flex items-center gap-2'>
-                                <select className='border rounded-lg text-xs text-font px-2 py-2'>
-                                    <option className='py-2' value={''}>Ascendente</option>
-                                    <option className='py-2' value={''}>Descendente</option>
+                                <select onChange={(e) => setOrder(e.target.value as 'asc' | 'desc')} className='border rounded-lg text-xs text-font px-2 py-2'>
+                                    <option className='py-2' value={'asc'} selected>Ascendente</option>
+                                    <option className='py-2' value={'desc'}>Descendente</option>
                                 </select>
                             </div>
                         </div>
