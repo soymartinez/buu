@@ -29,9 +29,13 @@ export const careerRouter = createRouter()
     .query('getAllCareersDetails', {
         input: z.object({
             name: z.string().optional(),
+            order: z.string().optional(),
         }).nullish(),
         async resolve({ ctx, input }) {
             return await ctx.prisma.career.findMany({
+                orderBy: {
+                    name: input?.order === 'asc' ? 'asc' : 'desc',
+                },
                 where: {
                     OR: [
                         {
