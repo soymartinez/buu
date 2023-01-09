@@ -55,7 +55,7 @@ export default function Admin() {
 
     // GET
     const { data: universities } = trpc.useQuery(['university.getAll', { name: status === 'universidad' ? search : '', order }])
-    const { data: regions } = trpc.useQuery(['region.getAll', { name: status === 'región' ? search : '' }])
+    const { data: regions } = trpc.useQuery(['region.getAll', { name: status === 'región' ? search : '', order }])
     const { data: campus } = trpc.useQuery(['campus.getAll', { name: status === 'campus' ? search : '' }])
     const { data: careers } = trpc.useQuery(['career.getAllCareersDetails', { name: status === 'carrera' ? search : '' }])
 
