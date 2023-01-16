@@ -9,7 +9,7 @@ interface LayoutProps {
 
 export default function Layout({ title, navbar = true, children }: LayoutProps) {
   return (
-    <div>
+    <>
       <Head>
         <title>{title}</title>
         <meta name='description' content='Buscador de universidades' />
@@ -24,7 +24,7 @@ export default function Layout({ title, navbar = true, children }: LayoutProps) 
       </Head>
 
       <Navbar visible={navbar} />
-      <main className='flex flex-col gap-4'>{children}</main>
-    </div>
+      <main className='flex flex-col gap-4 h-screen'>{children}</main>
+    </>
   )
 }
