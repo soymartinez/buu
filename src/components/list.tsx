@@ -24,13 +24,18 @@ export default function List({
     return (
         <div className='flex flex-col gap-4 lg:gap-2 w-full'>
             {asPath === '/' && <h1 className='text-md font-bold bg-white mt-3 leading-none lg:hidden'>Populares</h1>}
-            {data ? data?.map((item: University, index: number) => (
-                <Link href={`/universidades/${item.subname?.toLocaleLowerCase()}`} key={index}>
-                    <a>
-                        <Card {...item} />
-                    </a>
-                </Link>
-            )) :
+            {data
+                ? data.length > 0
+                    ? data?.map((item: University, index: number) => (
+                        <Link href={`/universidades/${item.subname?.toLocaleLowerCase()}`} key={index}>
+                            <a>
+                                <Card {...item} />
+                            </a>
+                        </Link>))
+                    : <p className='text-font text-sm w-full'>
+                        Ninguna universidad encontrada con los filtros seleccionados
+                    </p>
+                :
                 [0, 1, 2, 3, 4].map((_, index) => (
                     <div key={index} className='flex flex-col md:flex-row md:items-center justify-between gap-4 p-3 
                     border md:border-none border-secondary transition-colors rounded-xl'>
