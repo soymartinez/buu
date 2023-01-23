@@ -312,7 +312,7 @@ export default function Admin() {
                                 </>
                             }
                         </div>
-                        <div className='flex flex-row items-center gap-2'>
+                        <div className='flex items-center gap-2'>
                             <div className='flex items-center w-full'>
                                 <label className='sr-only'>Buscar</label>
                                 <div className='relative w-full'>
@@ -326,10 +326,27 @@ export default function Admin() {
                                         placeholder='Buscar por nombre' />
                                 </div>
                             </div>
-                            <div className='w-56'>
+                            <div>
                                 <ReactSelect
-                                    name='order'
-                                    className='rounded-2xl text-xs text-font'
+                                    menuPosition='fixed'
+                                    styles={{
+                                        control: (provided) => ({
+                                            ...provided,
+                                            height: '42px',
+                                            width: '160px',
+                                            borderRadius: '0.5rem',
+                                            border: '1px solid #dadada',
+                                            boxShadow: 'none',
+                                        }),
+                                        option: (provided, state) => ({
+                                            ...provided,
+                                            backgroundColor: state.isSelected ? '#2524d1' : '',
+                                            ':hover': {
+                                                backgroundColor: state.isSelected ? '#2524d1' : '#edefef',
+                                            }
+                                        }),
+                                    }}
+                                    className='text-xs text-font z-50'
                                     defaultValue={OrderOptions[0]}
                                     options={OrderOptions}
                                     onChange={(value) => setOrder(value?.value as 'asc' | 'desc')}
