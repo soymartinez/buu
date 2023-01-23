@@ -8,12 +8,14 @@ import Plus from 'components/icons/plus'
 import Layout from 'components/layout'
 import Modal from 'components/modal'
 import Select from 'components/select'
+import ReactSelect from 'react-select'
 import { NextApiRequest, NextApiResponse } from 'next'
 import Image from 'next/image'
 import { FormEvent, useState } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import { getServerAuthSession } from 'server/common/get-server-auth-session'
 import { trpc } from 'utils/trpc'
+import { OrderOptions } from 'types/react-select'
 
 export async function getServerSideProps({ req, res }: { req: NextApiRequest; res: NextApiResponse }) {
     const session = await getServerAuthSession({ req, res })
@@ -324,11 +326,14 @@ export default function Admin() {
                                         placeholder='Buscar por nombre' />
                                 </div>
                             </div>
-                            <div className='flex items-center gap-2'>
-                                <select onChange={(e) => setOrder(e.target.value as 'asc' | 'desc')} className='border rounded-lg text-xs text-font px-2 py-2'>
-                                    <option className='py-2' value={'asc'} selected>Ascendente</option>
-                                    <option className='py-2' value={'desc'}>Descendente</option>
-                                </select>
+                            <div className='w-56'>
+                                <ReactSelect
+                                    name='order'
+                                    className='rounded-2xl text-xs text-font'
+                                    defaultValue={OrderOptions[0]}
+                                    options={OrderOptions}
+                                    onChange={(value) => setOrder(value?.value as 'asc' | 'desc')}
+                                />
                             </div>
                         </div>
                     </div>
