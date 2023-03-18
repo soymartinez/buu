@@ -24,7 +24,7 @@ export default function Layout({ title, navbar = true, children }: LayoutProps) 
       </Head>
 
       <Navbar visible={navbar} />
-      <main className='flex flex-col gap-4 h-screen'>{children}</main>
+      <main className='flex flex-col gap-4'>{children}</main>
     </>
   )
 }
